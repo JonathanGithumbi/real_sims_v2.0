@@ -1,0 +1,19 @@
+{% extends 'dashboard/layout.html' %}
+{% block content_area %}
+<h1>Student Registration Form</h1>
+<hr>
+<form action="{%url 'register_student'%}" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" class="btn btn-primary mb-3" value="Submit">
+</form>
+<script>
+    function onLoadBody() {
+        document.getElementById('transport_fee').readOnly = true;
+      }
+    window.onload = onLoadBody
+    document.getElementById('transport').onchange = function() {
+        document.getElementById('transport_fee').readOnly = !this.checked;
+    };
+</script>
+{% endblock content_area %}

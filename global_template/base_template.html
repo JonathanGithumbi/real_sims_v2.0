@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css'%}">
-   
+    <link rel="stylesheet" type="text/css" href="{% static 'datatables/datatables.min.css'%}">
+    <script src="{%static 'jquery-3.6.0.js'%}"></script>
     {% block style%}
     {%endblock style%}
     <title>SIMS</title>
@@ -14,7 +15,9 @@
 <body class="{%block body_class%}{%endblock%}">
     {% block content%}
     {%endblock content%}
-    <script src="{%static 'jquery-3.6.0.js'%}"></script>
+    
     <script src="{%static 'popper.min.js'%}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.js'%}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'datatables/datatables.min.js'%}"></script>
+   
 </body>

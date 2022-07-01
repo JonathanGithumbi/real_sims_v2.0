@@ -1,0 +1,51 @@
+{% extends 'dashboard/layout.html' %}
+{% block content_area %}
+<h1>Student Profile</h1>
+<hr>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>Admission Number</th>
+        <td>{{student.admission_number}} </td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td>{{student.first_name}} {{student.middle_name}} {{student.last_name}} </td>
+    </tr>
+    <tr>
+        <th>Grade</th>
+        <td>{{student.current_grade}} </td>
+    </tr>
+    <tr>
+        <th>Primary Contact Name</th>
+        <td>{{student.primary_contact_name}} </td>
+    </tr>
+    <tr>
+        <th>Primary Contact Phone Number</th>
+        <td>{{student.primary_contact_phone_number}} </td>
+    </tr>
+    <tr>
+        <th>Secondary Contact Name</th>
+        <td>{{student.secondary_contact_name}} </td>
+    </tr>
+    <tr>
+        <th>Secondary Contact Phone Number</th>
+        <td>{{student.secondary_contact_phone_number}} </td>
+    </tr>
+    <tr>
+        <th>Taking Lunch</th>
+        <td>{{student.hot_lunch}} </td>
+    </tr>
+    <tr>
+        <th>Taking Transport</th>
+        <td>{{student.transport}} </td>
+    </tr>
+    <tr>
+        <th>Transport Fee</th>
+        <td>{{student.transport_fee}} </td>
+    </tr>
+</table>
+<a href="{%url 'edit_student_profile' student.id%} "class='btn btn-primary'>Edit Profile</a>
+<hr>
+<h1>Payment History</h1>
+<hr>
+{% endblock content_area %}

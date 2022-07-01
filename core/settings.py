@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user_account',
-    'dashboard'
+    'dashboard',
+    'grade',
+    'student'
 ]
 
 MIDDLEWARE = [
@@ -77,7 +79,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sims_v2.0',
         'USER':'root',
         'PASSWORD':'',
@@ -129,3 +131,4 @@ STATICFILES_DIRS = [
 ]
 AUTH_USER_MODEL = 'user_account.User'
 LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/'
