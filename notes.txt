@@ -1,0 +1,1 @@
+the only time you should e changing the optionals is when a user is opting student into programs

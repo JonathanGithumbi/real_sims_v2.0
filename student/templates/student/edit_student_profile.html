@@ -7,4 +7,13 @@
     {{form.as_p}}
     <input type="submit" value="Submit" class='btn btn-primary'>
 </form>
+<script>
+    function onLoadBody() {
+        document.getElementById('transport_fee').readOnly = true;
+      }
+    window.onload = onLoadBody
+    document.getElementById('transport').onchange = function() {
+        document.getElementById('transport_fee').readOnly = !this.checked;
+    };
+</script>
 {% endblock content_area %}

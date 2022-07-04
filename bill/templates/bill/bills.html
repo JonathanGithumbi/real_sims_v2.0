@@ -1,0 +1,7 @@
+{% extends 'dashboard/layout.html' %}
+{% load static %}
+{% block content_area %}
+<a href="{% url 'create_bill'%}" class='btn btn-primary'>New Bill <img src="{% static 'bootstrap_icons/plus-circle.svg'%}" alt="Bootstrap" width="30" height="30"></a>
+<hr>
+
+{% endblock content_area %}

@@ -1,0 +1,11 @@
+{% extends 'dashboard/layout.html' %}
+{% block content_area %}
+    <form method="post">
+        {{ formset.management_form }}
+        {% for form in formset %}
+            <div class="row">
+                {% for field in form %}<div class="col">{{ field.label_tag }} {{ field }}</div>{% endfor %}
+            </div>
+        {% endfor %}
+    </form>    
+{% endblock content_area %}

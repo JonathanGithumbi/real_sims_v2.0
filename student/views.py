@@ -1,6 +1,7 @@
 from django.forms import ValidationError
 from django.shortcuts import render,redirect
 from django.urls import reverse
+from regex import P
 
 from .utils import generate_admission_number
 from student.models import Student
@@ -34,10 +35,17 @@ def edit_student_profile(request,id):
     if request.method == 'POST':
         form = EditStudentProfileForm(request.POST, instance=student)
         if form.is_valid():
+            instance = form.save()
             if form.has_changed():
-                return render(request,'student/dispose.html',{'has_changed':'true'})
+                if 'hot_lunch' in form.changed_data:
+                    pass
+                #Create invoice for lunch
+                if 'transport' in form.changed_data:
+                    #create invoice for transport
+                    pass
+                return redirect(reverse('student_profile', args=[instance.id]))
             else:
-                return render(request,'student/dispose.html',{'has_changed':'false'})
+                return redirect(reverse('student_profile', args=[instance.id]))
         else:
             return render(request,'student/edit_student_profile.html',{'form':form,'student':student})
     if request.method =='GET':

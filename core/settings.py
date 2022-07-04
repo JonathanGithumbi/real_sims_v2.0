@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'user_account',
     'dashboard',
     'grade',
-    'student'
+    'student',
+    'bill'
 ]
 
 MIDDLEWARE = [
