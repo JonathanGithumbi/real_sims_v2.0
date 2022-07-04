@@ -1,6 +1,6 @@
 from unicodedata import decimal
 from django.db import models
-
+from django import utils
 class Bill(models.Model):
     bill_number = models.CharField(max_length=30, null=True,default=None,unique=True)
     created = models.DateField(auto_now_add=True)
@@ -16,8 +16,9 @@ class BillItem(models.Model):
     price_per_quantity = models.DecimalField(max_digits=7,decimal_places=2)
     total = models.DecimalField(max_digits=7, decimal_places=2)
     synced = models.BooleanField(default=False)
-    bill = models.ForeignKey(Bill,on_delete=models.CASCADE)
-
+    created = models.DateField(auto_now_add=True)
+    bill_number = models.CharField(max_length=255)
+    
     def __str__(self):
         return self.description
 

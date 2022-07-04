@@ -1,29 +1,33 @@
 from django import forms
-from django.shortcuts import render
-from .models import Bill, BillItem
-from django.forms import inlineformset_factory
+from django.shortcuts import redirect, render
+from .models import BillItem
+from django.forms import modelformset_factory
 from .utils import generate_bill_number
 from django import forms
+from .forms import CreateBillItemForm
+from django.urls import reverse
+from . import utils
 
 
 def bills(request):
-    return render(request, 'bill/bills.html')
+    bills = BillItem.objects.all()
+
+    return render(request, 'bill/bills.html',{'bills':bills})
 
 
 def create_bill(request):
-    bill = Bill()
-    BillItemInlineFormSet = inlineformset_factory(Bill, BillItem, fields=(
-        'description', 'quantity', 'price_per_quantity', 'total'),
-        widgets={
-            'description': forms.TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Description'}),
-            'quantity': forms.NumberInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Quantity'}),
-            'price_per_quantity': forms.NumberInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Price Per Quantity'}),
-            'total': forms.NumberInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Total'}),
-        }, extra=2,)
-
+    form = CreateBillItemForm()
     if request.method == 'GET':
-        formset = BillItemInlineFormSet(instance=bill)
+        return render(request, 'bill/create_bill.html',{'form':form})
     if request.method == 'POST':
-        pass
-    
-    return render(request,'bill/create_bill.html',{'formset':formset,'bill':bill})
+        form=CreateBillItemForm(request.POST)
+        if form.is_valid():
+            instance = form.save()
+            instance.bill_number = utils.generate_bill_number(instance.id)
+            instance.save()
+            return redirect(reverse('bills'))
+        else:
+            return render(request, 'bill/create_bill.html',{'form':form})
+
+
+

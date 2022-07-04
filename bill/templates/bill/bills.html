@@ -3,5 +3,32 @@
 {% block content_area %}
 <a href="{% url 'create_bill'%}" class='btn btn-primary'>New Bill <img src="{% static 'bootstrap_icons/plus-circle.svg'%}" alt="Bootstrap" width="30" height="30"></a>
 <hr>
-
+<h1>Bill History</h1>
+<table id="all_bills" class="display table table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th>Decription</th>
+            <th>Quantiy</th>
+            <th>Price per Quantity</th>
+            <th>Total Amount</th>
+            <th>Date Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bill in bills %}
+        <tr>
+            <td>{{bill.description}}</td>
+            <td>{{bill.quantity}}</td>
+            <td>{{bill.price_per_quantity}}</td>
+            <td>{{bill.total}}</td>
+            <td>{{bill.created}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    $(document).ready( function () {
+        $('#all_bills').DataTable();
+    } );
+</script>
 {% endblock content_area %}

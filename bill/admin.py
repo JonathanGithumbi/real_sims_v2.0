@@ -1,5 +1,5 @@
 from msilib.schema import Billboard
 from django.contrib import admin
-from .models import Bill
+from .models import BillItem
 
-admin.site.register(Bill)
+admin.site.register(BillItem)

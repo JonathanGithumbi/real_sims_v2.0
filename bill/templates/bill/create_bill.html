@@ -1,11 +1,13 @@
 {% extends 'dashboard/layout.html' %}
 {% block content_area %}
-    <form method="post">
-        {{ formset.management_form }}
-        {% for form in formset %}
-            <div class="row">
-                {% for field in form %}<div class="col">{{ field.label_tag }} {{ field }}</div>{% endfor %}
-            </div>
-        {% endfor %}
+<h1>Create Bill</h1>
+<hr>
+{% for error in form.errors %}
+<p>{{error}}</p>
+{% endfor %}
+    <form method="post" action="{% url 'create_bill'%}">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" class="btn btn-primary" value="Submit">
     </form>    
 {% endblock content_area %}
