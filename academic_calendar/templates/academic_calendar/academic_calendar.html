@@ -1,0 +1,36 @@
+{% extends 'dashboard/layout.html' %}
+{% load static %}
+{% block content_area %}
+<h1>Academic Calendar</h1>
+<a href="{% url 'create_academic_calendar'%}" class='btn btn-primary'>New Calendar <img src="{% static 'bootstrap_icons/plus-circle.svg'%}" alt="Bootstrap" width="30" height="30"></a>
+
+<hr>
+{% for academic_calendar in academic_calendars %}
+<h2>Year: {{academic_calendar.year}}</h2>
+<table  class="display table table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th>Term 1 Start Date</th>
+            <th>Term 1 End Date</th>
+            <th>Term 2 Start Date</th>
+            <th>Term 2 End Date</th>
+            <th>Term 3 Start Date</th>
+            <th>Term 3 End Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{academic_calendar.term_1_start_date}}</td>
+            <td>{{academic_calendar.term_1_end_date}}</td>
+            <td>{{academic_calendar.term_2_start_date}}</td>
+            <td>{{academic_calendar.term_2_end_date}}</td>
+            <td>{{academic_calendar.term_3_start_date}}</td>
+            <td>{{academic_calendar.term_3_end_date}}</td>
+        </tr>
+    </tbody>
+</table>
+<a href="{% url 'update_academic_calendar' academic_calendar.id%}" class='btn btn-primary'>Edit</a>
+<a href="{% url 'delete_academic_calendar' academic_calendar.id%}" class='btn btn-danger'>Delete</a>
+
+{% endfor %}
+{% endblock content_area %}

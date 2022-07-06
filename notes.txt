@@ -1,1 +1,4 @@
 the only time you should e changing the optionals is when a user is opting student into programs
+registration should only be done after the beginning of the term
+1 invoice for term x year y grade z , that are modifiable.
+user gets notified when 

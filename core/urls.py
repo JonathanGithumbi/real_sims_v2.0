@@ -21,5 +21,10 @@ urlpatterns = [
     path('',include('user_account.urls')),
     path('dashboard/',include('dashboard.urls')),
     path('student/',include('student.urls')),
-    path('bill/',include('bill.urls'))
+    path('bill/',include('bill.urls')),
+    path('fees structure/', include('fees_structure.urls')),
+    path('academic calendar/',include('academic_calendar.urls')),
+    path('reports/',include('report.urls')),
+    path('notifications/', include('notification.urls'))
+    
 ]

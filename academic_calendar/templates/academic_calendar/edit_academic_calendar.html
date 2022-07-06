@@ -1,0 +1,11 @@
+{% extends 'dashboard/layout.html' %}
+{% block content_area %}
+<h1>Edit Academic Calendar</h1>
+<hr>
+<h2>Year: {{academic_calendar.year}}</h2>
+<form action="{% url 'update_academic_calendar' academic_calendar.id%}" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" class="btn btn-primary" value="submit">
+</form>
+{% endblock content_area %}

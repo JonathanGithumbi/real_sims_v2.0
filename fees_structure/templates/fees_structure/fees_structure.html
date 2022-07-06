@@ -1,0 +1,47 @@
+{% extends 'dashboard/layout.html' %}
+
+{% block content_area %}
+<h1>Fees Structure</h1>
+<hr>
+<br>
+<table id="all_fees_structures" class="display table table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th>Grade</th>
+            <th>Year</th>
+            <th>Term</th>
+            <th>Tuition</th>
+            <th>Lunch</th>
+            <th>Transport</th>
+            <th>Admission</th>
+            <th>Diary and R_Bk</th>
+            <th>Interview</th>
+            <th>Computer</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for structure in fees_structure %}
+        <tr>
+            <td>{{structure.grade}}</td>
+            <td>{{structure.year}}</td>
+            <td>{{structure.term}}</td>
+            <td>{{structure.tuition}}</td>
+            <td>{{structure.lunch}}</td>
+            <td>{{structure.transport}}</td>
+            <td>{{structure.admission}}</td>
+            <td>{{structure.diary_and_report_book}}</td>
+            <td>{{structure.interview}}</td>
+            <td>{{structure.computer}}</td>
+            <td><a href="{% url 'update_fees_structure' structure.id%}" class='btn btn-primary'>Edit</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $(document).ready( function () {
+        $('#all_fees_structures').DataTable();
+    } );
+</script>
+{% endblock content_area %}

@@ -41,7 +41,12 @@ INSTALLED_APPS = [
     'dashboard',
     'grade',
     'student',
-    'bill'
+    'bill',
+    'fees_structure',
+    'invoice',
+    'academic_calendar',
+    'report',
+    'notification'
 ]
 
 MIDDLEWARE = [
