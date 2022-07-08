@@ -1,7 +1,14 @@
 from datetime import datetime
+from http import client
 from venv import create
 from django.db import models
 from grade.models import Grade
+from quickbooks import QuickBooks
+
+
+from intuitlib.client import AuthClient
+from django.conf import settings
+
 
 class AdmissionNumber(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -43,4 +50,17 @@ class Student(models.Model):
         self.admission_number_formatted = self.format_adm_no(self.adm_no_id)
         self.current_grade = self.grade_admitted_to
         super().save(*args, **kwargs)  # Call the "real" save() method.
+        #Create the Customer Object
+        #Setup AuthClient
+        auth_client = AuthClient(
+            client_id= settings.CLIENT_ID,
+            client_secret=settings.CLIENT_SECRET,
+            access_token='',
+            environment = settings.ENVIRONMENT,
+            redirect_uri=settings.REDIRECT_URI
+        )
+        client = QuickBooks(
+            auth_client=auth_client,
+            refresh_token = auth_client
+        )
         

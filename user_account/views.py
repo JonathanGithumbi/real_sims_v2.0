@@ -95,10 +95,10 @@ def connected(request):
 
     if auth_client.id_token is not None:
         messages.success(request, "Quickbooks Connection Succsessfull")
-        return redirect(reverse('login'))
+        return redirect(reverse('dashboard'))
     else:
         messages.success(request, "Quickbooks Connection Succsessfull")
-        return redirect(reverse('login'))
+        return redirect(reverse('dashboard'))
 
 def qbo_request(request):
     auth_client = AuthClient(
