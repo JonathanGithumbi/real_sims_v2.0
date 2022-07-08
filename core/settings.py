@@ -138,3 +138,23 @@ STATICFILES_DIRS = [
 AUTH_USER_MODEL = 'user_account.User'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
+# OAauth2 config here
+CLIENT_ID = 'ABrMAlNLQrh4hieApxNc10IPVELEBDMX9A4g2rG6jlYlDgBLbJ'
+CLIENT_SECRET = 'MZIPXa08vO3k6iwKqmdSqoY4eFcu5WAgZxD35CGF'
+REDIRECT_URI = 'http://localhost:8000/user_account/callback/'
+ENVIRONMENT = 'sandbox'
+
+# QBO Base URLs
+QBO_BASE_SANDBOX = 'https://sandbox-quickbooks.api.intuit.com'
+QBO_BASE_PROD = 'https://quickbooks.api.intuit.com'
+
+# OAuth1 config for migration
+CONSUMER_KEY = '<EnterHere>'
+CONSUMER_SECRET = '<EnterHere>'
+ACCESS_KEY = '<EnterHere>'
+ACCESS_SECRET = '<EnterHere>'
+
+REALM_ID = '<EnterHere>'
+
+ALLOWED_HOSTS=["http://127.0.0.1:8000/",'127.0.0.1','localhost']
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

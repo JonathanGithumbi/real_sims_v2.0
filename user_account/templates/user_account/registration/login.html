@@ -106,18 +106,22 @@ body {
   <main class="form-signin w-100 m-auto">
     <form action="{% url 'login' %}" method="post">
       {% csrf_token %}
-      
       <img class="mb-4"
            src="{% static 'logo.svg' %}"
            alt=""
            width="250"
            height="200">
-           {% if form.errors %}
+      {% if form.errors %}
+      {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"
+             role="alert">{{ message }}ma</div>
+      {% endfor %}
+    {% endif %}
         <p>
           Your username and password didn't match. Please try again.
         </p>
       {% endif %}
-     
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
       <div class="form-floating">
         {{ form.username }}
@@ -132,10 +136,48 @@ body {
           <a href="{% url 'password_reset' %}">Forgot Password</a>
         </label>
       </div>
+      <input type="hidden" name="next" value="{{ next }}">
+      <a class="imgLink"
+         href="#"
+         onclick="launchPopup('/user_account/oauth/')">
+        <img style="height: 40px"
+             src="{% static 'C2QB_white_btn_lg_default.png' %}"/>
+      </a>
+      <br>
+      <br>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
       <p class="mt-5 mb-3 text-muted">
         &copy; Kings Education Center
       </p>
     </form>
   </main>
+  <script>
+    if (window.opener) {
+        window.opener.location.href = '/user_account/'
+        window.close()
+    }
+
+    function launchPopup(path) {
+        var win;
+        var checkConnect;
+        var parameters = "location=1,width=800,height=650";
+        parameters += ",left=" + (screen.width - 800) / 2 + ",top=" + (screen.height - 650) / 2;
+
+        // Launch Popup
+        win = window.open(path, 'connectPopup', parameters);
+    }
+
+    function migrateCall() {
+        $("#result").html('Loading...')
+        $.get("/app/migration", function (data) {
+            $("#result").html(JSON.stringify(data, null, 2))
+        })
+    }
+  </script>
+  <script>
+  if (window.opener) {
+      window.opener.location.href = '/user_account/connected'
+      window.close()
+  }
+  </script>
 {% endblock content %}

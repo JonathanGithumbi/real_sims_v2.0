@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('fees structure/', include('fees_structure.urls')),
     path('academic calendar/',include('academic_calendar.urls')),
     path('reports/',include('report.urls')),
-    path('notifications/', include('notification.urls'))
+    path('notifications/', include('notification.urls')),
+    path('user_account/',include('user_account.urls'))
     
 ]

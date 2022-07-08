@@ -7,7 +7,7 @@ from . import utils
 class StudentRegistrationForm(ModelForm):
     class Meta:
         model = Student
-        exclude =['current_grade','synced','admission_number']
+        exclude =['current_grade','synced','admission_number','admission_number_formatted']
         widgets = {
             'first_name': TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'First Name'}),
             'middle_name': TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Middle Name'}),
@@ -27,8 +27,9 @@ class StudentRegistrationForm(ModelForm):
 class EditStudentProfileForm(ModelForm):
     class Meta:
         model = Student
-        exclude =['current_grade','synced','admission_number']
+        exclude =['current_grade','synced','admission_number',]
         widgets = {
+            'admission_number_formatted': TextInput(attrs={'class':'form-control', 'id':'floatingInput','readonly':'readonly'}),
             'first_name': TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'First Name'}),
             'middle_name': TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Middle Name'}),
             'last_name': TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Last Name'}),

@@ -36,7 +36,7 @@ class Invoice(models.Model):
     synced = models.BooleanField(default=False)
     
 class Item(models.Model):
-    item = models.CharField(max_length=255,choices=ITEM_CHOICES)
+    item_description = models.CharField(max_length=255,choices=ITEM_CHOICES)
     amount = models.IntegerField()
     synced= models.BooleanField(default=False)
     invoice = models.ForeignKey(Invoice,on_delete=models.CASCADE)

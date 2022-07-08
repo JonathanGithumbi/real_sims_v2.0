@@ -2,3 +2,4 @@ the only time you should e changing the optionals is when a user is opting stude
 registration should only be done after the beginning of the term
 1 invoice for term x year y grade z , that are modifiable.
 user gets notified when 
+invoice generation is done after a user and customer are registered into the system

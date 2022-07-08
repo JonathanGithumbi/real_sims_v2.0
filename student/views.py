@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect
 from django.urls import reverse
 from regex import P
 
-from .utils import generate_admission_number
+
 from student.models import Student
 from .forms import StudentRegistrationForm,EditStudentProfileForm
 
@@ -16,9 +16,6 @@ def register_student(request):
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
             model = form.save()
-            model.admission_number = generate_admission_number(model.id) 
-            model.current_grade = model.grade_admitted_to
-            model.save()
             return redirect(reverse('student_profile',args=[model.id]))
         else:
             return render(request, 'student/registration.html',{'form':form})
