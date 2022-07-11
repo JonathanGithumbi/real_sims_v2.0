@@ -1,6 +1,5 @@
 from django.db import models
 from grade.models import Grade
-
 TERM_CHOICES = (
             (1, "1st Term"),
             (2, "2nd Term"),
@@ -24,6 +23,9 @@ class FeesStructure(models.Model):
     diary_and_report_book = models.IntegerField()
     interview = models.IntegerField()
     computer = models.IntegerField()
+
+    def __str__(self):
+        return str(self.grade)
 
 
 

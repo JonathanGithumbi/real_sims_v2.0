@@ -1,4 +1,4 @@
-from student.utils import generate_admission_number
+
 from .models import Invoice
 from fees_structure.models import FeesStructure
 from student.models import Student

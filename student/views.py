@@ -2,10 +2,13 @@ from django.forms import ValidationError
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from regex import P
-
-
+from fees_structure.models import FeesStructure
+import invoice
+from invoice.models import Invoice,Item
+from academic_calendar import utils as academic_utils
 from student.models import Student
 from .forms import StudentRegistrationForm,EditStudentProfileForm
+from invoice import utils as invoice_utils
 
 def students(request):
     students = Student.objects.all()
@@ -15,8 +18,36 @@ def register_student(request):
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
-            model = form.save()
-            return redirect(reverse('student_profile',args=[model.id]))
+            student = form.save()
+            #create invoice for student
+            invoice = Invoice.objects.create(
+                student = student,
+                #created = default now,
+                grade = student.grade_admitted_to,
+                term = academic_utils.get_term(student.date_of_admission),
+                year = student.date_of_admission.year,
+                status = 'unpaid',
+                
+            )
+            invoice.save()
+            #Fees Structure object to get item price
+            fees_structure_obj = FeesStructure.objects.get(grade = student.grade_admitted_to)
+            #create the items to add to the invoice
+            items = student.get_items()
+            for item in items:
+                item_obj = Item.objects.create(
+                    item_description = item,
+                    invoice = invoice
+                )
+                if item =='tuition':
+                    item_obj.amount = fees_structure_obj.tuition
+                if item =='transport':
+                    item_obj.amount = fees_structure_obj.transport
+                if item == 'lunch':
+                    item_obj.amount = fees_structure_obj.lunch
+
+                item_obj.save()
+            return redirect(reverse('student_profile',args=[student.id]))
         else:
             return render(request, 'student/registration.html',{'form':form})
     elif request.method == 'GET':
@@ -25,7 +56,8 @@ def register_student(request):
     
 def student_profile(request,id):
     student = Student.objects.get(pk=id)
-    return render(request, 'student/student_profile.html',{'student':student})
+    invoices = Invoice.objects.filter(student=student)
+    return render(request, 'student/student_profile.html',{'student':student,'invoices':invoices})
 
 def edit_student_profile(request,id):
     student = Student.objects.get(pk=id)

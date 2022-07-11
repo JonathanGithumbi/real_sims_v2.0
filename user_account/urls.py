@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^refresh/?$', views.refresh, name='refresh'),
     url(r'^user_info/?$', views.user_info, name='user_info'),
     url(r'^migration/?$', views.migration, name='migration'),
+    path('bno/',views.no_auth_code,name="no_auth_code")
 ]
 
 

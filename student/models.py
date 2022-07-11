@@ -9,12 +9,16 @@ from quickbooks import QuickBooks
 from intuitlib.client import AuthClient
 from django.conf import settings
 
+from academic_calendar.utils import get_term
+
 
 class AdmissionNumber(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.id
+
+
 
 class Student(models.Model):
     admission_number = models.ForeignKey(AdmissionNumber,on_delete=models.CASCADE,default=None,null=True)
@@ -32,7 +36,7 @@ class Student(models.Model):
     secondary_contact_phone_number = models.CharField(max_length = 255,blank=True)
     synced = models.BooleanField(default=False)
     # optionals 
-    hot_lunch = models.BooleanField(default=False)
+    lunch = models.BooleanField(default=False)
     transport = models.BooleanField(default=False)
     transport_fee = models.IntegerField(default=0)
     
@@ -42,6 +46,16 @@ class Student(models.Model):
     def format_adm_no(self,adm_no):
         return 's'+str(adm_no).zfill(4)
 
+    def get_items(self):
+        items = ['tuition']
+        if self.lunch:
+            items.append('lunch')
+        if self.transport:
+            items.append('transport')
+
+        return items
+
+
     def save(self, *args, **kwargs):
         self.adm_no = AdmissionNumber()
         self.adm_no.save()
@@ -50,17 +64,7 @@ class Student(models.Model):
         self.admission_number_formatted = self.format_adm_no(self.adm_no_id)
         self.current_grade = self.grade_admitted_to
         super().save(*args, **kwargs)  # Call the "real" save() method.
-        #Create the Customer Object
-        #Setup AuthClient
-        auth_client = AuthClient(
-            client_id= settings.CLIENT_ID,
-            client_secret=settings.CLIENT_SECRET,
-            access_token='',
-            environment = settings.ENVIRONMENT,
-            redirect_uri=settings.REDIRECT_URI
-        )
-        client = QuickBooks(
-            auth_client=auth_client,
-            refresh_token = auth_client
-        )
+
+
+        
         
