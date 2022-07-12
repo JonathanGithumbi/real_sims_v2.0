@@ -45,6 +45,17 @@ class Invoice(models.Model):
     synced = models.BooleanField(default=False)
 
 
+    def get_amount(request,inv_id):
+        invoice = Invoice.objects.get(pk=inv_id)
+        items = invoice.item_set.all()
+        amount = 0
+        for item in items:
+            amount += item.amount
+        return amount
+
+
+        
+
     def format_invoice_no(self,invoice_no):
         return 'inv'+str(invoice_no).zfill(4)
 

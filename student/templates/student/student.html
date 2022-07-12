@@ -9,6 +9,7 @@
         <tr>
             <th>Name</th>
             <th>Grade</th>
+            <th>Registered</th>
             <th>Profile</th>
         </tr>
     </thead>
@@ -17,6 +18,7 @@
         <tr>
             <td>{{student}}</td>
             <td>{{student.current_grade}}</td>
+            <td>{{student.date_of_admission}}</td>
             <td><a href="{%url 'student_profile' student.id%} "class='btn btn-primary'>View Profile</a></td>
         </tr>
         {% endfor %}

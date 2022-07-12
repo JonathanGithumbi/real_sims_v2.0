@@ -21,6 +21,8 @@ class AdmissionNumber(models.Model):
 
 
 class Student(models.Model):
+    class Meta:
+        ordering = ['-date_of_admission']
     admission_number = models.ForeignKey(AdmissionNumber,on_delete=models.CASCADE,default=None,null=True)
     admission_number_formatted = models.CharField(max_length=255,default=None,null=True)
     first_name = models.CharField(max_length=255)

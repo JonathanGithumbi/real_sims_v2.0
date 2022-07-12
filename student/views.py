@@ -64,17 +64,32 @@ def edit_student_profile(request,id):
     if request.method == 'POST':
         form = EditStudentProfileForm(request.POST, instance=student)
         if form.is_valid():
-            instance = form.save()
+            student = form.save()
+            fees_structure_obj = FeesStructure.objects.get(grade = student.current_grade)
             if form.has_changed():
-                if 'hot_lunch' in form.changed_data:
-                    pass
-                #Create invoice for lunch
+                if 'lunch' in form.changed_data:
+                    invoice = student.invoice_set.all().order_by('created').first()
+                    #add the lunch to the invoice
+                    lunch_item = Item.objects.create(
+                        item_description = 'lunch',
+                        amount = fees_structure_obj.lunch,
+                        invoice = invoice
+                    )
+                    lunch_item.save()
+
                 if 'transport' in form.changed_data:
-                    #create invoice for transport
-                    pass
-                return redirect(reverse('student_profile', args=[instance.id]))
+                    invoice = student.invoice_set.all().order_by('created').first()
+                    #add the lunch to the invoice
+                    transport_item = Item.objects.create(
+                        item_description = 'transport',
+                        amount = student.transport_fee,
+                        invoice = invoice
+                    )
+                    transport_item.save()
+
+                return redirect(reverse('student_profile', args=[student.id]))
             else:
-                return redirect(reverse('student_profile', args=[instance.id]))
+                return redirect(reverse('student_profile', args=[student.id]))
         else:
             return render(request,'student/edit_student_profile.html',{'form':form,'student':student})
     if request.method =='GET':

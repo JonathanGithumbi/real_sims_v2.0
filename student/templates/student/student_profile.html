@@ -33,7 +33,7 @@
     </tr>
     <tr>
         <th>Taking Lunch</th>
-        <td>{{student.hot_lunch}} </td>
+        <td>{{student.lunch}} </td>
     </tr>
     <tr>
         <th>Taking Transport</th>
@@ -51,7 +51,7 @@
 <div class="list-group">
     {% if invoices %}
     {% for invoice in invoices %}
-    <a href="{% url 'invoice_detail' invoice.id%}" class="list-group-item list-group-item-action">Year:{{invoice.year}} Term:{{invoice.term}}</a>
+    <a href="{% url 'invoice_detail' invoice.id%}" class="list-group-item list-group-item-action"> Invoice Year:{{invoice.year}} Term:{{invoice.term}}</a>
     {% endfor %}
     {% else %}
     No Invoices Yet

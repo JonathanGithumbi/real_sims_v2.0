@@ -10,7 +10,6 @@ class FeesStructureForm(forms.ModelForm):
         widgets={
             'grade':forms.Select(attrs={'class':'form-select', 'readonly':True}),
             'term': forms.Select(attrs={'readonly':True,'class':'form-select'}),
-            'year':forms.Select(attrs={'readonly':True,'class':'form-select'}),
             'tuition':forms.NumberInput({'class':'form-control', 'id':'tuition','placeholder':'Tuition'}),
             'lunch':forms.NumberInput({'class':'form-control','placeholder':'Lunch'}),
             'transport': forms.NumberInput({'class':'form-control','placeholder':'Transport'}),

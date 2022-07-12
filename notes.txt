@@ -3,3 +3,6 @@ registration should only be done after the beginning of the term
 1 invoice for term x year y grade z , that are modifiable.
 user gets notified when 
 invoice generation is done after a user and customer are registered into the system
+
+a student can only be subscribed to an item, and cannot be unsubscribed from the item once they've been subscribed
+add javascript to disable lunch and transport, in the edit student form if they are set to True

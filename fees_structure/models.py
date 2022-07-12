@@ -15,7 +15,6 @@ class FeesStructure(models.Model):
     
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
     term = models.IntegerField(choices=TERM_CHOICES)
-    year = models.IntegerField(choices=YEAR_CHOICES)
     tuition = models.IntegerField()
     lunch = models.IntegerField()
     transport = models.IntegerField()
