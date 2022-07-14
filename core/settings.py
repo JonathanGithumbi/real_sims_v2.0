@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'invoice',
     'academic_calendar',
     'report',
-    'notification'
+    'notification',
+    'payment'
 ]
 
 MIDDLEWARE = [
@@ -147,9 +148,9 @@ AUTH_USER_MODEL = 'user_account.User'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 # OAauth2 config here
-CLIENT_ID = 'ABrMAlNLQrh4hieApxNc10IPVELEBDMX9A4g2rG6jlYlDgBLbJ'
-CLIENT_SECRET = 'MZIPXa08vO3k6iwKqmdSqoY4eFcu5WAgZxD35CGF'
-REDIRECT_URI = 'http://localhost:8000/user_account/callback/'
+CLIENT_ID = 'ABqj7EU6zlngD2KKw34dy6Z7SzVwF7XcHP7c6EOr2GCZUiSOZI'
+CLIENT_SECRET = 'KgY50RPimjKkz4shvDb2PRrIKADSadw8ysWIuOhA'
+REDIRECT_URI = 'http://localhost:8000/user_account/callback'
 ENVIRONMENT = 'sandbox'
 
 # QBO Base URLs

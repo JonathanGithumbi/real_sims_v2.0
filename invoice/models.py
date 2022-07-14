@@ -45,8 +45,8 @@ class Invoice(models.Model):
     synced = models.BooleanField(default=False)
 
 
-    def get_amount(request,inv_id):
-        invoice = Invoice.objects.get(pk=inv_id)
+    def get_amount(self):
+        invoice = Invoice.objects.get(pk=self.id)
         items = invoice.item_set.all()
         amount = 0
         for item in items:
@@ -75,4 +75,17 @@ class Item(models.Model):
     amount = models.IntegerField(null=True,default=None)
     synced= models.BooleanField(default=False)
     invoice = models.ForeignKey(Invoice,on_delete=models.CASCADE)
+
+
+class BalanceTable(models.Model):
+    """This table reflects the accumulation of all of a students amount owed to the school
+    this table is updated whenever a payment is made and whenever an invoice is created
+    this table should not allow deletion of a student if they;re balance is not 0
+    wheneve the invoice is added, the amoun is added to the balance 
+    whenever a payment is made, the amount is deducted from the balance 
+    allows negative numbers to iindicate overpayment
+    """
+    student = models.OneToOneField(Student, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=8,decimal_places=2,default=0)
+    modified = models.DateTimeField(auto_now=True)
 

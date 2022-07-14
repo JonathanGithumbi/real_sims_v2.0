@@ -1,14 +1,17 @@
+from sre_constants import SUCCESS
 from django.forms import ValidationError
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from regex import P
 from fees_structure.models import FeesStructure
 import invoice
-from invoice.models import Invoice,Item
+from invoice.models import Invoice,Item,BalanceTable
 from academic_calendar import utils as academic_utils
 from student.models import Student
 from .forms import StudentRegistrationForm,EditStudentProfileForm
 from invoice import utils as invoice_utils
+from django.contrib import messages
+
 
 def students(request):
     students = Student.objects.all()
@@ -47,6 +50,14 @@ def register_student(request):
                     item_obj.amount = fees_structure_obj.lunch
 
                 item_obj.save()
+
+            #Create Balance Object for student
+            balance_obj = BalanceTable.objects.create(
+                student=student,
+                balance = invoice.get_amount()            
+            )
+            balance_obj.save()
+
             return redirect(reverse('student_profile',args=[student.id]))
         else:
             return render(request, 'student/registration.html',{'form':form})
@@ -76,6 +87,12 @@ def edit_student_profile(request,id):
                         invoice = invoice
                     )
                     lunch_item.save()
+                    #Student and balance to BalanceTable
+                    balance_obj = BalanceTable.objects.get(student=student)
+                    balance = balance_obj.balance
+                    new_balance = balance + lunch_item.amount
+                    balance_obj.balance = new_balance
+                    balance_obj.save()
 
                 if 'transport' in form.changed_data:
                     invoice = student.invoice_set.all().order_by('created').first()
@@ -86,7 +103,11 @@ def edit_student_profile(request,id):
                         invoice = invoice
                     )
                     transport_item.save()
-
+                    balance_obj = BalanceTable.objects.get(student=student)
+                    balance = balance_obj.balance
+                    new_balance = balance + transport_item.amount
+                    balance_obj.balance = new_balance
+                    balance_obj.save()
                 return redirect(reverse('student_profile', args=[student.id]))
             else:
                 return redirect(reverse('student_profile', args=[student.id]))
@@ -95,3 +116,9 @@ def edit_student_profile(request,id):
     if request.method =='GET':
         form = EditStudentProfileForm(instance=student)
         return render(request,'student/edit_student_profile.html',{'form':form,'student':student})
+
+def delete_student(request,id):
+    student = Student.objects.get(pk=id)
+    student.delete()
+    messages.add_message(request, messages.SUCCESS,"Student Deleted Successfully")
+    return redirect(reverse('students'))

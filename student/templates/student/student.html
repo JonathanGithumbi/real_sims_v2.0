@@ -4,12 +4,23 @@
 <a href="{% url 'register_student'%}" class='btn btn-primary'>New Student <img src="{% static 'bootstrap_icons/plus-circle.svg'%}" alt="Bootstrap" width="30" height="30"></a>
 <hr>
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            {{message}}
+          </div>+
+    {% endfor %}
+</ul>
+{% endif %}
 <table id="all_students" class="display table table-bordered table-hover">
     <thead class="thead-light">
         <tr>
             <th>Name</th>
             <th>Grade</th>
             <th>Registered</th>
+            <th>Total Amount Due</th>
             <th>Profile</th>
         </tr>
     </thead>
@@ -19,6 +30,7 @@
             <td>{{student}}</td>
             <td>{{student.current_grade}}</td>
             <td>{{student.date_of_admission}}</td>
+            <td>{{student.balancetable.balance}}</td>
             <td><a href="{%url 'student_profile' student.id%} "class='btn btn-primary'>View Profile</a></td>
         </tr>
         {% endfor %}

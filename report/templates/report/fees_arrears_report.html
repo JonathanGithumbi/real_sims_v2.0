@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #fees_arrears {
+          font-family: Arial, Helvetica, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        #fees_arrears td, #fees_arrears th {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+        
+        #fees_arrears tr:nth-child(even){background-color: #f2f2f2;}
+        
+        #fees_arrears tr:hover {background-color: #ddd;}
+        
+        #fees_arrears th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #04AA6D;
+          color: white;
+        }
+        </style>
+    <title>fees_arrears Subscribers Report</title>
+</head>
+<body>
+    <div class="container mt-3">
+        <h2>Students taking fees_arrears</h2>            
+        <table class="table table-bordered" id="fees_arrears">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Grade</th>
+              <th>Primary Contact phone Number</th>
+              <th>Amount Due</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{student.student.first_name}} {{student.student.middle_name}} {{student.student.last_name}}</td>
+                <td>{{student.student.current_grade}}</td>
+                <td>{{student.student.primary_contact_phone_number}}</td>
+                <td>{{student.balance}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+</body>
+</html>
+
+
+  

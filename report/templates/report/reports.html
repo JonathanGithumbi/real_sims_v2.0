@@ -1,4 +1,12 @@
 {% extends 'dashboard/layout.html' %}
 {% block content_area %}
-Reports
+<div class="container mt-3">
+    <h2>Available Reports</h2>
+    <div class="list-group">
+      <a href="{%url 'fees_arrears_report'%}" class="list-group-item list-group-item-action">Students With Fees Arrears</a>
+      <a href="{%url 'lunch_subscribers_report'%}" class="list-group-item list-group-item-action">Students Taking Lunch</a>
+      <a href="{%url 'transport_subscribers_report'%}" class="list-group-item list-group-item-action">Students Taking Transport</a>
+    </div>
+  </div>
+  
 {% endblock content_area %}

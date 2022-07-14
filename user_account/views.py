@@ -27,136 +27,85 @@ def oauth(request):
     )
 
     url = auth_client.get_authorization_url([Scopes.ACCOUNTING])
-    #request.session['state'] = auth_client.state_token
-    try:
-        state = Token.objects.get(name='state')
-    except Token.DoesNotExist:
-        state = Token.objects.create(name='state')
-        
-    state.key = auth_client.state_token
-    state.save()
-    return redirect(url)
-
-def openid(request):
-    auth_client = AuthClient(
-        settings.CLIENT_ID, 
-        settings.CLIENT_SECRET, 
-        settings.REDIRECT_URI, 
-        settings.ENVIRONMENT,
-    )
-
-    url = auth_client.get_authorization_url([Scopes.OPENID, Scopes.EMAIL])
     request.session['state'] = auth_client.state_token
     return redirect(url)
 
 def callback(request):
-    state = Token.objects.get(name='state')
     auth_client = AuthClient(
         settings.CLIENT_ID, 
         settings.CLIENT_SECRET, 
         settings.REDIRECT_URI, 
         settings.ENVIRONMENT, 
-        state_token=state.key
-        #state_token=request.session.get('state', None),
+        state_token=request.session.get('state', None),
     )
 
     state_tok = request.GET.get('state', None)
     error = request.GET.get('error', None)
     
     if error == 'access_denied':
-        return redirect(reverse('dashboard'))
-    messages.error(request,"Access to quickbooks account denied")#messages outside the if clause
+        messages.add_message(request, messages.WARNING,"Access Denied")
+        return redirect('disconnected_dashboard')
+        #messages outside the if clause
     
     if state_tok is None:
-        return redirect(reverse('dashboard'))
-    messages.error(request,"State_tok is None")
+        return HttpResponseBadRequest()
 
-    if state_tok != auth_client.state_token:  
-        return redirect(reverse('dashboard'))
-    messages.error(request,"Unauthorized")
+    if state_tok != auth_client.state_token: 
+        return HttpResponse('unauthorized', status=401)
     
     auth_code = request.GET.get('code', None)
     realm_id = request.GET.get('realmId', None)
-    try:
-        realm_id_obj = Token.objects.get(name='realm_id')
-    except Token.DoesNotExist:
-        realm_id_obj = Token.objects.create(name='realm_id')
-
-    realm_id_obj.key = realm_id
-    realm_id_obj.save()
-    #request.session['realm_id'] = realm_id
+    realm_id_token = Token.objects.create()
+    realm_id_token.name = 'realm_id'
+    realm_id_token.key = realm_id
+    realm_id_token.save()
+    request.session['realm_id'] = realm_id
 
 
     if auth_code is None:
-        messages.add_message(request,messages.ERROR,"Error: Auth Code is None")
-        return redirect(reverse('no_auth_code'))
-    messages.error(request,"Auth code is none")
+        return HttpResponseBadRequest()
 
     try:
-        auth_client.get_bearer_token(auth_code, realm_id=realm_id_obj.key)
-        #request.session['access_token'] = auth_client.access_token
-        try:
-            access_token_obj = Token.objects.get('access_token')
-        except Token.DoesNotExist:
-            access_token_obj = Token.objects.create(name='access_token')
-
+        auth_client.get_bearer_token(auth_code, realm_id=realm_id)
+        access_token_obj = Token.objects.create()
+        access_token_obj.name = 'access_token'
         access_token_obj.key = auth_client.access_token
         access_token_obj.save()
-        #request.session['refresh_token'] = auth_client.refresh_token
-        try:
-            refresh_token_obj = Token.objects.get('refresh_token')
-        except Token.DoesNotExist:
-            refresh_token_obj.objects.create(name='refresh_token')
+        request.session['access_token'] = auth_client.access_token
+        refresh_token_obj = Token.objects.create()
+        refresh_token_obj.name = 'refresh_token'
         refresh_token_obj.key = auth_client.refresh_token
         refresh_token_obj.save()
-        #request.session['id_token'] = auth_client.id_token
-        try:
-            id_token_obj = Token.objects.get('id_token')
-        except Token.DoesNotExist:
-            id_token_obj.objects.create(name='id_token')
-
+        request.session['refresh_token'] = auth_client.refresh_token
+        id_token_obj = Token.objects.create()
+        id_token_obj.name = 'id_token'
         id_token_obj.key = auth_client.id_token
         id_token_obj.save()
+        request.session['id_token'] = auth_client.id_token
     except AuthClientError as e:
         # just printing status_code here but it can be used for retry workflows, etc
-        return redirect(reverse('dashboard'))
-
         print(e.status_code)
         print(e.content)
         print(e.intuit_tid)
-    
     except Exception as e:
         print(e)
-        messages.add_message(request,messages.ERROR,"Exceptio as e")
-        return redirect(reverse('dashboard'))
-    messages.error(request, "AuthCLient error exception")
-
-    return redirect(reverse('connected'))
-    
+    return redirect('connected_dashboard')
 
 def connected(request):
-    access_token_obj = Token.objects.get(name='access_token')
-    refresh_token_obj = Token.objects.get(name='refresh_token')
-    id_token_obj = Token.objects.get(name='id_token')
     auth_client = AuthClient(
         settings.CLIENT_ID, 
         settings.CLIENT_SECRET, 
         settings.REDIRECT_URI, 
         settings.ENVIRONMENT, 
-        #access_token=request.session.get('access_token', None), 
-        access_token = access_token_obj.key,
-        #refresh_token=request.session.get('refresh_token', None),
-        refresh_token = refresh_token_obj.key,
-        #id_token=request.session.get('id_token', None),
-        id_token = id_token_obj.key
+        access_token=request.session.get('access_token', None), 
+        refresh_token=request.session.get('refresh_token', None), 
+        id_token=request.session.get('id_token', None),
     )
 
     if auth_client.id_token is not None:
-        messages.add_message(request,messages.SUCCESS,"auth client id_token is not none")
-        return redirect(reverse('dashboard'))
+        return render(request, 'connected.html', context={'openid': True})
     else:
-        messages.add_message(request,messages.ERROR,"auth client id_token is none")
-        return redirect(reverse('dashboard'))
+        return render(request, 'connected.html', context={'openid': False})
 
 def qbo_request(request):
     access_token_obj = Token.objects.get(name='access_token')
@@ -240,28 +189,3 @@ def revoke(request):
         print(e.status_code)
         print(e.intuit_tid)
     return HttpResponse('Revoke successful')
-
-
-def migration(request):
-    auth_client = AuthClient(
-        settings.CLIENT_ID, 
-        settings.CLIENT_SECRET, 
-        settings.REDIRECT_URI, 
-        settings.ENVIRONMENT,
-    )
-    try:
-        migrate(
-            settings.CONSUMER_KEY, 
-            settings.CONSUMER_SECRET, 
-            settings.ACCESS_KEY, 
-            settings.ACCESS_SECRET, 
-            auth_client, 
-            [Scopes.ACCOUNTING]
-        )
-    except AuthClientError as e:
-        print(e.status_code)
-        print(e.intuit_tid)
-    return HttpResponse('OAuth2 refresh_token {0}'.format(auth_client.refresh_token))
-
-def no_auth_code(request):
-    return render(request,'user_ccount/no_auth.html')

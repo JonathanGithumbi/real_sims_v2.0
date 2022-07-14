@@ -45,8 +45,10 @@
     </tr>
 </table>
 <a href="{%url 'edit_student_profile' student.id%} "class='btn btn-primary'>Edit Profile</a>
+<a href="{%url 'delete_student' student.id%} "class='btn btn-danger'>Delete Student</a>
 <hr>
 <h1>Transaction History</h1>
+<h5>Total Amount Due: <span class="badge bg-danger">{{student.balancetable.balance}}</span></h5>
 <hr>
 <div class="list-group">
     {% if invoices %}

@@ -15,15 +15,13 @@ urlpatterns = [
     path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
     #url(r'^$', views.index, name='index'),
     url(r'^oauth/?$', views.oauth, name='oauth'),
-    url(r'^openid/?$', views.openid, name='openid'),
     url(r'^callback/?$', views.callback, name='callback'),
     url(r'^connected/?$', views.connected, name='connected'),
     url(r'^qbo_request/?$', views.qbo_request, name='qbo_request'),
     url(r'^revoke/?$', views.revoke, name='revoke'),
     url(r'^refresh/?$', views.refresh, name='refresh'),
     url(r'^user_info/?$', views.user_info, name='user_info'),
-    url(r'^migration/?$', views.migration, name='migration'),
-    path('bno/',views.no_auth_code,name="no_auth_code")
+
 ]
 
 
