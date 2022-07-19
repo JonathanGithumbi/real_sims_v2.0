@@ -170,7 +170,11 @@ def refresh(request):
     except AuthClientError as e:
         print(e.status_code)
         print(e.intuit_tid)
-    return HttpResponse('New refresh_token: {0}'.format(auth_client.refresh_token))
+    access_token_obj.key = auth_client.access_token
+    access_token_obj.save()
+    refresh_token_obj.key = auth_client.refresh_token
+    refresh_token_obj.save()
+    return HttpResponse('New access_token: {0}'.format(auth_client.access_token))
 
 def revoke(request):
     access_token_obj = Token.objects.get(name='access_token')

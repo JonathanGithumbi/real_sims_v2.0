@@ -21,4 +21,9 @@ class BillItem(models.Model):
     
     def __str__(self):
         return self.description
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+
 

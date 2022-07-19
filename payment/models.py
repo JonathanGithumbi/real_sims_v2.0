@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+class Payment(models.Model):
+    pass
+    def save(self, *args, **kwargs):
+        #create payment
+        super().save(*args, **kwargs)

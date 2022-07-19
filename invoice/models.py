@@ -75,7 +75,9 @@ class Item(models.Model):
     amount = models.IntegerField(null=True,default=None)
     synced= models.BooleanField(default=False)
     invoice = models.ForeignKey(Invoice,on_delete=models.CASCADE)
-
+    qb_id = models.CharField(max_length=255,default=None,null=True)
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
 class BalanceTable(models.Model):
     """This table reflects the accumulation of all of a students amount owed to the school
