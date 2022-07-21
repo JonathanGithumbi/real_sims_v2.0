@@ -1,0 +1,26 @@
+{% extends 'dashboard/layout.html' %}
+{% load static %}
+{% block content_area %}
+<a href="{% url 'create_vendor'%}" class='btn btn-primary'>New Vendor <img src="{% static 'bootstrap_icons/plus-circle.svg'%}" alt="Bootstrap" width="30" height="30"></a>
+<hr>
+<h1>All Vendors</h1>
+<table id="all_vendors" class="display table table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vendor in vendors %}
+        <tr>
+            <td>{{vendor.given_name}} {{vendor.middle_name}} {{vendor.last_name}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    $(document).ready( function () {
+        $('#all_vendors').DataTable();
+    } );
+</script>
+{% endblock content_area %}

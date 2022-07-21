@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'academic_calendar',
     'report',
     'notification',
-    'payment'
+    'payment',
+    'vendor'
 ]
 
 MIDDLEWARE = [

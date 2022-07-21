@@ -7,7 +7,9 @@
 <table id="all_bills" class="display table table-bordered table-hover">
     <thead class="thead-light">
         <tr>
+            
             <th>Decription</th>
+            <th>Vendor</th>
             <th>Quantiy</th>
             <th>Price per Quantity</th>
             <th>Total Amount</th>
@@ -17,7 +19,9 @@
     <tbody>
         {% for bill in bills %}
         <tr>
+            
             <td>{{bill.description}}</td>
+            <td>{{bill.vendor_set.given_name}}</td>
             <td>{{bill.quantity}}</td>
             <td>{{bill.price_per_quantity}}</td>
             <td>{{bill.total}}</td>

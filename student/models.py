@@ -95,6 +95,7 @@ class Student(models.Model):
             customer.FamilyName = self.last_name
             customer.CompanyName = "Test Student"
             customer.save(qb=client)
+            self.synced = True
         except QuickbooksException as e:
             e.message
             e.error_code

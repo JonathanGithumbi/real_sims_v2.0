@@ -1,0 +1,13 @@
+{% extends 'dashboard/layout.html' %}
+{% block content_area %}
+<h1>Create Vendor</h1>
+<hr>
+{% for error in form.errors %}
+<p>{{error}}</p>
+{% endfor %}
+    <form method="post" action="{% url 'create_vendor'%}">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </form>    
+{% endblock content_area %}
