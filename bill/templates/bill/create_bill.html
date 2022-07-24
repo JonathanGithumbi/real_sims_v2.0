@@ -10,4 +10,20 @@
         {{form.as_p}}
         <input type="submit" class="btn btn-primary" value="Submit">
     </form>    
+    <script>
+        $(document).ready(function(){
+            $("#quantity").change(function(){
+                var quantity = $("#quantity").val();
+                var price_per_quantity = $("#price_per_quantity").val();
+                var total = quantity * price_per_quantity;
+                $("#total").val(total);
+            });
+            $("#price_per_quantity").change(function(){
+                var quantity = $("#quantity").val();
+                var price_per_quantity = $("#price_per_quantity").val();
+                var total = quantity * price_per_quantity;
+                $("#total").val(total);
+            });
+        });
+    </script>
 {% endblock content_area %}

@@ -25,9 +25,9 @@ class UpdateFeesStructureForm(forms.ModelForm):
         model = FeesStructure
         fields = '__all__'
         widgets={
-            'grade':forms.Select(attrs={'class':'form-select',}),
-            'term': forms.Select(attrs={'readonly':True,'class':'form-select'}),
-            'year':forms.Select(attrs={'readonly':True,'class':'form-select'}),
+            'grade':forms.Select(attrs={'class':'form-select','readonly':'readonly'}),
+            'term': forms.Select(attrs={'readonly':'readonly','class':'form-select'}),
+            'year':forms.Select(attrs={'readonly':'readonly','class':'form-select'}),
             'tuition':forms.NumberInput({'class':'form-control', 'id':'tuition','placeholder':'Tuition'}),
             'lunch':forms.NumberInput({'class':'form-control','placeholder':'Lunch'}),
             'transport': forms.NumberInput({'class':'form-control','placeholder':'Transport'}),

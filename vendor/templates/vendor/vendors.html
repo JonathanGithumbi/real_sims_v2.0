@@ -8,12 +8,16 @@
     <thead class="thead-light">
         <tr>
             <th>Name</th>
+            <th>qbo vendor id</th>
+            <th>Operations</th>
         </tr>
     </thead>
     <tbody>
         {% for vendor in vendors %}
         <tr>
             <td>{{vendor.given_name}} {{vendor.middle_name}} {{vendor.last_name}}</td>
+            <td>{{vendor.qb_vendor_id}}</td>
+            <td><a href="{% url 'delete_vendor' vendor.id %}" class='btn btn-primary'>Delete</a></td>
         </tr>
         {% endfor %}
     </tbody>

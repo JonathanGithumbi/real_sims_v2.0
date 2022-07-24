@@ -25,5 +25,10 @@ def create_vendor(request):
         else:
             return render(request, 'vendor/create_vendor.html',{'form':form})
 
+def delete_vendor(request ,id):
+    vendor = Vendor.objects.get(pk=id)
+    vendor.delete()
+    return redirect('vendors')
+
 
 
