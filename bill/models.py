@@ -15,6 +15,7 @@ from user_account.models import Token
 from quickbooks.exceptions import QuickbooksException
 from quickbooks.objects import Vendor as qb_vendor
 from quickbooks.objects import Account as qb_account
+from account.models import Account
 
 class Bill(models.Model):
     bill_number = models.CharField(max_length=30, null=True,default=None,unique=True)
@@ -68,8 +69,8 @@ class BillItem(models.Model):
         bill.VendorRef = vendor_ref
 
         #get Account 
-        qb_account_object = qb_account.filter(Name="Uncategorized Expense")
-        qb_account_object = qb_account_object[0]
+        sims_acc_obj = Account.objects.get(qb_acc_id=93)
+        qb_account_object = qb_account.get(sims_acc_obj.qb_acc_id,qb=client)
         qb_account_object_ref = qb_account_object.to_ref()
         #Line 
         acc_based_expense_line = AccountBasedExpenseLine()

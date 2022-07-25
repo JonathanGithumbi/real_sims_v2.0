@@ -21,7 +21,7 @@ def connected_dashboard(request):
     refresh_token_obj = Token.objects.get(name='refresh_token')
     id_token_obj = Token.objects.get(name='id_token')
 
-    """auth_client = AuthClient(
+    auth_client = AuthClient(
         settings.CLIENT_ID, 
         settings.CLIENT_SECRET, 
         settings.REDIRECT_URI, 
@@ -29,7 +29,7 @@ def connected_dashboard(request):
         access_token=access_token_obj.key,
         refresh_token=refresh_token_obj.key,
         id_token=id_token_obj.key
-    )"""
+    )
 
     return render(request, 'dashboard/connected_dashboard.html')
 
