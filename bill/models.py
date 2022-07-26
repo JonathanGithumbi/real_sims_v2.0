@@ -35,7 +35,7 @@ class BillItem(models.Model):
     synced = models.BooleanField(default=False)
     created = models.DateField(auto_now_add=True)
     bill_number = models.CharField(max_length=255)
-    qb_bill_id = models.CharField(max_length=255,null=True, default=None)
+    qb_id = models.CharField(max_length=255,null=True, default=None)
     
     def __str__(self):
         return self.description

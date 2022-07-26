@@ -16,6 +16,7 @@ from quickbooks.exceptions import QuickbooksException
 
 
 class AdmissionNumber(models.Model):
+    """Generates the unformatted admission number"""
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -26,7 +27,7 @@ class AdmissionNumber(models.Model):
 class Student(models.Model):
     class Meta:
         ordering = ['-date_of_admission']
-    admission_number = models.ForeignKey(AdmissionNumber,on_delete=models.CASCADE,default=None,null=True)
+    admission_number = models.IntegerField(null=True,default=None)
     admission_number_formatted = models.CharField(max_length=255,default=None,null=True)
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, blank=True)
@@ -44,12 +45,13 @@ class Student(models.Model):
     lunch = models.BooleanField(default=False)
     transport = models.BooleanField(default=False)
     transport_fee = models.IntegerField(default=0)
+    qb_id = models.CharField(max_length=20,null=True, default=None)
     
     def __str__(self):
         return self.first_name+' '+self.last_name
 
-    def format_adm_no(self,adm_no):
-        return 's'+str(adm_no).zfill(4)
+    def format_adm_no(self):
+        return 's'+str(self.admission_number).zfill(4)
 
     def get_items(self):
         items = ['tuition']
@@ -60,16 +62,7 @@ class Student(models.Model):
 
         return items
 
-
-    def save(self, *args, **kwargs):
-
-        self.adm_no = AdmissionNumber()
-        self.adm_no.save()
-        self.admission_number = self.adm_no
-        self.adm_no_id = self.adm_no.id
-        self.admission_number_formatted = self.format_adm_no(self.adm_no_id)
-        self.current_grade = self.grade_admitted_to
-        super().save(*args, **kwargs)  # Call the "real" save() method.
+    def create_customer(self):
         #create customer
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
@@ -93,13 +86,35 @@ class Student(models.Model):
             customer.GivenName = self.first_name
             customer.MiddleName = self.middle_name
             customer.FamilyName = self.last_name
-            customer.CompanyName = "Test Student"
-            customer.save(qb=client)
-            self.synced = True
+            customer.CompanyName = self.first_name + self.middle_name + self.last_name
+            saved_customer = customer.save(qb=client)
+            return saved_customer
         except QuickbooksException as e:
             e.message
             e.error_code
             e.detail
+
+
+    def save(self, *args, **kwargs):
+
+        #Generate admission number
+        self.adm_no = AdmissionNumber()
+        self.adm_no.save()
+        self.admission_number = self.adm_no.id # Assign the admission number object to the model's admission number
+        self.admission_number_formatted = self.format_adm_no()
+
+        #Assign Initial Grade
+        self.current_grade = self.grade_admitted_to
+        
+        #create & save customer 
+        saved_customer = self.create_customer()
+
+        #populate populate and save remaining fields
+        self.synced = True
+        self.qb_id = saved_customer.Id
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+        
+        
 
             
 
