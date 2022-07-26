@@ -11,13 +11,16 @@ class Currency(models.Model):
     name = models.CharField(max_length=30,null=True, default=None)
     value = models.CharField(max_length=20,null=True, default=None)
 
+    def __str__(self):
+        return self.name
+
 class Account(models.Model):
     COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
     SALES_OF_PRODUCT_INCOME = 'Sales of Product Income'
 
     ACCOUNT_TYPE_CHOICES = [
         (COST_OF_GOODS_SOLD,"Cost of Goods Sold"),
-        (SALES_OF_PRODUCT_INCOME,"Sales of Product Income")
+        (SALES_OF_PRODUCT_INCOME,"SalesOfProductIncome")
     ]
 
     name = models.CharField(max_length=255,null=True,default=None)
@@ -29,7 +32,7 @@ class Account(models.Model):
     def __str__(self):
         return self.name
 
-    def create_account(self,name,type):
+    def create_account(self):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')
@@ -48,14 +51,16 @@ class Account(models.Model):
             company_id = realm_id_obj.key
         )
         qb_acc_obj = qb_acc()
-        qb_acc_obj.Name = name
-        qb_acc_obj.AccountType = type
-        qb_acc_obj.CurrencyRef = 
+        qb_acc_obj.Name = self.name
+        qb_acc_obj.AccountType = self.type
+        currencyref = Currency.objects.get(value='KES')
+        qb_acc_obj.CurrencyRef = currencyref
         saved_qb_acc_obj = qb_acc_obj.save(qb=client)
         return saved_qb_acc_obj
 
     def save(self, *args, **kwargs):
-        saved_qb_acc_obj = self.create_account(name=self.name,type=self.type)
+        saved_qb_acc_obj = self.create_account()
         self.qb_id = saved_qb_acc_obj.Id
         self.synced = True
         super().save(*args, **kwargs)
+        return saved_qb_acc_obj

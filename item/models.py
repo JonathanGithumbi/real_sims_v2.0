@@ -28,7 +28,7 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-    def create_item(self,name,type):
+    def create_item(self):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')
@@ -48,59 +48,61 @@ class Item(models.Model):
         )
 
         qb_item_obj = qb_item()
-        qb_item_obj.Name = name
-        qb_item_obj.Type = type 
+        qb_item_obj.Name = self.name
+        qb_item_obj.Type = self.type 
+        COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
+        INCOME = 'Income'
+        SALES_OF_PRODUCT_INCOME = 'SalesOfProductIncome'
 
-        if type == "Service":
+        #CREATE ACCOUNTS FOR THE ITEMS
+        if self.type == "Service":
             #Income account re required for the Service items
-            #But also the Expense account ref
-            COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
-            SALES_OF_PRODUCT_INCOME = 'Sales of Product Income'
-            
-            income_account = Account()
-            income_account_obj = income_account.create_account(name+'income account',SALES_OF_PRODUCT_INCOME)
-            income_account_obj.save()
+            #But also the Expense account ref            
+            income_account_obj = Account()
+            income_account_obj.name = self.name+' income account'
+            income_account_obj.type = SALES_OF_PRODUCT_INCOME
+            income_account_obj = income_account_obj.save()
 
-            expense_account = Account()
-            expense_account_obj = expense_account.create_account(name+'expense account',COST_OF_GOODS_SOLD)
-            expense_account_obj.save()
+            expense_account_obj = Account()
+            expense_account_obj.name = self.name + ' expense account'
+            expense_account_obj.type = COST_OF_GOODS_SOLD
+            expense_account_obj = expense_account_obj.save()
 
-            qb_item_obj.IncomeAccountRef = income_account_obj.to_ref()
-            qb_item_obj.ExpenseAccountRef = expense_account_obj.to_ref()
+
             
-        if type == "NonInventory":
+            
+        if self.type == "NonInventory":
             # only Expense account ref reuired
-            COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
-            SALES_OF_PRODUCT_INCOME = 'Sales of Product Income'
-
-            expense_account = Account()
-            expense_account_obj = expense_account.create_account(name+'expense account',COST_OF_GOODS_SOLD)
-            expense_account_obj.save()
-
-        if type == "Inventory":
-            # create Expense and Income accounts
-            COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
-            SALES_OF_PRODUCT_INCOME = 'Sales of Product Income'
+            expense_account_obj = Account()
+            expense_account_obj.name = self.name + ' expense account'
+            expense_account_obj.type = COST_OF_GOODS_SOLD
+            expense_account_obj = expense_account_obj.save()
             
-            income_account = Account()
-            income_account_obj = income_account.create_account(name+' income account',SALES_OF_PRODUCT_INCOME)
-            income_account_obj.save()
 
-            expense_account = Account()
-            expense_account_obj = expense_account.create_account(name+' expense account',COST_OF_GOODS_SOLD)
-            expense_account_obj.save()
+        if self.type == "Inventory":
+            # create Expense and Income accounts
+            income_account_obj = Account()
+            income_account_obj.name = self.name+' income account'
+            income_account_obj.type = SALES_OF_PRODUCT_INCOME
+            income_account_obj = income_account_obj.save()
 
-            qb_item_obj.IncomeAccountRef = income_account_obj.to_ref()
-            qb_item_obj.ExpenseAccountRef = expense_account_obj.to_ref()
+            expense_account_obj = Account()
+            expense_account_obj.name = self.name + ' expense account'
+            expense_account_obj.type = COST_OF_GOODS_SOLD
+            expense_account_obj = expense_account_obj.save()
 
+            
+        qb_item_obj.IncomeAccountRef = income_account_obj.to_ref()
+        qb_item_obj.ExpenseAccountRef = expense_account_obj.to_ref()  
         saved_qb_item_obj = qb_item_obj.save(qb=client)
         return saved_qb_item_obj
 
 
 
     def save(self, *args, **kwargs):
-        saved_qb_item_obj = self.create_item(name=self.name, type=self.type)
+        saved_qb_item_obj = self.create_item()
         self.qb_id = saved_qb_item_obj.Id
         self.synced  = True
         super().save(*args, **kwargs)
+        return saved_qb_item_obj
         
