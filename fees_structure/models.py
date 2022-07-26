@@ -19,9 +19,11 @@ class FeesStructure(models.Model):
     lunch = models.IntegerField()
     transport = models.IntegerField()
     admission = models.IntegerField()
-    diary_and_report_book = models.IntegerField()
+    diary = models.IntegerField(null=True,default=None)
+    report_book = models.IntegerField(null=True,default=None)
     interview = models.IntegerField()
-    computer = models.IntegerField()
+    computer_lessons = models.IntegerField()
+    #Include transport 
 
     def __str__(self):
         return str(self.grade)

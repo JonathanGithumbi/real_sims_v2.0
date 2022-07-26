@@ -7,13 +7,24 @@ from quickbooks.objects import Account as qb_acc
 
 
 class Account(models.Model):
-    qb_acc_id = models.CharField(max_length=255,null=True,default=None)
-    name = models.CharField(max_length=255)
+    COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
+    SALES_OF_PRODUCT_INCOME = 'Sales of Product Income'
+
+    ACCOUNT_TYPE_CHOICES = [
+        (COST_OF_GOODS_SOLD,"Cost of Goods Sold"),
+        (SALES_OF_PRODUCT_INCOME,"Sales of Product Income")
+    ]
+
+    name = models.CharField(max_length=255,null=True,default=None)
+    type = models.CharField(max_length=30, choices=ACCOUNT_TYPE_CHOICES,null=True,default=None)
+    synced = models.BooleanField(default=False,null=True)
+    qb_id = models.CharField(max_length=255,null=True,default=None)
+    
 
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
+    def create_account(self,name,type):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')
@@ -31,11 +42,14 @@ class Account(models.Model):
             refresh_token = refresh_token_obj.key,
             company_id = realm_id_obj.key
         )
-
-        #create an Account
         qb_acc_obj = qb_acc()
-        qb_acc_obj.Name = self.name
-        qb_acc_obj.AccountSubType = "OtherMiscellaneousServiceCost"
-        acc_obj = qb_acc_obj.save(qb=client)
-        self.qb_acc_id = acc_obj.Id
+        qb_acc_obj.Name = name
+        qb_acc_obj.AccountType = type
+        saved_qb_acc_obj = qb_acc_obj.save(qb=client)
+        return saved_qb_acc_obj
+
+    def save(self, *args, **kwargs):
+        saved_qb_acc_obj = self.create_account(name=self.name,type=self.type)
+        self.qb_id = saved_qb_acc_obj.Id
+        self.synced = True
         super().save(*args, **kwargs)
