@@ -6,6 +6,11 @@ from quickbooks import QuickBooks
 from quickbooks.objects import Account as qb_acc
 
 
+
+class Currency(models.Model):
+    name = models.CharField(max_length=30,null=True, default=None)
+    value = models.CharField(max_length=20,null=True, default=None)
+
 class Account(models.Model):
     COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
     SALES_OF_PRODUCT_INCOME = 'Sales of Product Income'
@@ -45,6 +50,7 @@ class Account(models.Model):
         qb_acc_obj = qb_acc()
         qb_acc_obj.Name = name
         qb_acc_obj.AccountType = type
+        qb_acc_obj.CurrencyRef = 
         saved_qb_acc_obj = qb_acc_obj.save(qb=client)
         return saved_qb_acc_obj
 
