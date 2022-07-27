@@ -8,6 +8,8 @@ from account.models import Account
 
 
 
+
+
 class Item(models.Model):
     SERVICE = 'Service'
     NONINVENTORY = 'NonInventory'
@@ -50,9 +52,7 @@ class Item(models.Model):
         qb_item_obj = qb_item()
         qb_item_obj.Name = self.name
         qb_item_obj.Type = self.type 
-        COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
-        INCOME = 'Income'
-        SALES_OF_PRODUCT_INCOME = 'SalesOfProductIncome'
+
 
         #CREATE ACCOUNTS FOR THE ITEMS
         if self.type == "Service":
@@ -60,13 +60,19 @@ class Item(models.Model):
             #But also the Expense account ref            
             income_account_obj = Account()
             income_account_obj.name = self.name+' income account'
-            income_account_obj.type = SALES_OF_PRODUCT_INCOME
+            income_account_obj.type = Account.INCOME
+            income_account_obj.sub_type = Account.SALES_OF_PRODUCT_INCOME
             income_account_obj = income_account_obj.save()
 
             expense_account_obj = Account()
             expense_account_obj.name = self.name + ' expense account'
-            expense_account_obj.type = COST_OF_GOODS_SOLD
+            expense_account_obj.type = Account.COST_OF_GOODS_SOLD
+            expense_account_obj.sub_type = Account.COST_OF_LABOR_COST
             expense_account_obj = expense_account_obj.save()
+
+            qb_item_obj.IncomeAccountRef = income_account_obj.to_ref()
+            qb_item_obj.ExpenseAccountRef = expense_account_obj.to_ref()  
+            saved_qb_item_obj = qb_item_obj.save(qb=client)
 
 
             
@@ -75,26 +81,32 @@ class Item(models.Model):
             # only Expense account ref reuired
             expense_account_obj = Account()
             expense_account_obj.name = self.name + ' expense account'
-            expense_account_obj.type = COST_OF_GOODS_SOLD
+            expense_account_obj.type = Account.COST_OF_GOODS_SOLD
+            expense_account_obj.sub_type = Account.COST_OF_LABOR_COST
             expense_account_obj = expense_account_obj.save()
+
+            qb_item_obj.ExpenseAccountRef = expense_account_obj.to_ref()  
+            saved_qb_item_obj = qb_item_obj.save(qb=client)
             
 
         if self.type == "Inventory":
             # create Expense and Income accounts
             income_account_obj = Account()
             income_account_obj.name = self.name+' income account'
-            income_account_obj.type = SALES_OF_PRODUCT_INCOME
+            income_account_obj.type = Account.INCOME
+            income_account_obj.sub_type = Account.SALES_OF_PRODUCT_INCOME
             income_account_obj = income_account_obj.save()
 
             expense_account_obj = Account()
             expense_account_obj.name = self.name + ' expense account'
-            expense_account_obj.type = COST_OF_GOODS_SOLD
+            expense_account_obj.type = Account.COST_OF_GOODS_SOLD
+            expense_account_obj.sub_type = Account.COST_OF_LABOR_COST
             expense_account_obj = expense_account_obj.save()
-
             
-        qb_item_obj.IncomeAccountRef = income_account_obj.to_ref()
-        qb_item_obj.ExpenseAccountRef = expense_account_obj.to_ref()  
-        saved_qb_item_obj = qb_item_obj.save(qb=client)
+            qb_item_obj.IncomeAccountRef = income_account_obj.to_ref()
+            qb_item_obj.ExpenseAccountRef = expense_account_obj.to_ref()  
+            saved_qb_item_obj = qb_item_obj.save(qb=client)
+
         return saved_qb_item_obj
 
 

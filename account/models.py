@@ -4,7 +4,7 @@ from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings
 from quickbooks import QuickBooks
 from quickbooks.objects import Account as qb_acc
-
+from quickbooks.objects.base import Ref 
 
 
 class Currency(models.Model):
@@ -14,17 +14,33 @@ class Currency(models.Model):
     def __str__(self):
         return self.name
 
+    def to_ref(self):
+        ref = Ref()
+        ref.name = self.name
+        #ref.type = self.qbo_object_name
+        ref.value = self.value
+        return ref
+
+
 class Account(models.Model):
     COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
-    SALES_OF_PRODUCT_INCOME = 'Sales of Product Income'
+    SALES_OF_PRODUCT_INCOME = 'SalesOfProductIncome'
+    COST_OF_LABOR_COST = "CostOfLaborCos"
+    INCOME = "Income"
+    
 
     ACCOUNT_TYPE_CHOICES = [
         (COST_OF_GOODS_SOLD,"Cost of Goods Sold"),
-        (SALES_OF_PRODUCT_INCOME,"SalesOfProductIncome")
+        (INCOME,"Income")
+    ]
+    ACCOUNT_SUB_TYPE_CHOICES = [
+        (SALES_OF_PRODUCT_INCOME,"Sales of Product Income"),
+        (COST_OF_LABOR_COST, "Cost of Labor Cost")
     ]
 
     name = models.CharField(max_length=255,null=True,default=None)
     type = models.CharField(max_length=30, choices=ACCOUNT_TYPE_CHOICES,null=True,default=None)
+    sub_type = models.CharField(max_length=255,choices=ACCOUNT_SUB_TYPE_CHOICES,null=True,default=None)
     synced = models.BooleanField(default=False,null=True)
     qb_id = models.CharField(max_length=255,null=True,default=None)
     
@@ -53,8 +69,9 @@ class Account(models.Model):
         qb_acc_obj = qb_acc()
         qb_acc_obj.Name = self.name
         qb_acc_obj.AccountType = self.type
-        currencyref = Currency.objects.get(value='KES')
-        qb_acc_obj.CurrencyRef = currencyref
+        qb_acc_obj.AccountSubType = self.sub_type
+        #currencyref = Currency.objects.get(value='KES')
+        #qb_acc_obj.CurrencyRef = currencyref.to_ref()
         saved_qb_acc_obj = qb_acc_obj.save(qb=client)
         return saved_qb_acc_obj
 
