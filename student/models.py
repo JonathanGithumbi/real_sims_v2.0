@@ -11,7 +11,6 @@ from user_account.models import Token
 from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings
 
-from academic_calendar.utils import get_term
 from quickbooks.exceptions import QuickbooksException
 
 
@@ -44,7 +43,6 @@ class Student(models.Model):
     # optionals 
     lunch = models.BooleanField(default=False)
     transport = models.BooleanField(default=False)
-    transport_fee = models.IntegerField(default=0)
     qb_id = models.CharField(max_length=20,null=True, default=None)
     
     def __str__(self):
@@ -54,11 +52,11 @@ class Student(models.Model):
         return 's'+str(self.admission_number).zfill(4)
 
     def get_items(self):
-        items = ['tuition']
+        items = ['Tuition']
         if self.lunch:
-            items.append('lunch')
+            items.append('Lunch')
         if self.transport:
-            items.append('transport')
+            items.append('Transport')
 
         return items
 
@@ -81,19 +79,12 @@ class Student(models.Model):
             refresh_token = refresh_token_obj.key,
             company_id = realm_id_obj.key
         )
-        try:
-            customer = Customer()
-            customer.GivenName = self.first_name
-            customer.MiddleName = self.middle_name
-            customer.FamilyName = self.last_name
-            customer.CompanyName = self.first_name + self.middle_name + self.last_name
-            saved_customer = customer.save(qb=client)
-            return saved_customer
-        except QuickbooksException as e:
-            e.message
-            e.error_code
-            e.detail
-
+        
+        customer = Customer()
+        customer.DisplayName = self.first_name +' '+ self.middle_name +' '+ self.last_name
+        saved_customer = customer.save(qb=client)
+        return saved_customer
+    
 
     def save(self, *args, **kwargs):
 

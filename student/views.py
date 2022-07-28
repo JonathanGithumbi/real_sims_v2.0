@@ -3,6 +3,7 @@ from django.forms import ValidationError
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from regex import P
+from academic_calendar.models import AcademicCalendar
 from fees_structure.models import FeesStructure
 import invoice
 from invoice.models import Invoice,Item,BalanceTable
@@ -11,7 +12,7 @@ from student.models import Student
 from .forms import StudentRegistrationForm,EditStudentProfileForm
 from invoice import utils as invoice_utils
 from django.contrib import messages
-
+from item.models import Item as sales_item
 
 def students(request):
     students = Student.objects.all()
@@ -25,31 +26,21 @@ def register_student(request):
             #create invoice for student
             invoice = Invoice.objects.create(
                 student = student,
-                #created = default now,
-                grade = student.grade_admitted_to,
-                term = academic_utils.get_term(student.date_of_admission),
-                year = student.date_of_admission.year,
-                status = 'unpaid',
-                
             )
             invoice.save()
-            #Fees Structure object to get item price
-            fees_structure_obj = FeesStructure.objects.get(grade = student.grade_admitted_to)
-            #create the items to add to the invoice
-            items = student.get_items()
-            for item in items:
-                item_obj = Item.objects.create(
+
+            #Save invoice items to db
+            for item in student.get_items():
+                sales_item_obj = sales_item.objects.get(name=item)
+                calendar_obj = AcademicCalendar()
+                fee_structure_obj = FeesStructure.objects.get(item=sales_item_obj,grade=student.current_grade, term=calendar_obj.get_term())
+                local_item_obj = Item.objects.create(
                     item_description = item,
+                    amount = fee_structure_obj.amount,
                     invoice = invoice
                 )
-                if item =='tuition':
-                    item_obj.amount = fees_structure_obj.tuition
-                if item =='transport':
-                    item_obj.amount = fees_structure_obj.transport
-                if item == 'lunch':
-                    item_obj.amount = fees_structure_obj.lunch
+                local_item_obj.save()
 
-                item_obj.save()
 
             #Create Balance Object for student
             balance_obj = BalanceTable.objects.create(
