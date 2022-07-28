@@ -27,20 +27,28 @@ class Account(models.Model):
     SALES_OF_PRODUCT_INCOME = 'SalesOfProductIncome'
     COST_OF_LABOR_COST = "CostOfLaborCos"
     INCOME = "Income"
-    
-
+    ACCOUNTS_PAYABLE_TYPE = "Accounts Payable"
+    ACCOUNTS_PAYABLE_SUB_TYPE = "AccountsPayable"
+    EXPENSE_TYPE = "Expense"
+    EXPENSE_SUB_TYPE = "CostOfLabor"
     ACCOUNT_TYPE_CHOICES = [
         (COST_OF_GOODS_SOLD,"Cost of Goods Sold"),
-        (INCOME,"Income")
+        (INCOME,"Income"),
+        (ACCOUNTS_PAYABLE_TYPE, "Accounts Payable"),
+        (EXPENSE_TYPE,"Expense"),
+        
+
     ]
     ACCOUNT_SUB_TYPE_CHOICES = [
         (SALES_OF_PRODUCT_INCOME,"Sales of Product Income"),
-        (COST_OF_LABOR_COST, "Cost of Labor Cost")
+        (COST_OF_LABOR_COST, "Cost of Labor Cost"),
+        (ACCOUNTS_PAYABLE_SUB_TYPE, "Accounts Payable"),
+        (EXPENSE_SUB_TYPE,"Cost of Labor(Expense)")
     ]
 
     name = models.CharField(max_length=255,null=True,default=None)
-    type = models.CharField(max_length=30, choices=ACCOUNT_TYPE_CHOICES,null=True,default=None)
-    sub_type = models.CharField(max_length=255,choices=ACCOUNT_SUB_TYPE_CHOICES,null=True,default=None)
+    type = models.CharField(max_length=30, choices=ACCOUNT_TYPE_CHOICES,null=True,default=None,blank=True)
+    sub_type = models.CharField(max_length=255,choices=ACCOUNT_SUB_TYPE_CHOICES,null=True,default=None,blank=True)
     synced = models.BooleanField(default=False,null=True)
     qb_id = models.CharField(max_length=255,null=True,default=None)
     
