@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'invoice',
     'academic_calendar',
     'report',
-    'notification',
     'payment',
     'vendor',
     'account',
