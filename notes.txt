@@ -8,3 +8,5 @@ a student can only be subscribed to an item, and cannot be unsubscribed from the
 add javascript to disable lunch and transport, in the edit student form if they are set to True
 
 add status to bill
+
+add poliicy to have a preapporved list of vendors 

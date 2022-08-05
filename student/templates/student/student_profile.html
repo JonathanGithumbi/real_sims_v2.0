@@ -69,7 +69,7 @@
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'create_payment'%}" class='btn btn-primary'>New Payment </a>
+<a href="{% url 'create_payment' student.id %}" class='btn btn-primary'>New Payment </a>
 <hr>
 <h3>Invoices</h3>
 <h6>Total Amount Due: <span class="badge bg-danger">{{student.balancetable.balance}}</span></h6>
