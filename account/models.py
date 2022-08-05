@@ -4,14 +4,15 @@ from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings
 from quickbooks import QuickBooks
 from quickbooks.objects import Account as qb_acc
-from quickbooks.objects.base import Ref 
+from quickbooks.objects.base import Ref
 
 
 class Currency(models.Model):
-    name = models.CharField(max_length=30,null=True, default=None)
-    value = models.CharField(max_length=20,null=True, default=None)
+    name = models.CharField(max_length=30, null=True, default=None)
+    value = models.CharField(max_length=20, null=True, default=None)
 
     def __str__(self):
+
         return self.name
 
     def to_ref(self):
@@ -32,26 +33,27 @@ class Account(models.Model):
     EXPENSE_TYPE = "Expense"
     EXPENSE_SUB_TYPE = "CostOfLabor"
     ACCOUNT_TYPE_CHOICES = [
-        (COST_OF_GOODS_SOLD,"Cost of Goods Sold"),
-        (INCOME,"Income"),
+        (COST_OF_GOODS_SOLD, "Cost of Goods Sold"),
+        (INCOME, "Income"),
         (ACCOUNTS_PAYABLE_TYPE, "Accounts Payable"),
-        (EXPENSE_TYPE,"Expense"),
-        
+        (EXPENSE_TYPE, "Expense"),
+
 
     ]
     ACCOUNT_SUB_TYPE_CHOICES = [
-        (SALES_OF_PRODUCT_INCOME,"Sales of Product Income"),
+        (SALES_OF_PRODUCT_INCOME, "Sales of Product Income"),
         (COST_OF_LABOR_COST, "Cost of Labor Cost"),
         (ACCOUNTS_PAYABLE_SUB_TYPE, "Accounts Payable"),
-        (EXPENSE_SUB_TYPE,"Cost of Labor(Expense)")
+        (EXPENSE_SUB_TYPE, "Cost of Labor(Expense)")
     ]
 
-    name = models.CharField(max_length=255,null=True,default=None)
-    type = models.CharField(max_length=30, choices=ACCOUNT_TYPE_CHOICES,null=True,default=None,blank=True)
-    sub_type = models.CharField(max_length=255,choices=ACCOUNT_SUB_TYPE_CHOICES,null=True,default=None,blank=True)
-    synced = models.BooleanField(default=False,null=True)
-    qb_id = models.CharField(max_length=255,null=True,default=None)
-    
+    name = models.CharField(max_length=255, null=True, default=None)
+    type = models.CharField(
+        max_length=30, choices=ACCOUNT_TYPE_CHOICES, null=True, default=None, blank=True)
+    sub_type = models.CharField(
+        max_length=255, choices=ACCOUNT_SUB_TYPE_CHOICES, null=True, default=None, blank=True)
+    synced = models.BooleanField(default=False, null=True)
+    qb_id = models.CharField(max_length=255, null=True, default=None)
 
     def __str__(self):
         return self.name
@@ -60,19 +62,19 @@ class Account(models.Model):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')
-        #create an auth_client
+        # create an auth_client
         auth_client = AuthClient(
-            client_id = settings.CLIENT_ID,
-            client_secret = settings.CLIENT_SECRET,
-            access_token = access_token_obj.key,
+            client_id=settings.CLIENT_ID,
+            client_secret=settings.CLIENT_SECRET,
+            access_token=access_token_obj.key,
             environment=settings.ENVIRONMENT,
-            redirect_uri = settings.REDIRECT_URI
+            redirect_uri=settings.REDIRECT_URI
         )
-        #create a quickboooks client
+        # create a quickboooks client
         client = QuickBooks(
-            auth_client = auth_client,
-            refresh_token = refresh_token_obj.key,
-            company_id = realm_id_obj.key
+            auth_client=auth_client,
+            refresh_token=refresh_token_obj.key,
+            company_id=realm_id_obj.key
         )
         qb_acc_obj = qb_acc()
         qb_acc_obj.Name = self.name

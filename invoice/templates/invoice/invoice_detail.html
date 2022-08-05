@@ -68,7 +68,7 @@
                 {% for item in items %}
                   <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ item.item_description }}</td>
+                    <td>{{ item.item_description}}</td>
                     <td>1</td>
                     <td>{{ item.amount }}</td>
                     <td>{{ item.amount }}</td>
@@ -78,14 +78,10 @@
             </table>
           </div>
           <div class="row">
-            <div class="col-xl-8">
-              <p class="ms-3">
-                Add additional notes and payment information
-              </p>
-            </div>
+          
             <div class="col-xl-3">
               <p class="text-black float-start">
-                <span class="text-black me-3">Total Amount</span><span style="font-size: 25px;">{{amount}}</span>
+                <span class="text-black me-3">Total Amount</span><span style="font-size: 25px;">{{invoice.get_amount}}</span>
               </p>
             </div>
           </div>

@@ -1,6 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+{% load static %}
 {% block content_area %}
-<h1>Student Profile</h1>
+<h3>Student Profile</h3>
 <hr>
 <table class="table table-bordered table-hover">
     <tr>
@@ -43,18 +44,64 @@
 </table>
 <a href="{%url 'edit_student_profile' student.id%} "class='btn btn-primary'>Edit Profile</a>
 <a href="{%url 'delete_student' student.id%} "class='btn btn-danger'>Delete Student</a>
-<hr>
-<h1>Transaction History</h1>
-<h5>Total Amount Due: <span class="badge bg-danger">{{student.balancetable.balance}}</span></h5>
-<hr>
-<div class="list-group">
-    {% if invoices %}
-    {% for invoice in invoices %}
-    <a href="{% url 'invoice_detail' invoice.id%}" class="list-group-item list-group-item-action"> Invoice Year:{{invoice.year}} Term:{{invoice.term}}</a>
-    {% endfor %}
-    {% else %}
-    No Invoices Yet
-    {% endif %}
-</div>
 
+<hr>
+<h3>Payments</h3>
+<hr>
+<table id="all_payments" class="display table table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            
+            <th>Invoice</th>
+            <th>Student</th>
+            <th>Date Created</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for payment in payments %}
+        <tr>
+            <td>{{payment.invoice}}</td>
+            <td>{{payment.student}}</td>
+            <td>{{payment.created}}</td>
+            <td>{{payment.amount}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'create_payment'%}" class='btn btn-primary'>New Payment </a>
+<hr>
+<h3>Invoices</h3>
+<h6>Total Amount Due: <span class="badge bg-danger">{{student.balancetable.balance}}</span></h6>
+<hr>
+<table id="all_invoices" class="display table table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th>Year</th>
+            <th>Term</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invoice in invoices %}
+        <tr>
+            <td>{{invoice.get_year}}</td>
+            <td>{{invoice.get_term}}</td>
+            <td>{{invoice.get_amount}}</td>
+            <td>{{invoice.get_status}}</td>
+            <td><a class="btn btn-primary" href="{%url 'invoice_detail' invoice.id%}">Details</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    $(document).ready( function () {
+        $('#all_payments').DataTable();
+    } );
+    $(document).ready( function () {
+        $('#all_invoices').DataTable();
+    } );
+</script>
 {% endblock content_area %}

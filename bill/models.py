@@ -17,6 +17,11 @@ from quickbooks.objects import Vendor as qb_vendor
 from quickbooks.objects import Account as qb_account
 from account.models import Account
 
+BILL_STATUS=[
+    ("paid","paid"),
+    ('part-paid','part-paid'),
+    ('unpaid','unpaid')
+]
 class Bill(models.Model):
     bill_number = models.CharField(max_length=30, null=True,default=None,unique=True)
     created = models.DateField(auto_now_add=True)
@@ -35,6 +40,7 @@ class BillItem(models.Model):
     synced = models.BooleanField(default=False)
     created = models.DateField(auto_now_add=True)
     qb_id = models.CharField(max_length=255,null=True, default=None)
+    status = models.CharField(max_length=255, choices = BILL_STATUS, default="unpaid")
     
     def __str__(self):
         return self.description

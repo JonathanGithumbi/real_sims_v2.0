@@ -27,7 +27,7 @@ class StudentRegistrationForm(ModelForm):
 class EditStudentProfileForm(ModelForm):
     class Meta:
         model = Student
-        exclude =['current_grade','synced','admission_number',]
+        exclude =['current_grade','synced','admission_number','qb_id']
         widgets = {
             'admission_number_formatted': TextInput(attrs={'class':'form-control', 'id':'floatingInput','readonly':'readonly'}),
             'first_name': TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'First Name'}),

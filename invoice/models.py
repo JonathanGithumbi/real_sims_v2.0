@@ -118,16 +118,28 @@ class Invoice(models.Model):
         return saved_invoice
 
 
+    def get_term(self):
+        academic_calendar_obj = AcademicCalendar()
+        term = academic_calendar_obj.get_term(self.created)
+        return term
+
+    def get_year(self):
+        return self.created.year
+
+    def get_status(self):
+        return self.status
+
     def get_amount(self):
         items = self.student.get_items()
         amount = 0
         for item in items:
             item_obj = sales_item.objects.get(name=item)
             calendar_obj = AcademicCalendar()
-            fee_structure_obj = FeesStructure.objects.get(item=item_obj,term = calendar_obj.get_term(),grade = self.student.current_grade)
+            fee_structure_obj = FeesStructure.objects.get(item=item_obj,term = self.get_term(),grade = self.student.current_grade)
             total = amount + fee_structure_obj.amount
 
         return total
+
 
 
     def format_invoice_no(self):

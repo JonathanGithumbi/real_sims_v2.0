@@ -2,12 +2,9 @@ from django.db import models
 from datetime import timedelta
 import datetime
 class AcademicCalendar(models.Model):
+    
     """The system should have only one academic calendar at any given time"""
     """Usage: Used in get_term"""
-    def __str__(self):
-        year = self.year
-        year = str(year)
-        return year
 
     year = models.IntegerField()
     term_1_start_date = models.DateField()
@@ -17,6 +14,11 @@ class AcademicCalendar(models.Model):
     term_3_start_date = models.DateField()
     term_3_end_date = models.DateField()
 
+    def __str__(self):
+        year = self.year
+        year = str(year)
+        return year
+
 
     def date_range(self,start,end):
         """This view returns a list of datetime instances  of days between 'start' day and 'end' day """
@@ -24,6 +26,7 @@ class AcademicCalendar(models.Model):
         delta = end-start
         days = [start + timedelta(days=i) for i in range(delta.days+1)]
         return days
+
 
     def get_term(self,date=None):
         """This method returns the term number (int) given the date """
