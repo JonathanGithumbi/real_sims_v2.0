@@ -24,17 +24,7 @@ INVOICE_STATUS=[
     ('unpaid','unpaid')
 ]
 
-#this list contains all of the possible charges that could be levied to a student
-ITEM_CHOICES = [
-    ("admission","admission"),
-    ('diary_and_report_book','diary_and_report_book'),
-    ('interview_fee_lower_classes','interview_fee_lower_classes'),
-    ('interview_fee_upper_classes','interview_fee_upper_classes'),
-    ('tuition','tuition'),
-    ('computer_lessons','computer_lessons'),
-    ('transport','transport'),
-    ('lunch','lunch')
-]
+
 TERM_CHOICES = [ 
     (1,1),
     (2,2),
@@ -129,16 +119,14 @@ class Invoice(models.Model):
     def get_status(self):
         return self.status
 
+    
     def get_amount(self):
-        items = self.student.get_items()
         amount = 0
-        for item in items:
-            item_obj = sales_item.objects.get(name=item)
-            calendar_obj = AcademicCalendar()
-            fee_structure_obj = FeesStructure.objects.get(item=item_obj,term = self.get_term(),grade = self.student.current_grade)
-            total = amount + fee_structure_obj.amount
+        local_item_objects = Item.objects.filter(invoice_id=self.id)
+        for obj in local_item_objects:
+            amount = obj.amount+amount
 
-        return total
+        return amount
 
 
 
@@ -159,7 +147,7 @@ class Invoice(models.Model):
 
     
 class Item(models.Model):
-    item_description = models.CharField(max_length=255,choices=ITEM_CHOICES,null=True,default=None)
+    item_description = models.CharField(max_length=255,null=True,default=None)
     amount = models.IntegerField(null=True,default=None)
     invoice = models.ForeignKey(Invoice,on_delete=models.CASCADE)
     

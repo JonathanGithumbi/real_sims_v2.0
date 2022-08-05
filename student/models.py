@@ -52,13 +52,22 @@ class Student(models.Model):
         return 's'+str(self.admission_number).zfill(4)
 
     def get_items(self):
-        items = ['Tuition']
+        items = ['Tuition','Computer Lessons']
         if self.lunch:
             items.append('Lunch')
         if self.transport:
             items.append('Transport')
 
         return items
+
+    def student_is_upper_class(self):
+        LOWER_CLASSES = ['Grade 1','Grade 2','Grade 3','Pre Primary 1','Pre Primary 2','Play Group']
+        if self.current_grade.title in LOWER_CLASSES:
+            return False
+        else:
+            return True
+
+
 
     def create_customer(self):
         #create customer

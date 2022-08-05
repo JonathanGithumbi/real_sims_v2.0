@@ -29,8 +29,21 @@ def register_student(request):
             )
             invoice.save()
 
+            items = student.get_items()
+            #Items for Registering Students 
+            items.append("Admission")
+            items.append("Diaries")
+            items.append("Report Books")
+            if student.student_is_upper_class():
+                items.append("Upper Class Interview Fee")
+            else:
+                items.append("Lower Class Interview Fee")
+
+
+            #check whether student is upperclass or lower class
+            
             #Save invoice items to db
-            for item in student.get_items():
+            for item in items:
                 sales_item_obj = sales_item.objects.get(name=item)
                 calendar_obj = AcademicCalendar()
                 fee_structure_obj = FeesStructure.objects.get(item=sales_item_obj,grade=student.current_grade, term=calendar_obj.get_term())
@@ -45,7 +58,7 @@ def register_student(request):
             #Create Balance Object for student
             balance_obj = BalanceTable.objects.create(
                 student=student,
-                balance = invoice.get_amount()            
+                balance = invoice.get_amount(items)            
             )
             balance_obj.save()
 
