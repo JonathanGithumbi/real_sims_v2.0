@@ -44,7 +44,7 @@ class BillItem(models.Model):
     
     def __str__(self):
         return self.description
-
+        
     def create_bill(self):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')

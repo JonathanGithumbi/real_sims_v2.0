@@ -93,13 +93,15 @@ class Invoice(models.Model):
             sales_item_line_detail.Qty = 1
             #populate the line detail's unit price - to be determined from the fees structure
             calendar_obj = AcademicCalendar()
-            fee_structure_obj = FeesStructure.objects.get(item = item_obj,grade=self.student.current_grade,term=calendar_obj.get_term())
+            current_grade = self.student.current_grade
+            term = calendar_obj.get_term()
+            fee_structure_obj = FeesStructure.objects.get(item=item_obj, grade=current_grade,term= term)
             sales_item_line_detail.UnitPrice = fee_structure_obj.amount
 
             #create line 
             sales_item_line = SalesItemLine()
             sales_item_line.SalesItemLineDetail = sales_item_line_detail
-            sales_item_line.Amount = self.get_amount()
+            sales_item_line.Amount = fee_structure_obj.amount
             sales_item_line.Description = item
 
             qb_invoice_obj.Line.append(sales_item_line)
@@ -127,7 +129,6 @@ class Invoice(models.Model):
             amount = obj.amount+amount
 
         return amount
-
 
 
     def format_invoice_no(self):

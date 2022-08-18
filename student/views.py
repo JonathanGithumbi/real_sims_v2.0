@@ -39,9 +39,6 @@ def register_student(request):
             else:
                 items.append("Lower Class Interview Fee")
 
-
-            #check whether student is upperclass or lower class
-            
             #Save invoice items to db
             for item in items:
                 sales_item_obj = sales_item.objects.get(name=item)
@@ -58,7 +55,7 @@ def register_student(request):
             #Create Balance Object for student
             balance_obj = BalanceTable.objects.create(
                 student=student,
-                balance = invoice.get_amount(items)            
+                balance = invoice.get_amount()            
             )
             balance_obj.save()
 
