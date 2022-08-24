@@ -135,6 +135,7 @@ class Invoice(models.Model):
         return 'inv'+str(self.invoice_number).zfill(4)
 
     def save(self, *args, **kwargs):
+        """Save is not called when you use the Models.update() so this is safe to use for registration"""
         inv_number = InvoiceNumber()
         inv_number.save()
         self.invoice_number = inv_number.id
@@ -148,9 +149,12 @@ class Invoice(models.Model):
 
     
 class Item(models.Model):
-    item_description = models.CharField(max_length=255,null=True,default=None)
+    """These are invoice items"""
+    #item_description = models.CharField(max_length=255,null=True,default=None)
+    invoice_item = models.ForeignKey(sales_item, on_delete=models.DO_NOTHING,null=True, default=None)
     amount = models.IntegerField(null=True,default=None)
     invoice = models.ForeignKey(Invoice,on_delete=models.CASCADE)
+    created = models.DateField(null=True, default=None)
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

@@ -10,6 +10,7 @@ from account.models import Account
 
 
 
+
 class Item(models.Model):
     SERVICE = 'Service'
     NONINVENTORY = 'NonInventory'

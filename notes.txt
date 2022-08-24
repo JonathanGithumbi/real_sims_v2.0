@@ -10,3 +10,7 @@ add javascript to disable lunch and transport, in the edit student form if they 
 add status to bill
 
 add poliicy to have a preapporved list of vendors 
+
+add back navigation and fron navogation 
+put in a plcae a feature that can restrict a child from progressing to the next grade
+many fees structure querie rely on the student's current grade
