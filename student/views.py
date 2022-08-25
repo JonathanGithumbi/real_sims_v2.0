@@ -117,6 +117,59 @@ def edit_student_profile(request,id):
                         bal_table = BalanceTable.objects.get(student=student)
                         bal_table.balance = bal_table.balance + invoice_item.amount
                         bal_table.save()
+
+                        #Reflect changes in the quickbooks by sparse updating the iinvoice
+                        access_token_obj = Token.objects.get(name='access_token')
+                        refresh_token_obj = Token.objects.get(name='refresh_token')
+                        realm_id_obj = Token.objects.get(name='realm_id')
+
+                        #create an auth_client
+                        auth_client = AuthClient(
+                            client_id = settings.CLIENT_ID,
+                            client_secret = settings.CLIENT_SECRET,
+                            access_token = access_token_obj.key,
+                            environment=settings.ENVIRONMENT,
+                            redirect_uri = settings.REDIRECT_URI
+                        )
+                        #create a quickboooks client
+                        client = QuickBooks(
+                            auth_client = auth_client,
+                            refresh_token = refresh_token_obj.key,
+                            company_id = realm_id_obj.key
+                        )
+                        #Get qb_invoice
+                        qb_invoice_obj = QB_Invoice.get(latest_invoice.qb_id, qb=client)
+                        #Add a sales itemline for lunch
+                        #create a line line detail to go into the line
+                        sales_item_line_detail = SalesItemLineDetail()
+
+                        #Populate line detail's ItemRef
+
+                            #get qb item obj 
+                        qb_item_obj =  QB_Item.get(id=lunch_item.qb_id,qb=client)
+                            #assign ItemRef
+                        sales_item_line_detail.ItemRef = qb_item_obj.to_ref()
+                        #populate line detail quantity
+                        sales_item_line_detail.Qty = 1
+                        #populate the line detail's unit price - to be determined from the fees structure
+                        calendar_obj = AcademicCalendar()
+                        current_grade = student.current_grade
+                        term = calendar_obj.get_term()
+                        fee_structure_obj = FeesStructure.objects.get(item=lunch_item, grade=current_grade,term= term)
+                        sales_item_line_detail.UnitPrice = fee_structure_obj.amount
+
+                        #create line 
+                        sales_item_line = SalesItemLine()
+                        sales_item_line.SalesItemLineDetail = sales_item_line_detail
+                        sales_item_line.Amount = fee_structure_obj.amount
+                        sales_item_line.Description = lunch_item.name
+
+                        qb_invoice_obj.Line.append(sales_item_line)
+
+                        #save the invoice
+                        qb_invoice_obj.save(qb=client)
+
+                         #update model
                         student_instance = Student.objects.filter(pk=id).update(lunch=True)
 
                 if 'transport' in form.changed_data:
@@ -143,16 +196,86 @@ def edit_student_profile(request,id):
                         bal_table = BalanceTable.objects.get(student=student)
                         bal_table.balance = bal_table.balance + invoice_item.amount
                         bal_table.save()
+
+                        #Reflect changes in the quickbooks by sparse updating the iinvoice
+                        access_token_obj = Token.objects.get(name='access_token')
+                        refresh_token_obj = Token.objects.get(name='refresh_token')
+                        realm_id_obj = Token.objects.get(name='realm_id')
+
+                        #create an auth_client
+                        auth_client = AuthClient(
+                            client_id = settings.CLIENT_ID,
+                            client_secret = settings.CLIENT_SECRET,
+                            access_token = access_token_obj.key,
+                            environment=settings.ENVIRONMENT,
+                            redirect_uri = settings.REDIRECT_URI
+                        )
+                        #create a quickboooks client
+                        client = QuickBooks(
+                            auth_client = auth_client,
+                            refresh_token = refresh_token_obj.key,
+                            company_id = realm_id_obj.key
+                        )
+                        #Get qb_invoice
+                        qb_invoice_obj = QB_Invoice.get(latest_invoice.qb_id, qb=client)
+                        #Add a sales itemline for lunch
+                        #create a line line detail to go into the line
+                        sales_item_line_detail = SalesItemLineDetail()
+
+                        #Populate line detail's ItemRef
+
+                            #get qb item obj 
+                        qb_item_obj =  QB_Item.get(id=transport_item.qb_id,qb=client)
+                            #assign ItemRef
+                        sales_item_line_detail.ItemRef = qb_item_obj.to_ref()
+                        #populate line detail quantity
+                        sales_item_line_detail.Qty = 1
+                        #populate the line detail's unit price - to be determined from the fees structure
+                        calendar_obj = AcademicCalendar()
+                        current_grade = student.current_grade
+                        term = calendar_obj.get_term()
+                        fee_structure_obj = FeesStructure.objects.get(item=transport_item, grade=current_grade,term= term)
+                        sales_item_line_detail.UnitPrice = fee_structure_obj.amount
+
+                        #create line 
+                        sales_item_line = SalesItemLine()
+                        sales_item_line.SalesItemLineDetail = sales_item_line_detail
+                        sales_item_line.Amount = fee_structure_obj.amount
+                        sales_item_line.Description = transport_item.name
+
+                        qb_invoice_obj.Line.append(sales_item_line)
+
+                        #save the invoice
+                        qb_invoice_obj.save(qb=client)
+
+                         #update model
                         student_instance = Student.objects.filter(pk=id).update(transport=True)
 
-                if 'first_name' in form.changed_data:
-                    
+                #Name change triggers name change in quickbooks
+                if 'first_name' in form.changed_data or 'middle_name' in form.changed_data or 'last_name ' in form.changed_data:
+                    access_token_obj = Token.objects.get(name='access_token')
+                    refresh_token_obj = Token.objects.get(name='refresh_token')
+                    realm_id_obj = Token.objects.get(name='realm_id')
+                    #create an auth_client
+                    auth_client = AuthClient(
+                        client_id = settings.CLIENT_ID,
+                        client_secret = settings.CLIENT_SECRET,
+                        access_token = access_token_obj.key,
+                        environment=settings.ENVIRONMENT,
+                        redirect_uri = settings.REDIRECT_URI
+                    )
+                    #create a quickboooks client
+                    client = QuickBooks(
+                        auth_client = auth_client,
+                        refresh_token = refresh_token_obj.key,
+                        company_id = realm_id_obj.key
+                    )
+                    customer = Customer.get(student.qb_id, qb=client)
+                    customer.DisplayName = form.cleaned_data['first_name'] +' '+form.cleaned_data['middle_name']+' '+form.cleaned_data['last_name']
+                    customer.save(qb=client)
                     student_instance = Student.objects.filter(pk=id).update(first_name=form.cleaned_data['first_name'])
-                if 'middle_name' in form.changed_data:
                     student_instance = Student.objects.filter(pk=id).update(middle_name=form.cleaned_data['middle_name'])
-                if 'last_name' in form.changed_data:
                     student_instance = Student.objects.filter(pk=id).update(last_name=form.cleaned_data['last_name'])
-
                 if 'primary_contact_name' in form.changed_data:
                     student_instance = Student.objects.filter(pk=id).update(primary_contact_name=form.cleaned_data['primary_contact_name'])
                 if 'primary_contact_phone_number' in form.changed_data:
