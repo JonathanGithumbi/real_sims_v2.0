@@ -7,5 +7,15 @@
     {{form.as_p}}
     <input type="submit" value="Submit" class='btn btn-primary'>
 </form>
-
+<script>
+    $(document).ready(function(){
+        if ($("#lunch").is(':checked')){
+            $("#lunch").attr("disabled", true);
+        }
+        if ($("#transport").is(':checked')){
+            $("#transport").attr("disabled", true);
+        }
+      });
+</script>
 {% endblock content_area %}
+

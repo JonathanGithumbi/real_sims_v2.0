@@ -81,7 +81,6 @@
             <th>Year</th>
             <th>Term</th>
             <th>Total Amount</th>
-            <th>Status</th>
             <th>Details</th>
         </tr>
     </thead>
@@ -91,7 +90,7 @@
             <td>{{invoice.get_year}}</td>
             <td>{{invoice.get_term}}</td>
             <td>{{invoice.get_amount}}</td>
-            <td>{{invoice.get_status}}</td>
+
             <td><a class="btn btn-primary" href="{%url 'invoice_detail' invoice.id%}">Details</a></td>
         </tr>
         {% endfor %}

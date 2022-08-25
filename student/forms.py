@@ -37,6 +37,6 @@ class EditStudentProfileForm(ModelForm):
             'primary_contact_phone_number': TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Phone Number'}),
             'secondary_contact_name': TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Secondary Contact Name'}),
             'secondary_contact_phone_number': TextInput(attrs={'class':'form-control', 'id':'floatingInput','placeholder':'Secondary Contact Phone Number'}),
-            'lunch': CheckboxInput(attrs={'class':'form-check-input', 'id':'floatingInput'}),
+            'lunch': CheckboxInput(attrs={'class':'form-check-input', 'id':'lunch'}),
             'transport': CheckboxInput(attrs={'class':'form-check-input','id':'transport','onclick':'enable_transport_fee()'}),
         }

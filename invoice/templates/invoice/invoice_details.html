@@ -1,0 +1,35 @@
+{% extends 'dashboard/layout.html' %}
+{% block content_area %}
+<h3>INVOICE </h3>
+<hr>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>Student Name</th>
+        <td>{{invoice.student}} </td>
+    </tr>
+    <tr>
+        <th>Year</th>
+        <td>{{invoice.year}} </td>
+    </tr>
+    <tr>
+        <th>Term</th>
+        <td>{{invoice.term}} </td>
+    </tr>
+    
+</table>
+<hr>
+<h2>Invoice Items</h2>
+<table class="table table-bordered table-hover">
+    {% for item in items %}
+    <tr>
+        <th>{{item}}</th>
+        <td>{{item.amount}}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <th>TOTAL</th>
+        <td>{{invoice.get_amount}}</td>
+    </tr>
+</table>
+<h1>Total : {{invoice.get_amount}}</h1>
+{% endblock content_area %}

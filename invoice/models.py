@@ -39,14 +39,16 @@ class InvoiceNumber(models.Model):
 class Invoice(models.Model):
     student = models.ForeignKey(Student,on_delete=models.DO_NOTHING)
     created = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=255, choices=INVOICE_STATUS,default='unpaid')
+    year = models.IntegerField(null=True, default=None)
+    term = models.IntegerField(null=True, default=None)
+
     invoice_number = models.BigIntegerField(null=True,default=None)
     invoice_number_formatted = models.CharField(max_length=255,default=None,null=True)
     synced = models.BooleanField(default=False)
     qb_id = models.CharField(max_length=255,null=True, default=None)
     
 
-    def create_invoice(self):
+    def create_qb_invoice(self):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')
@@ -106,8 +108,8 @@ class Invoice(models.Model):
 
             qb_invoice_obj.Line.append(sales_item_line)
 
-        saved_invoice = qb_invoice_obj.save(qb=client)
-        return saved_invoice
+        saved_qb_invoice = qb_invoice_obj.save(qb=client)
+        return saved_qb_invoice
 
 
     def get_term(self):
@@ -118,8 +120,6 @@ class Invoice(models.Model):
     def get_year(self):
         return self.created.year
 
-    def get_status(self):
-        return self.status
 
     
     def get_amount(self):
@@ -140,9 +140,9 @@ class Invoice(models.Model):
         inv_number.save()
         self.invoice_number = inv_number.id
         self.invoice_number_formatted = self.format_invoice_no()
-        saved_invoice = self.create_invoice()
+        saved_qb_invoice = self.create_qb_invoice()
         self.synced = True
-        self.qb_id = saved_invoice.Id
+        self.qb_id = saved_qb_invoice.Id
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
 
@@ -160,7 +160,7 @@ class Item(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        pass
+        return self.invoice_item.name
 
 
 class BalanceTable(models.Model):
