@@ -29,5 +29,6 @@ def create_bill(request):
         else:
             return render(request, 'bill/create_bill.html',{'form':form})
 
-
+def pay_bill(request):
+    pass
 

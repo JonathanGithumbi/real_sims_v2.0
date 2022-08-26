@@ -7,25 +7,33 @@
 <table id="all_bills" class="display table table-bordered table-hover">
     <thead class="thead-light">
         <tr>
-            
+            <th>Date Created</th>
             <th>Decription</th>
             <th>Vendor</th>
             <th>Quantiy</th>
             <th>Price per Quantity</th>
             <th>Total Amount</th>
-            <th>Date Created</th>
+            <th>Bill Status</th>
+            
         </tr>
     </thead>
     <tbody>
         {% for bill in bills %}
         <tr>
-            
+            <td>{{bill.created}}</td>
             <td>{{bill.description}}</td>
             <td>{{bill.vendor_set.given_name}}</td>
             <td>{{bill.quantity}}</td>
             <td>{{bill.price_per_quantity}}</td>
             <td>{{bill.total}}</td>
-            <td>{{bill.created}}</td>
+            <td>
+                {% if bill.status == 'unpaid' %}
+                <a href="{% url 'pay_bill' bill.id %}" class='btn btn-danger'>Mark as Paid</a>
+                {% endif %}
+                {% if bill.status == 'paid' %}
+                Paid
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
