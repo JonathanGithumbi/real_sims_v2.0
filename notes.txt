@@ -14,3 +14,5 @@ add poliicy to have a preapporved list of vendors
 add back navigation and fron navogation 
 put in a plcae a feature that can restrict a child from progressing to the next grade
 many fees structure querie rely on the student's current grade
+
+remember to add try..block statements to the API calls

@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'payment',
     'vendor',
     'account',
-    'item'
+    'item',
+    'bill_payment'
 ]
 
 MIDDLEWARE = [

@@ -13,7 +13,7 @@ class Vendor(models.Model):
     middle_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     synced = models.BooleanField(default=False)
-    qb_vendor_id = models.CharField(max_length= 255, null=True, default= None)
+    qb_id = models.CharField(max_length= 255, null=True, default= None)
 
 
     def __str__(self):

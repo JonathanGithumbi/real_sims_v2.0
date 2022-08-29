@@ -29,7 +29,7 @@ from quickbooks.objects import Customer
 from quickbooks.objects import Item as QB_Item
 
 def students(request):
-    students = Student.objects.all()
+    students = Student.objects.all().order_by('date_of_admission')
     return render(request, 'student/student.html',{'students':students})
 
 def register_student(request):

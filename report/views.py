@@ -7,14 +7,14 @@ def reports(request):
     return render(request, 'report/reports.html')
 
 def generate_fees_arrears_report(request):
-    students = BalanceTable.objects.filter(balance__gt= 0)
+    students = BalanceTable.objects.filter(balance__gt= 0).order_by('-balance')
     context = {'students':students}
     template_name = 'report/fees_arrears_report.html'
     pdf = render_to_pdf(template_name,context)
     return HttpResponse(pdf, content_type='application/pdf')
 
 
-def generate_lunch_subscribers_report(report):
+def generate_lunch_subscribers_report(request):
     students = Student.objects.filter(lunch=True)
     context = {'students':students}
     template_name = 'report/lunch_subscribers.html'

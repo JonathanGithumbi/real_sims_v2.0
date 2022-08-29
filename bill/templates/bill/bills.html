@@ -28,6 +28,7 @@
             <td>{{bill.total}}</td>
             <td>
                 {% if bill.status == 'unpaid' %}
+            
                 <a href="{% url 'pay_bill' bill.id %}" class='btn btn-danger'>Mark as Paid</a>
                 {% endif %}
                 {% if bill.status == 'paid' %}
@@ -38,6 +39,7 @@
         {% endfor %}
     </tbody>
 </table>
+
 <script>
     $(document).ready( function () {
         $('#all_bills').DataTable();
