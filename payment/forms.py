@@ -7,7 +7,8 @@ class CreatePaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
         exclude = ['qb_id','synced','student']                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-        widgets={ 
+        widgets={
+        'date_paid': forms.DateInput(attrs={'class':'form-control', 'id':'floatingInput','type':'date'}), 
         'amount': forms.NumberInput(attrs={'class':'form-control', 'id':'quantity','value':0}),
-        'date_paid': forms.DateInput(attrs={'class':'form-control', 'id':'floatingInput'}),
+        
         }

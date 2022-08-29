@@ -14,7 +14,5 @@ class Payment(models.Model):
         pass
 
     def save(self, *args, **kwargs):
-        qb_payment_object = self.create_payment()
-        self.qb_id = True
-        self.synced = True
+
         super().save(*args, **kwargs)  # Call the "real" save() method.

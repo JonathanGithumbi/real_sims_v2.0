@@ -8,6 +8,7 @@ from fees_structure.models import FeesStructure
 import invoice
 from invoice.models import Invoice,Item,BalanceTable
 from academic_calendar import utils as academic_utils
+from payment.models import Payment
 from student.models import Student
 from .forms import StudentRegistrationForm,EditStudentProfileForm
 from invoice import utils as invoice_utils
@@ -84,7 +85,8 @@ def register_student(request):
 def student_profile(request,id):
     student = Student.objects.get(pk=id)
     invoices = Invoice.objects.filter(student=student)
-    return render(request, 'student/student_profile.html',{'student':student,'invoices':invoices})
+    payments = Payment.objects.filter(student = student)
+    return render(request, 'student/student_profile.html',{'student':student,'invoices':invoices,'payments':payments})
 
 def edit_student_profile(request,id):
     student = Student.objects.get(pk=id)
