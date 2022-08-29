@@ -67,7 +67,7 @@ class BillItem(models.Model):
         bill = qb_bill()
 
         #get vendor
-        qb_vendor_obj = qb_vendor.get(self.vendor.qb_vendor_id,qb=client)
+        qb_vendor_obj = qb_vendor.get(self.vendor.qb_id,qb=client)
         # create Vendor Ref
         vendor_ref = qb_vendor_obj.to_ref()
         bill.VendorRef = vendor_ref

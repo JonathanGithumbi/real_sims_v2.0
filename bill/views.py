@@ -20,7 +20,11 @@ from quickbooks.objects import BillPayment as QB_BillPayment
 from quickbooks.objects import BillPaymentLine
 from quickbooks.objects import Vendor as qb_vendor
 from quickbooks.objects import Bill as qb_bill
+from quickbooks.objects.base import LinkedTxn
+from quickbooks.objects import Account as QB_Account
 
+from account.models import Account as Local_Account
+from quickbooks.objects.billpayment import CheckPayment
 
 def bills(request):
     bills = BillItem.objects.all()
@@ -72,21 +76,34 @@ def pay_bill(request,id):
 
     local_bill_payment_obj.save()
 
-
     #get the qb_bill_item
     qb_bill_item = qb_bill.get(local_bill_obj.qb_id,qb=client)
+
+    #Linked Txn
+    lnk_txn = LinkedTxn()
+    lnk_txn.TxnId = qb_bill_item.Id
+    lnk_txn.TxnType = 'Bill'
+    
     #construct bill payment line
     bill_paym_line = BillPaymentLine()
     bill_paym_line.Amount = local_bill_obj.total
-    bill_paym_line.LinkedTxn.append(qb_bill_item)
+    bill_paym_line.LinkedTxn.append(lnk_txn)
     #get vendor bject 
     qb_vendor_obj = qb_vendor.get(local_bill_obj.vendor.qb_id, qb=client)
     #create qb bill payment object
     bill_paym_obj = QB_BillPayment()
-    bill_paym_obj.vendor = qb_vendor_obj.to_ref()
+    bill_paym_obj.VendorRef = qb_vendor_obj.to_ref()
     bill_paym_obj.TotalAmt = local_bill_obj.total
     bill_paym_obj.Line.append(bill_paym_line)
     bill_paym_obj.PayType = "Check"
+    #get qb_account 
+    #first get local
+    local_qb_acc = Local_Account.objects.get(name='Checking Bank Account')
+    qb_acc_obj = QB_Account.get(local_qb_acc.qb_id,qb=client)
+    #create checkpayment object
+    check_paym_obj = CheckPayment()
+    check_paym_obj.BankAccountRef = qb_acc_obj.to_ref()
+    bill_paym_obj.CheckPayment = check_paym_obj
     bill_paym_obj.save(qb=client)
 
     return redirect('bills')

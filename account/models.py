@@ -32,11 +32,16 @@ class Account(models.Model):
     ACCOUNTS_PAYABLE_SUB_TYPE = "AccountsPayable"
     EXPENSE_TYPE = "Expense"
     EXPENSE_SUB_TYPE = "CostOfLabor"
+    BANK_TYPE = 'Bank'
+    CHECKING_SUB_TYPE = 'Checking'
     ACCOUNT_TYPE_CHOICES = [
         (COST_OF_GOODS_SOLD, "Cost of Goods Sold"),
         (INCOME, "Income"),
         (ACCOUNTS_PAYABLE_TYPE, "Accounts Payable"),
         (EXPENSE_TYPE, "Expense"),
+        (BANK_TYPE,'Bank'),
+        
+
 
 
     ]
@@ -44,7 +49,8 @@ class Account(models.Model):
         (SALES_OF_PRODUCT_INCOME, "Sales of Product Income"),
         (COST_OF_LABOR_COST, "Cost of Labor Cost"),
         (ACCOUNTS_PAYABLE_SUB_TYPE, "Accounts Payable"),
-        (EXPENSE_SUB_TYPE, "Cost of Labor(Expense)")
+        (EXPENSE_SUB_TYPE, "Cost of Labor(Expense)"),
+        (CHECKING_SUB_TYPE,'Checking')
     ]
 
     name = models.CharField(max_length=255, null=True, default=None)
