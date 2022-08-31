@@ -4,9 +4,9 @@ from venv import create
 from django.db import models
 from regex import E
 from grade.models import Grade
-from quickbooks import QuickBooks
-from quickbooks.objects import Customer
 
+from quickbooks.objects import Customer
+from quickbooks import QuickBooks
 from user_account.models import Token
 from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings

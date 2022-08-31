@@ -16,3 +16,11 @@ put in a plcae a feature that can restrict a child from progressing to the next 
 many fees structure querie rely on the student's current grade
 
 remember to add try..block statements to the API calls
+
+the the customers are being invoice 2 times
+
+if the current term's fees is fully paid, and an excess amount is payed, then a new invoice should be created for the next term and 
+the excess amount be added there.
+therefore, whenever the new term script is run(that invoices students every new term) it should check whether an invoice for that term and year
+already exists
+

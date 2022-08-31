@@ -45,6 +45,8 @@ class Invoice(models.Model):
     invoice_number = models.BigIntegerField(null=True,default=None)
     invoice_number_formatted = models.CharField(max_length=255,default=None,null=True)
     synced = models.BooleanField(default=False)
+    paid = models.BooleanField(default=False,null=True)
+    balance = models.DecimalField(max_digits=8,decimal_places=2,default=None,null=True)
     qb_id = models.CharField(max_length=255,null=True, default=None)
     
 
