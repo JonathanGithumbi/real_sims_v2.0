@@ -53,7 +53,7 @@
     <thead class="thead-light">
         <tr>
             <th>Date Paid</th>
-            <th>Payment Method</th>
+            <th>For Invoice</th>
             <th>Amount</th>
         </tr>
     </thead>
@@ -61,7 +61,7 @@
         {% for payment in payments %}
         <tr>
             <td>{{payment.date_paid}}</td>
-            <td>{{payment.payment_method}}</td>
+            <td>{{payment.invoice.invoice_number_formatted}}</td>
             <td>{{payment.amount}}</td>
         </tr>
         {% endfor %}
@@ -75,9 +75,12 @@
 <table id="all_invoices" class="display table table-bordered table-hover">
     <thead class="thead-light">
         <tr>
+            <th>Invoice Number</th>
             <th>Year</th>
             <th>Term</th>
             <th>Total Amount</th>
+            <th>Paid</th>
+            <th>Balance</th>
             <th>Status</th>
             <th>Details</th>
         </tr>
@@ -85,9 +88,12 @@
     <tbody>
         {% for invoice in invoices %}
         <tr>
+            <td>{{invoice.invoice_number_formatted}}</td>
             <td>{{invoice.get_year}}</td>
             <td>{{invoice.get_term}}</td>
-            <td>{{invoice.get_amount}}</td>
+            <td>{{invoice.amount}}</td>
+            <td>{{invoice.get_amount_paid}}</td>
+            <td>{{invoice.balance}}</td>
             <td>
                 {% if invoice.paid == False %}
                 Unpaid

@@ -67,7 +67,9 @@ def register_student(request):
                 )
                 local_item_obj.save()
 
-
+            invoice.amount = invoice.get_amount()
+            invoice.balance = invoice.get_amount()
+            invoice.save()
             #Create Balance Object for student
             balance_obj = BalanceTable.objects.create(
                 student=student,

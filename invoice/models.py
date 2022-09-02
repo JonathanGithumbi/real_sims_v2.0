@@ -37,16 +37,16 @@ class InvoiceNumber(models.Model):
 
 
 class Invoice(models.Model):
-    student = models.ForeignKey(Student,on_delete=models.DO_NOTHING)
-    created = models.DateField(auto_now_add=True)
-    year = models.IntegerField(null=True, default=None)
-    term = models.IntegerField(null=True, default=None)
-
-    invoice_number = models.BigIntegerField(null=True,default=None)
-    invoice_number_formatted = models.CharField(max_length=255,default=None,null=True)
-    synced = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False,null=True)
-    balance = models.DecimalField(max_digits=8,decimal_places=2,default=None,null=True)
+    student = models.ForeignKey(Student,on_delete=models.DO_NOTHING)#added in views
+    created = models.DateField(auto_now_add=True)#created on save()
+    year = models.IntegerField(null=True, default=None)#added in views
+    term = models.IntegerField(null=True, default=None)#added in views
+    amount = models.DecimalField(max_digits=8,decimal_places=2, null=True, default=None)#to be added in registration views
+    invoice_number = models.BigIntegerField(null=True,default=None)#added in save
+    invoice_number_formatted = models.CharField(max_length=255,default=None,null=True)#added in save
+    synced = models.BooleanField(default=False)#added in save
+    paid_status = models.BooleanField(default=False,null=True)#updated when creating payments
+    balance = models.DecimalField(max_digits=8,decimal_places=2,default=None,null=True)#hOW MUCH IS LEFT ON THE PAYMENT
     qb_id = models.CharField(max_length=255,null=True, default=None)
     
 
@@ -132,7 +132,9 @@ class Invoice(models.Model):
 
         return amount
 
-
+    def get_amount_paid(self):
+        amount_paid = self.amount-self.balance
+        return amount_paid
     def format_invoice_no(self):
         return 'inv'+str(self.invoice_number).zfill(4)
 
@@ -146,8 +148,6 @@ class Invoice(models.Model):
         self.synced = True
         self.qb_id = saved_qb_invoice.Id
         super().save(*args, **kwargs)  # Call the "real" save() method.
-
-
 
     
 class Item(models.Model):

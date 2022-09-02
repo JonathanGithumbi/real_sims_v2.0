@@ -24,3 +24,4 @@ the excess amount be added there.
 therefore, whenever the new term script is run(that invoices students every new term) it should check whether an invoice for that term and year
 already exists
 
+make the system refresh the token call upon login
