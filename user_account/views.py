@@ -17,6 +17,9 @@ from django.contrib import messages
 from user_account.services import qbo_api_call
 from user_account.models import Token
 
+from .auth_backend import AuthBackend
+from .forms import AuthFormWithBootstrapSpecifics
+
 # Create your views here.
 def oauth(request):
     auth_client = AuthClient(
@@ -193,3 +196,35 @@ def revoke(request):
         print(e.status_code)
         print(e.intuit_tid)
     return HttpResponse('Revoke successful')
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        auth_backend = AuthBackend()
+        user = auth_backend.authenticate(request,username=username,password=password)
+        if user is not None:
+            
+            #try to refresh tokens 
+            try:
+                refresh()
+                login(request,user)
+                request.session['qb_synced'] = True
+                return redirect('dashboard')
+                #set the qb_synced=True in the User's session
+                #then redirect to the dashboard
+            except:
+                login(request,user)
+                request.session['qb_synced'] = False
+                return redirect('dashboard')
+                #capture all exception
+                #sets qb_synced=False in the user's session
+                #then redirect to the dashboard
+        else:
+            #Invalid logins
+            form = AuthFormWithBootstrapSpecifics(request.POST)
+            return render(request,'user_account/registration/login.html',{'form':form})
+    else:
+        #called with get
+        form = AuthFormWithBootstrapSpecifics()
+        return render(request,'user_account/registration/login.html',{'form':form})

@@ -170,3 +170,5 @@ REALM_ID = '<EnterHere>'
 
 ALLOWED_HOSTS=["http://127.0.0.1:8000/",'127.0.0.1','localhost']
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+AUTHENTICATION_BACKENDS = ['user_account.auth_backend.AuthBackend']
+

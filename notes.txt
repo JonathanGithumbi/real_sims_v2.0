@@ -32,3 +32,6 @@ dashbord summaries:
 >total number of students taking transport
 >total number of students taking lunch
 >total number of students in each grade (Table)
+
+
+Login must be done with the school's official email address
