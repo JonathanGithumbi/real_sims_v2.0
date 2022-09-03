@@ -1,9 +1,9 @@
 from django.contrib.auth import backends
 from .models import User
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth.backends import BaseBackend
+from django.contrib.auth.backends import ModelBackend
 
-class AuthBackend(backends.BaseBackend):
+class AuthBackend(ModelBackend):
     """My custom backend which will fetch a new token key """
     def get_user(self, user_id):
         #user_id can be anything as long as that thing is the primary key of your user object

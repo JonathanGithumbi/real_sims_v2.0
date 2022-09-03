@@ -17,7 +17,9 @@ from django.contrib import messages
 from user_account.services import qbo_api_call
 from user_account.models import Token
 
-from .auth_backend import AuthBackend
+from django.contrib.auth import authenticate,login
+
+from .backends import AuthBackend
 from .forms import AuthFormWithBootstrapSpecifics
 
 # Create your views here.
@@ -197,7 +199,7 @@ def revoke(request):
         print(e.intuit_tid)
     return HttpResponse('Revoke successful')
 
-def login(request):
+def login_user(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -208,11 +210,15 @@ def login(request):
             #try to refresh tokens 
             try:
                 refresh()
+                #PUT TIMER HERE TO AUTOMATICALLY UPDATE THE REFRESH TOKEN EVERY HOUR IF THE USER IS STIL LOGGED IN 
                 login(request,user)
                 request.session['qb_synced'] = True
                 return redirect('dashboard')
                 #set the qb_synced=True in the User's session
                 #then redirect to the dashboard
+            
+            #catch more exceptions and maybe put in a retry workflow
+            
             except:
                 login(request,user)
                 request.session['qb_synced'] = False
@@ -223,6 +229,7 @@ def login(request):
         else:
             #Invalid logins
             form = AuthFormWithBootstrapSpecifics(request.POST)
+            form.add_error("Invalid Username/Password.")
             return render(request,'user_account/registration/login.html',{'form':form})
     else:
         #called with get

@@ -5,7 +5,7 @@ from .forms import AuthFormWithBootstrapSpecifics,PasswordResetFormWithBootstrap
 from . import views
 
 urlpatterns = [
-    path('',views.login,name='login'),
+    path('',views.login_user,name='login'),
     path('logout/', auth_views.LogoutView.as_view(),name='logout'),
     path('password_change/',auth_views.PasswordChangeView.as_view(),name='password_change'),
     path('password_change/done/',auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),

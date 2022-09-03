@@ -3,42 +3,23 @@
 
 
 {% block content_area %}
+QuickBooks Connection Status: 
+{% if request.session.qb_synced is True %}<span class="badge bg-success">Connected</span>{% endif %}
+{% if request.session.qb_synced is False %}<span class="badge bg-warning">Not Connected</span>{% endif %}
+<div>
+    {% if openid %}
+        <button onclick="userInfoCall()">UserInfo API Call</button>
+    {% else %}
+        <button onclick="apiCall()">QuickBooks API Call</button>
+    {% endif %}
+    <button onclick="refreshCall()">Refresh Token Call</button>
+    <button onclick="revokeCall()">Revoke Token Call</button>
+    
+    <br><br>
+    <div><code id="result"></code></div>
+</div>
 
-<a href="{% url 'refresh'%}">Refresh Token</a>
-<button onlick="refreshCall">Refresh token onclick</button>
-<div><code id="result"></code></div>
-{% if status == "connected" %}
-<h1>Dashboard</h1>
 
-<h6>Quickbooks Connection Status: <span class="badge bg-success">CONNECTED</span></h6>
-<hr>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <div class="container-fluid p-0">
-      <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="True">&times;</span>
-        </button>
-        {{ message }}
-      </div>
-    </div>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endif %}
-{% if status == "disconnected" %}
-<h1>Dashboard</h1>
-<h6>Quickbooks Connection Status: <span class="badge bg-danger">DISCONNECTED</span></h6>
-<hr>
-
-<a class="imgLink"
-         href="{% url 'oauth'%}">
-        <img style="height: 40px"
-             src="{% static 'C2QB_white_btn_lg_default.png' %}"/>
-      </a>
-{% endif %}
-Dashb
 
  <script>
     function apiCall() {

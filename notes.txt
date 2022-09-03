@@ -35,3 +35,5 @@ dashbord summaries:
 
 
 Login must be done with the school's official email address
+
+make sure to put a timer to update the token whenever its about to expire 

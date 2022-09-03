@@ -148,7 +148,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR ,'static')
 ]
 AUTH_USER_MODEL = 'user_account.User'
-LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 # OAauth2 config here
 CLIENT_ID = 'ABqj7EU6zlngD2KKw34dy6Z7SzVwF7XcHP7c6EOr2GCZUiSOZI'
@@ -170,5 +169,5 @@ REALM_ID = '<EnterHere>'
 
 ALLOWED_HOSTS=["http://127.0.0.1:8000/",'127.0.0.1','localhost']
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
-AUTHENTICATION_BACKENDS = ['user_account.auth_backend.AuthBackend']
+AUTHENTICATION_BACKENDS = ['user_account.backends.AuthBackend']
 
