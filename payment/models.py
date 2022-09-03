@@ -21,7 +21,7 @@ class Payment(models.Model):
     """This model is for making payments for invoices"""
     # This models is for making payments for invoices.
     amount = models.DecimalField(max_digits=8, decimal_places=2,null=True, default=None)
-    date_paid = models.DateField(null=True,default=None)
+    date_paid = models.DateField(auto_now_add=True)
     qb_id = models.CharField(max_length=255, null=True, default=None)
     synced = models.BooleanField(default=False, null=True)
     invoice = models.ForeignKey(Invoice, on_delete=models.DO_NOTHING,null=True, default=None)

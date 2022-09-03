@@ -95,10 +95,10 @@
             <td>{{invoice.get_amount_paid}}</td>
             <td>{{invoice.balance}}</td>
             <td>
-                {% if invoice.paid == False %}
+                {% if invoice.paid_status == False %}
                 Unpaid
                 {% endif %}
-                {% if invoice.paid == True %}
+                {% if invoice.paid_status == True %}
                 Paid
                 {% endif %}
             </td>

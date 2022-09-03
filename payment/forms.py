@@ -9,6 +9,7 @@ class CreatePaymentForm(forms.ModelForm):
         exclude = ['qb_id','synced','invoice','student']                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
         widgets={
         'date_paid': forms.DateInput(attrs={'class':'form-control', 'id':'floatingInput','type':'date'}), 
-        'amount': forms.NumberInput(attrs={'class':'form-control', 'id':'quantity','value':0}),
-        
+        'amount': forms.NumberInput(attrs={'class':'form-control', 'id':'quantity','value':0,'min':1}),
         }
+
+    #You have to validate that the amount is greatter than 1

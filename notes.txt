@@ -25,3 +25,10 @@ therefore, whenever the new term script is run(that invoices students every new 
 already exists
 
 make the system refresh the token call upon login
+
+dashbord summaries:
+>total amount of unpaid bills
+>total amount of unpaid fees arrears
+>total number of students taking transport
+>total number of students taking lunch
+>total number of students in each grade (Table)

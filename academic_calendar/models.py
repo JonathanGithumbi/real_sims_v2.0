@@ -27,6 +27,13 @@ class AcademicCalendar(models.Model):
         days = [start + timedelta(days=i) for i in range(delta.days+1)]
         return days
 
+    def get_year(self,date=None):
+        if date == None:
+            today = datetime.date.today()
+            return int(today.year)
+
+        else: 
+            return int(date.year)
 
     def get_term(self,date=None):
         """This method returns the term number (int) given the date """

@@ -30,6 +30,34 @@
         <th>TOTAL</th>
         <td>{{invoice.get_amount}}</td>
     </tr>
+    
 </table>
-<h1>Total : {{invoice.get_amount}}</h1>
+
+
+<hr>
+<h3>Payments</h3>
+<hr>
+<table id="all_payments" class="display table table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th>Date Paid</th>
+            <th>For Invoice</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for payment in payments %}
+        <tr>
+            <td>{{payment.date_paid}}</td>
+            <td>{{payment.invoice.invoice_number_formatted}}</td>
+            <td>{{payment.amount}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    $(document).ready( function () {
+        $('#all_payments').DataTable();
+    } );
+</script>
 {% endblock content_area %}
