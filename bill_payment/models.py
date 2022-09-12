@@ -1,5 +1,5 @@
 from django.db import models
-from bill.models import Bill, BillItem
+from bill.models import BillItem
 from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings
 
@@ -11,6 +11,7 @@ from vendor.models import Vendor
 
 # Create your models here.
 class BillPayment(models.Model):
+    """This model represents a payment for a bill"""
     qb_id = models.CharField(max_length=255,null=True,default=None)
     vendor = models.ForeignKey(Vendor,on_delete=models.DO_NOTHING)
     created = models.DateField(auto_now_add=True)

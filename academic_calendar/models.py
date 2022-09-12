@@ -2,11 +2,11 @@ from django.db import models
 from datetime import timedelta
 import datetime
 class AcademicCalendar(models.Model):
+    """This Class contains the start and end date for each term of a given year
+    The system uses it so that it can find out what term to charge the student for.So it is a very critical part of the system
+    """
     
-    """The system should have only one academic calendar at any given time"""
-    """Usage: Used in get_term"""
-
-    year = models.IntegerField()
+    year = models.IntegerField(unique=True)
     term_1_start_date = models.DateField()
     term_1_end_date = models.DateField()
     term_2_start_date = models.DateField()
@@ -22,12 +22,12 @@ class AcademicCalendar(models.Model):
 
     def date_range(self,start,end):
         """This view returns a list of datetime instances  of days between 'start' day and 'end' day """
-        """It is used in get_term() to retrieve the term number """
         delta = end-start
         days = [start + timedelta(days=i) for i in range(delta.days+1)]
         return days
 
     def get_year(self,date=None):
+        """Returns the current year as an integer if no argument is passed, and returns the integer year of the date if argument is passed"""
         if date == None:
             today = datetime.date.today()
             return int(today.year)
@@ -36,7 +36,7 @@ class AcademicCalendar(models.Model):
             return int(date.year)
 
     def get_term(self,date=None):
-        """This method returns the term number (int) given the date """
+        """This method returns the term number of the current term if no arg is given, otherwise returns the term number of the date passed in"""
         """Uses date_range() to retrieve the list of days in a term"""
         if date is None:
             today = datetime.date.today()

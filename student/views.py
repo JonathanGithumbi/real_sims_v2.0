@@ -7,7 +7,7 @@ from academic_calendar.models import AcademicCalendar
 from fees_structure.models import FeesStructure
 import invoice
 from invoice.models import Invoice,Item,BalanceTable
-from academic_calendar import utils as academic_utils
+
 from payment.models import Payment
 from student.models import Student
 from .forms import StudentRegistrationForm,EditStudentProfileForm
@@ -73,7 +73,7 @@ def register_student(request):
             #Create Balance Object for student
             balance_obj = BalanceTable.objects.create(
                 student=student,
-                balance = invoice.get_amount()            
+                balance = -(invoice.get_amount())            
             )
             balance_obj.save()
 
@@ -81,6 +81,7 @@ def register_student(request):
         else:
             return render(request, 'student/registration.html',{'form':form})
     elif request.method == 'GET':
+        # i want to register student only when the term has begun 
         form = StudentRegistrationForm()
         return render(request, 'student/registration.html',{'form':form})
     
@@ -119,7 +120,7 @@ def edit_student_profile(request,id):
                         invoice_item.save()
 
                         bal_table = BalanceTable.objects.get(student=student)
-                        bal_table.balance = bal_table.balance + invoice_item.amount
+                        bal_table.balance = bal_table.balance + -(invoice_item.amount)
                         bal_table.save()
 
                         #Reflect changes in the quickbooks by sparse updating the iinvoice
@@ -198,7 +199,7 @@ def edit_student_profile(request,id):
                         invoice_item.save()
 
                         bal_table = BalanceTable.objects.get(student=student)
-                        bal_table.balance = bal_table.balance + invoice_item.amount
+                        bal_table.balance = bal_table.balance + -(invoice_item.amount)
                         bal_table.save()
 
                         #Reflect changes in the quickbooks by sparse updating the iinvoice

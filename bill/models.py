@@ -22,16 +22,17 @@ BILL_STATUS=[
     ('part-paid','part-paid'),
     ('unpaid','unpaid')
 ]
-class Bill(models.Model):
-    bill_number = models.CharField(max_length=30, null=True,default=None,unique=True)
-    created = models.DateField(auto_now_add=True)
-    amount = models.DecimalField(max_digits=7,decimal_places=2,null=True, default=None)
-    synced = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.bill_number 
+##class Bill(models.Model):
+##    bill_number = models.CharField(max_length=30, null=True,default=None,unique=True)
+##    created = models.DateField(auto_now_add=True)
+##    amount = models.DecimalField(max_digits=7,decimal_places=2,null=True, default=None)
+##    synced = models.BooleanField(default=False)
+##
+ #   def __str__(self):
+ #       return self.bill_number 
 
 class BillItem(models.Model):
+    """This model represents a bill item from a third party vendor,"""
     vendor = models.ForeignKey(Vendor, on_delete=models.DO_NOTHING,null=True, default=None)
     description = models.CharField(max_length=255)
     quantity = models.DecimalField(max_digits=7,decimal_places=2)

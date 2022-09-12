@@ -19,8 +19,8 @@ from academic_calendar.models import AcademicCalendar
 
 
 def make_payment(request,id):
+    student_obj = Student.objects.get(pk=id)
     if request.method == 'POST':
-        student_obj = Student.objects.get(pk=1)
         form_obj = CreatePaymentForm(request.POST)
 
         if form_obj.is_valid():
@@ -32,7 +32,7 @@ def make_payment(request,id):
                 unpaid_invoices_cycle = cycle(unpaid_invoices_list)#turn list to an iterable so that i can call next()
                 payment_amount = payment_obj.amount  #the amount to applied to invoices (amount paid)
                 while payment_amount != 0:#Make payments until the amount is spent up
-                    invoice = next(unpaid_invoices_cycle,default="end") #get the first oldest unpaid invoice
+                    invoice = next(unpaid_invoices_cycle,"end") #get the first oldest unpaid invoice
                     
                     if payment_amount > invoice.balance:#if the payment amount overpays that invoice
                         #Excess amount being payed
@@ -52,6 +52,11 @@ def make_payment(request,id):
                         #Now that that invoice is paid for, update the amount paid, to the excess amount so that when the loop runs again it can apply the payment to the next unpaid invoice or create another one of that was the only invoice
                         payment_amount = excess_amount
 
+                        #Update the Balance table
+                        bal_table = BalanceTable.objects.get(student=student_obj)
+                        bal_table.balance = bal_table.balance + payment_obj.amount
+                        bal_table.save()
+                        continue
         
 
                     if payment_amount < invoice.balance:
@@ -63,6 +68,11 @@ def make_payment(request,id):
                         payment_obj.student = student_obj
                         payment_obj.invoice = invoice
                         payment_obj.save()
+                        
+                        #update the Balance table
+                        bal_table = BalanceTable.objects.get(student=student_obj)
+                        bal_table.balance = bal_table.balance + payment_obj.amount
+                        bal_table.save()
 
                         #All the money is spent up
                         payment_amount = 0
@@ -78,11 +88,16 @@ def make_payment(request,id):
                         payment_obj.invoice = invoice
                         payment_obj.save()
 
+                        #update the balance table
+                        bal_table = BalanceTable.objects.get(student=student_obj)
+                        bal_table.balance = bal_table.balance + payment_obj.amount
+                        bal_table.save()
+
                         #now all the money iis spent up
                         payment_amount = 0
 
 
-                    if invoice == 'end' and payment_amount>0:#if there are no incoices left to apply payments but there's still payments left, also covers if there
+                    if invoice == 'end' and payment_amount > 0:#if there are no incoices left to apply payments but there's still payments left, also covers if there
                         #create a new invoice and apply that invoice there.
                         #by now the balance cannot be greater than the invoice balance.
                         cal_obj = AcademicCalendar()
@@ -225,4 +240,4 @@ def make_payment(request,id):
     else:
         #request method GET
         form = CreatePaymentForm()
-        return render(request, 'payment/create_payment.html',{'form':form})
+        return render(request, 'payment/create_payment.html',{'form':form,'student':student_obj})

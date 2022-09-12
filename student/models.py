@@ -24,6 +24,7 @@ class AdmissionNumber(models.Model):
 
 
 class Student(models.Model):
+    """this model represents a student enrolled in school"""
     class Meta:
         ordering = ['-date_of_admission']
     admission_number = models.IntegerField(null=True,default=None)

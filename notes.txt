@@ -1,18 +1,10 @@
-the only time you should e changing the optionals is when a user is opting student into programs
-registration should only be done after the beginning of the term
-1 invoice for term x year y grade z , that are modifiable.
-user gets notified when 
-invoice generation is done after a user and customer are registered into the system
 
-a student can only be subscribed to an item, and cannot be unsubscribed from the item once they've been subscribed
-add javascript to disable lunch and transport, in the edit student form if they are set to True
+#pending: registration should only be done after the beginning of the term (disable register student )
 
-add status to bill
+#pending: add poliicy to have a preapporved list of vendors 
 
-add poliicy to have a preapporved list of vendors 
-
-add back navigation and fron navogation 
-put in a plcae a feature that can restrict a child from progressing to the next grade
+#pending (non-essential)add back navigation and fron navogation 
+put in a plcae a feature that can restrict a child from progressing to the next grade(is there still such a thing as repeating a class?)
 many fees structure querie rely on the student's current grade
 
 remember to add try..block statements to the API calls
@@ -26,14 +18,65 @@ already exists
 
 make the system refresh the token call upon login
 
-dashbord summaries:
->total amount of unpaid bills
->total amount of unpaid fees arrears
->total number of students taking transport
->total number of students taking lunch
->total number of students in each grade (Table)
 
 
 Login must be done with the school's official email address
 
 make sure to put a timer to update the token whenever its about to expire 
+
+
+more fatures down the road (further recommendations)
+>Bank Intergration to automatically make payments
+>Mass SMS and Email (Mass Communications)
+
+
+we need retry workflows so that we can decouple SIMS from the bookkeeping aspect of the system
+
+i should have a limit to how much is allowed as payments 
+
+
+12/09/2022 System Notes
+1.Academic Calendar app
+> What happens when someone passes in a date to AcademicCalendar.get_term but we do not have a calendar for that year?
+>AcademicCalendar.date_range should include the start and end dates in thr range list
+>Check whether the date passed in as an argument is a valid date on all the methods on the modifiable
+>
+
+2.Account
+>be sure to direct transactions to their respective accounts
+>Add try except blocks to qb_api calls in the create_account method
+>Ensure the synced flag is raised after you successfully save a qb_item
+>rename create_account to create_qb_account
+>>decouple the sims and qb sims by removing the create_qb_account from the account's's save method, and instead call that method from the view togetheer with a try...except clause
+
+3. billItem
+>Future feature, be able to make multiple bill items in one bill
+>Change status field in bill item to a boolean 'paid' attribute
+>add try_except blocks on create_bill
+>rename  create_bill to create_qb_bill
+>decouple the sims and qb sims by removing the create_qb_bill from the bill item's save method, and instead call that method from the view togetheer with a try...except clause
+>add form validation
+>Add bill number attribute to billItem to come from the saved create_qb_bill
+>remove pay_bill from views, and add it as a method in bill_payment, the method should receive a bill object
+
+4. bill_payment
+>rename create_qb_bill_payment_obj to create_qb_bill_payment
+>add a method,'pay_bill' to the class
+>>decouple the sims and qb sims by removing the create_qb_bill_payment from the bill payment item's save method, and instead call that method from the view togetheer with a try...except clause
+
+5.core
+6.dashboard
+>remember to add analytics:
+    >dashbord summaries:
+    >total amount of unpaid bills
+    >total amount of unpaid fees arrears
+    >total amount of paid fees
+    >total number of students taking transport
+    >total number of students taking lunch
+    >total number of students in each grade (Table)
+
+7. FeesStructure
+8.grade
+9.invoice
+>Change the source of an invoice number so that the invoice number comes from a saved invoice
+>>>decouple the sims and qb sims by removing the create_qb_invoice from the invoice's save method, and instead call that method from the view togetheer with a try...except clause

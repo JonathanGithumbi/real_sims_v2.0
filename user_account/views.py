@@ -206,7 +206,6 @@ def login_user(request):
         auth_backend = AuthBackend()
         user = auth_backend.authenticate(request,username=username,password=password)
         if user is not None:
-            
             #try to refresh tokens 
             try:
                 refresh()

@@ -1,9 +1,0 @@
-{% extends 'dashboard/layout.html' %}
-{% block content_area %}
-<form action="{% url 'create_academic_calendar'%}" method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" class="btn btn-primary" value="submit">
-</form>
-
-{% endblock content_area %}

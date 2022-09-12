@@ -24,6 +24,9 @@ class Currency(models.Model):
 
 
 class Account(models.Model):
+    """This model represents an account in the chart of accounts on the quickbooks side
+        Transactions are directed to different accounts from other accounts, thus maintaining some order on the quickbooks side 
+    """
     COST_OF_GOODS_SOLD = 'Cost of Goods Sold'
     SALES_OF_PRODUCT_INCOME = 'SalesOfProductIncome'
     COST_OF_LABOR_COST = "CostOfLaborCos"
@@ -73,6 +76,7 @@ class Account(models.Model):
         return self.name
 
     def create_account(self):
+        """This method actually creates the a quickboooks account and saves it to both the database and to the quickbooks account"""
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')

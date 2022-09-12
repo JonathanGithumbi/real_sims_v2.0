@@ -32,11 +32,15 @@ TERM_CHOICES = [
 ]
 
 class InvoiceNumber(models.Model):
-    """Generates the invoice number """
+    """Generates the invoice number from instance's id attribute """
+    """should it be linked to qb_invoice invoice number."""
+    def __init__(self):
+        pass
     created = models.DateTimeField(auto_now_add=True)
 
 
 class Invoice(models.Model):
+    """This is the invoice that has invoice items within it"""
     student = models.ForeignKey(Student,on_delete=models.DO_NOTHING)#added in views
     created = models.DateField(auto_now_add=True)#created on save()
     year = models.IntegerField(null=True, default=None)#added in views
@@ -135,6 +139,7 @@ class Invoice(models.Model):
     def get_amount_paid(self):
         amount_paid = self.amount-self.balance
         return amount_paid
+        
     def format_invoice_no(self):
         return 'inv'+str(self.invoice_number).zfill(4)
 
@@ -151,7 +156,7 @@ class Invoice(models.Model):
 
     
 class Item(models.Model):
-    """These are invoice items"""
+    """These are invoice items. i.e the items that compose the invoice"""
     #item_description = models.CharField(max_length=255,null=True,default=None)
     invoice_item = models.ForeignKey(sales_item, on_delete=models.DO_NOTHING,null=True, default=None)
     amount = models.IntegerField(null=True,default=None)
@@ -171,7 +176,7 @@ class BalanceTable(models.Model):
     this table should not allow deletion of a student if they;re balance is not 0
     wheneve the invoice is added, the amoun is added to the balance 
     whenever a payment is made, the amount is deducted from the balance 
-    allows negative numbers to iindicate overpayment
+    Negative numbers mean that the student owes the school while positive numbers means that the school owes the student
     """
     student = models.OneToOneField(Student, on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=8,decimal_places=2,default=0)

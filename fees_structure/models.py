@@ -9,13 +9,14 @@ TERM_CHOICES = (
         )
 
 class FeesStructure(models.Model):
+    """this model composes the entire school fees structure,"""
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
     term = models.IntegerField(choices=TERM_CHOICES)
-    item = models.ForeignKey(Item, on_delete= models.CASCADE,null=True, default=None)
+    item = models.ForeignKey(Item, on_delete= models.CASCADE,null=True, default=None)#One of the sales items the school is selling
     amount = models.DecimalField(max_digits=8,decimal_places=2,null=True, default=None)
 
     def __str__(self):
-        return "Grade: "+ str(self.grade) + ' Term: '+str(self.term)+' Item:'+str(self.item)
+        return "Fees Structure for Grade: "+ str(self.grade) + ' Term: '+str(self.term)+' for  Item:'+str(self.item)
 
 
 
