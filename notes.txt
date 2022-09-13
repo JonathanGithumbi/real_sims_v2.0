@@ -80,3 +80,6 @@ i should have a limit to how much is allowed as payments
 9.invoice
 >Change the source of an invoice number so that the invoice number comes from a saved invoice
 >>>decouple the sims and qb sims by removing the create_qb_invoice from the invoice's save method, and instead call that method from the view togetheer with a try...except clause
+
+9.student
+>validate form
