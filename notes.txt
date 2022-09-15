@@ -83,3 +83,18 @@ i should have a limit to how much is allowed as payments
 
 9.student
 >validate form
+
+
+
+should not allow the student to subscribe to two of the same items
+policy: subscription to lunch and transport should be done at the earliest, preferably beefore making any payment
+
+deployment checklist:
+    > Verify the academic calendar has the correct start and end dates of each term
+
+ while doing form verification,ensure that the dates make sense, i,e cant put a date earlier/later
+
+
+
+next time when developing, use selenium to simulate user activity on the browser, like filling forms and clicking buttons
+to eliminate the need to have to manually simulate user activity

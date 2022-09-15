@@ -11,6 +11,7 @@ from user_account.models import Token
 from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings
 
+
 from quickbooks.exceptions import QuickbooksException
 
 
@@ -58,11 +59,8 @@ class Student(models.Model):
         return 's' + str(self.admission_number).zfill(4)
 
     def get_items(self):
+        """These are the compulsory recurring items for continuing students"""
         items = ['Tuition', 'Computer Lessons']
-        if self.lunch:
-            items.append('Lunch')
-        if self.transport:
-            items.append('Transport')
 
         return items
 
@@ -72,6 +70,8 @@ class Student(models.Model):
             return False
         else:
             return True
+
+
 
     def create_qb_customer(self):
         # create customer
@@ -97,6 +97,30 @@ class Student(models.Model):
         customer.DisplayName = self.first_name + ' ' + self.middle_name + ' ' + self.last_name
         saved_customer = customer.save(qb=client)
         return saved_customer
+
+    def update_qb_customer(self,student):
+        access_token_obj = Token.objects.get(name='access_token')
+        refresh_token_obj = Token.objects.get(name='refresh_token')
+        realm_id_obj = Token.objects.get(name='realm_id')
+        # create an auth_client
+        auth_client = AuthClient(
+            client_id=settings.CLIENT_ID,
+            client_secret=settings.CLIENT_SECRET,
+            access_token=access_token_obj.key,
+            environment=settings.ENVIRONMENT,
+            redirect_uri=settings.REDIRECT_URI
+        )
+        # create a quickboooks client
+        client = QuickBooks(
+            auth_client=auth_client,
+            refresh_token=refresh_token_obj.key,
+            company_id=realm_id_obj.key
+        )
+        customer = Customer.get(student.qb_id, qb=client)
+        customer.DisplayName = student.first_name + ' ' + student.middle_name + ' ' + student.last_name
+
+        customer.save(qb=client)
+        return customer
 
     def save(self, *args, **kwargs):
         # saves the model to the Db

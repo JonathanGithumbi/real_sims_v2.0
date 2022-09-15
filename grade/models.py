@@ -6,5 +6,6 @@ class Grade(models.Model):
         return self.title
 
     title = models.CharField(max_length=255)
+    number = models.IntegerField(null=True,default=None)
     
     

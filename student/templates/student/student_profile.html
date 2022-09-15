@@ -1,6 +1,16 @@
 {% extends 'dashboard/layout.html' %}
 {% load static %}
 {% block content_area %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </ul>
+    {% endif %}
 <hr>
 <h3>Student Profile</h3>
 <hr>
@@ -70,38 +80,28 @@
 <a href="{% url 'create_payment' student.id %}" class='btn btn-primary'>New Payment </a>
 <hr>
 <h3>Invoices</h3>
-<h6>Total Amount Due: <span class="badge bg-danger">{{student.balancetable.balance}}</span></h6>
 <hr>
 <table id="all_invoices" class="display table table-bordered table-hover">
     <thead class="thead-light">
         <tr>
-            <th>Invoice Number</th>
             <th>Year</th>
             <th>Term</th>
             <th>Total Amount</th>
             <th>Paid</th>
             <th>Balance</th>
-            <th>Status</th>
             <th>Details</th>
         </tr>
     </thead>
     <tbody>
         {% for invoice in invoices %}
         <tr>
-            <td>{{invoice.invoice_number_formatted}}</td>
-            <td>{{invoice.get_year}}</td>
-            <td>{{invoice.get_term}}</td>
+
+            <td>{{invoice.year}}</td>
+            <td>{{invoice.term}}</td>
             <td>{{invoice.amount}}</td>
             <td>{{invoice.get_amount_paid}}</td>
             <td>{{invoice.balance}}</td>
-            <td>
-                {% if invoice.paid_status == False %}
-                Unpaid
-                {% endif %}
-                {% if invoice.paid_status == True %}
-                Paid
-                {% endif %}
-            </td>
+
 
             <td><a class="btn btn-primary" href="{%url 'invoice_detail' invoice.id%}">Details</a></td>
         </tr>

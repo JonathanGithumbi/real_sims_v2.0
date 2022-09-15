@@ -26,6 +26,8 @@ class Payment(models.Model):
     synced = models.BooleanField(default=False, null=True)
     invoice = models.ForeignKey(Invoice, on_delete=models.DO_NOTHING,null=True, default=None)
     student = models.ForeignKey(Student,on_delete=models.DO_NOTHING,null=True,default=None)
+    note = models.CharField(max_length=255,null=True,default="Single Payment")
+    created = models.DateTimeField(auto_now_add=True,null=True)
 
 
     def create_qb_payment(self):
@@ -82,9 +84,3 @@ class Payment(models.Model):
         qb_payment_obj.save(qb=client)
         #return the object
         return qb_payment_obj
-   
-    def save(self, *args, **kwargs):
-        qb_payment_obj = self.create_qb_payment()
-        self.qb_id = qb_payment_obj.Id
-        self.synced = True
-        super().save(*args, **kwargs)  # Call the "real" save() method.

@@ -43,19 +43,21 @@ def register_student(request):
         if form.is_valid():
             # save the student to the database
             student = form.save()
+
             # save teh student as a customer in qb
+            # Even if an exception occurs, i dont want sims to crash, sims should work at db level and save the task to retry later
             try:
                 qb_customer = student.create_qb_customer()
+            except:
+                # find out why the exception occurred
+                # handle the exception with the ultimate aim of getting the customer to quickbooks
+                # log
+                pass
+            else:
+                # also log
                 student.synced = True
                 student.qb_id = qb_customer.Id
-            except QuickbooksException as e:
-                # if there is an error when trying to create the customer
-                # research possible errors that might occur
-                # what to do when an exception occurs
-                # build a retry workflow using celery
-                pass
-            except ConnectionError as e:
-                pass
+                student.save(update_fields=['synced', 'qb_id'])
 
             # charge the student the term's fees
             # create invoice for student
@@ -65,6 +67,7 @@ def register_student(request):
             ac_cal = AcademicCalendar()
             invoice.term = ac_cal.get_term()
             invoice.year = ac_cal.get_year()
+            invoice.grade = student.current_grade
             invoice.save()  # saving the iinvoice now so that invoice items can have something to refefrence
             # Populate the lisst of items that the student is going to pay for
             # Get bare minimum items required
@@ -79,6 +82,7 @@ def register_student(request):
                 items.append("Lower Class Interview Fee")
 
             # Save invoice items to db these are not saved directly to qb
+            total_amount = 0
             for item in items:
                 sales_item_obj = SalesItem.objects.get(name=item)
                 calendar_obj = AcademicCalendar()
@@ -90,22 +94,29 @@ def register_student(request):
                     amount=fee_structure_obj.amount,
                     invoice=invoice
                 )
+                #adding the items to the ivoice, this should modify the amount and balance of the invoice by increasing their values
                 local_item_obj.save()
-            # add amount and balance
-            invoice.amount = invoice.get_amount()
-            invoice.balance = invoice.get_amount()
-            # calling update_fields should force an update
-            invoice.save(update_fields=['amount', 'balance'])
+                total_amount = total_amount + local_item_obj.amount
 
-            # record invoice in quickbooks
+
+            #alter invoice balance and invoice amount
+            invoice.balance = total_amount
+            invoice.amount = total_amount
+            invoice.save(update_fields=['balance','amount'])
+
+            # record that invoice to quickbooks quickbooks
             try:
                 qb_invoice = invoice.create_qb_invoice()
+
+                # also keep system logs
+            except:
+                # log and add retry workflow
+                # celery will probably work hhere for rescheduling these tasks
+                pass
+            else:
                 invoice.synced = True
                 invoice.qb_id = qb_invoice
-                # also keep system logs
-            except QuickbooksException as e:
-                # log and add retry workflow
-                pass
+                invoice.save(update_fields=['synced', 'qb_id'])
 
             # Create Balance record for student
             balance_obj = BalanceTable.objects.create(
@@ -140,7 +151,20 @@ def student_profile(request, student_id):
 def edit_student_profile(request, student_id):
     student = Student.objects.get(pk=student_id)
     if request.method == 'POST':
-        form = EditStudentProfileForm(request.POST, instance=student)  # the instance
+        prev_data = {
+            'first_name':student.first_name,
+            'middle_name':student.middle_name,
+            'last_name':student.last_name,
+            'grade_admitted_to':student.grade_admitted_to,
+            'date_of_admission':student.date_of_admission,
+            'primary_contact_name':student.primary_contact_name,
+            'primary_contact_phone_number':student.primary_contact_phone_number,
+            'secondary_contact_name':student.secondary_contact_name,
+            'secondary_contact_phone_number':student.secondary_contact_phone_number,
+            'lunch':student.lunch,
+            'transport':student.transport
+        }
+        form = EditStudentProfileForm(request.POST, initial=prev_data)  # the initial data
         if form.is_valid():
             if form.has_changed():
                 if 'lunch' in form.changed_data:
@@ -161,25 +185,30 @@ def edit_student_profile(request, student_id):
                         invoice_item = Item.objects.create(
                             invoice_item=lunch_item,
                             amount=fees_struc.amount,
-                            invoice=latest_invoice
-                        )
-                        # save the invoice_item
+                            invoice=latest_invoice)
+                        # save the invoice_item, i.e increase the invoice item to the invoice.
                         invoice_item.save()
+                        # increase the amount on the invoice by the amount of this item
+                        latest_invoice.amount = latest_invoice.amount + invoice_item.amount
+                        # increae the balance on the invoice by the amount of this item
+                        latest_invoice.balance = latest_invoice.balance + invoice_item.amount
+                        latest_invoice.save(update_fields=['amount', 'balance'])
 
-                        #save the transaction to quickbooks
+                        # save the transaction to quickbooks
                         try:
                             latest_invoice.update_qb_invoice(lunch_item)
-                        except QuickbooksException as e:
-                            #what do i do when the update fails to add the item to the invoice ?
+                        except:
+                            # what do i do when the update fails to add the item to the invoice ?
                             pass
 
                         bal_table = BalanceTable.objects.get(student=student)
-                        bal_table.balance = bal_table.balance + -(invoice_item.amount)
+                        bal_table.balance = bal_table.balance + -invoice_item.amount
                         bal_table.save()
-
 
                         # update the student subscripiton to lunnch
                         Student.objects.filter(pk=student_id).update(lunch=True)
+                        messages.success(request, "SUCCESS: student subscribed to lunch successfully",
+                                         extra_tags='alert-success')
 
                 if 'transport' in form.changed_data:
                     transport_item = SalesItem.objects.get(name='Transport')
@@ -202,71 +231,70 @@ def edit_student_profile(request, student_id):
                         )
                         # save the invoice_item
                         invoice_item.save()
+                        # increase the amount on the invoice by the amount of this item
+                        latest_invoice.amount = latest_invoice.amount + invoice_item.amount
+                        # increae the balance on the invoice by the amount of this item
+                        latest_invoice.balance = latest_invoice.balance + invoice_item.amount
+                        latest_invoice.save(update_fields=['amount', 'balance'])
 
                         try:
                             latest_invoice.update_qb_invoice(transport_item)
-                        except QuickbooksException as e:
+                        except :
                             pass
 
                         bal_table = BalanceTable.objects.get(student=student)
                         bal_table.balance = bal_table.balance + -(invoice_item.amount)
                         bal_table.save()
 
-
                         # update model
                         Student.objects.filter(pk=student_id).update(transport=True)
+                        messages.success(request, "SUCCESS: student subscribed to Transportation successfully",
+                                         extra_tags='alert-success')
 
                 # Name change triggers name change in quickbooks
                 if 'first_name' in form.changed_data or 'middle_name' in form.changed_data or 'last_name ' in form.changed_data:
-                    access_token_obj = Token.objects.get(name='access_token')
-                    refresh_token_obj = Token.objects.get(name='refresh_token')
-                    realm_id_obj = Token.objects.get(name='realm_id')
-                    # create an auth_client
-                    auth_client = AuthClient(
-                        client_id=settings.CLIENT_ID,
-                        client_secret=settings.CLIENT_SECRET,
-                        access_token=access_token_obj.key,
-                        environment=settings.ENVIRONMENT,
-                        redirect_uri=settings.REDIRECT_URI
-                    )
-                    # create a quickboooks client
-                    client = QuickBooks(
-                        auth_client=auth_client,
-                        refresh_token=refresh_token_obj.key,
-                        company_id=realm_id_obj.key
-                    )
-                    customer = Customer.get(student.qb_id, qb=client)
-                    customer.DisplayName = form.cleaned_data['first_name'] + ' ' + form.cleaned_data[
-                        'middle_name'] + ' ' + form.cleaned_data['last_name']
+
+                    student.first_name = form.cleaned_data['first_name']
+                    student.middle_name = form.cleaned_data['middle_name']
+                    student.last_name = form.cleaned_data['last_name']
+                    student.save(update_fields=['first_name','middle_name','last_name'])
+
+                    #reflect changes to quickbooks
                     try:
-                        customer.save(qb=client)
-                    except QuickbooksException as e:
+                        student.update_qb_customer(student)
+                    except:
                         pass
+                    messages.success(request, "SUCCESS: Student's name changed successfully", extra_tags='alert-success')
 
-
-                    Student.objects.filter(pk=student_id).update(
-                        first_name=form.cleaned_data['first_name'])
-                    Student.objects.filter(pk=student_id).update(
-                        middle_name=form.cleaned_data['middle_name'])
-                    Student.objects.filter(pk=student_id).update(
-                        last_name=form.cleaned_data['last_name'])
                 if 'primary_contact_name' in form.changed_data:
-                    student_instance = Student.objects.filter(pk=student_id).update(
+                    Student.objects.filter(pk=student_id).update(
                         primary_contact_name=form.cleaned_data['primary_contact_name'])
+                    messages.success(request, "SUCCESS: primary contact's name changed successfully",
+                                     extra_tags='alert-success')
                 if 'primary_contact_phone_number' in form.changed_data:
-                    student_instance = Student.objects.filter(pk=student_id).update(
+                    Student.objects.filter(pk=student_id).update(
                         primary_contact_phone_number=form.cleaned_data['primary_contact_phone_number'])
+                    messages.success(request, "SUCCESS: primary contact's phone number changed successfully",
+                                     extra_tags='alert-success')
                 if 'secondary_contact_name' in form.changed_data:
-                    student_instance = Student.objects.filter(pk=student_id).update(
+                    Student.objects.filter(pk=student_id).update(
                         secondary_contact_name=form.cleaned_data['secondary_contact_name'])
+                    messages.success(request, "SUCCESS: secondary contact's name changed successfully.",
+                                     extra_tags='alert-success')
                 if 'secondary_contact_phone_number' in form.changed_data:
-                    student_instance = Student.objects.filter(pk=student_id).update(
+                    Student.objects.filter(pk=student_id).update(
                         secondary_contact_phone_number=form.cleaned_data['secondary_contact_phone_number'])
-
-            return redirect('student_profile', student.id)
+                    messages.success(request, "SUCCESS: secondary contact's phone number changed successfully.",
+                                     extra_tags='alert-success')
+                #after everything redirect back to the stuudent profile
+                return redirect(student_profile,student.id)
+            else:
+                #form has not changed
+                messages.info(request,"INFO: No changes made to the student's profile",extra_tags='alert-info')
+                return redirect(student_profile,student.id)
         else:
-            # form is not valid
-            pass
+            #form is not valid
+            return render(request, 'student/edit_student_profile.html', {'form': form, 'student': student})
     if request.method == 'GET':
         form = EditStudentProfileForm(instance=student)
         return render(request, 'student/edit_student_profile.html', {'form': form, 'student': student})

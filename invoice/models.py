@@ -33,10 +33,6 @@ TERM_CHOICES = [
 class InvoiceNumber(models.Model):
     """Generates the invoice number from instance's id attribute """
     """should it be linked to qb_invoice invoice number."""
-
-    def __init__(self):
-        pass
-
     created = models.DateTimeField(auto_now_add=True)
 
 
@@ -47,12 +43,12 @@ class Invoice(models.Model):
     year = models.IntegerField(null=True, default=None)  # added in views
     term = models.IntegerField(null=True, default=None)  # added in views
     amount = models.DecimalField(max_digits=8, decimal_places=2, null=True,
-                                 default=None)  # to be added in registration views
-    invoice_number = models.BigIntegerField(null=True, default=None)  # added in save
-    invoice_number_formatted = models.CharField(max_length=255, default=None, null=True)  # added in save
+                                 default=0)  # to be added in registration views
+    grade = models.ForeignKey(Grade, on_delete=models.DO_NOTHING,null=True,default=None)
+
     synced = models.BooleanField(default=False)  # added in save
-    paid_status = models.BooleanField(default=False, null=True)  # updated when creating payments
-    balance = models.DecimalField(max_digits=8, decimal_places=2, default=None,
+    paid = models.BooleanField(default=False, null=True)  # updated when creating payments
+    balance = models.DecimalField(max_digits=8, decimal_places=2, default=0,
                                   null=True)  # hOW MUCH IS LEFT ON THE PAYMENT
     qb_id = models.CharField(max_length=255, null=True, default=None)
 
@@ -181,11 +177,19 @@ class Invoice(models.Model):
 
     def get_amount(self):
         amount = 0
-        local_item_objects = Item.objects.filter(invoice=self)
-        for obj in local_item_objects:
-            amount = obj.amount + amount
+        items = Item.objects.filter(invoice=self)
+        for item in items:
+            amount=amount+item.amount
 
         return amount
+    def get_balance(self):
+        #payment amount - amount
+        payments = self.payment_set.filter(invoice=self)
+        payment_amount = 0
+        for payment in payments:
+            payment_amount = payment_amount + payment.amount
+
+        return self.get_amount() - payment_amount
 
     def get_amount_paid(self):
         amount_paid = self.amount - self.balance
@@ -194,17 +198,11 @@ class Invoice(models.Model):
     def format_invoice_no(self):
         return 'inv' + str(self.invoice_number).zfill(4)
 
-    def save(self, *args, **kwargs):
-        """Save is not called when you use the Models.update() so this is safe to use for registration"""
-        inv_number = InvoiceNumber()
-        inv_number.save()
-        self.invoice_number = inv_number.id
-        self.invoice_number_formatted = self.format_invoice_no()
-        super().save(*args, **kwargs)  # Call the "real" save() method.
 
 
 class Item(models.Model):
     """These are invoice items. i.e the items that compose the invoice"""
+    """Whenever an invoice item is added to an invoice, the save method modifies the invoice by increasing the amount and balance of the invoice"""
     # item_description = models.CharField(max_length=255,null=True,default=None)
     invoice_item = models.ForeignKey(sales_item, on_delete=models.DO_NOTHING, null=True, default=None)
     amount = models.IntegerField(null=True, default=None)
@@ -212,6 +210,7 @@ class Item(models.Model):
     created = models.DateField(null=True, default=None)
 
     def save(self, *args, **kwargs):
+
         super().save(*args, **kwargs)
 
     def __str__(self):
