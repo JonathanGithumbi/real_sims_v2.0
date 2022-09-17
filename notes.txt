@@ -98,3 +98,11 @@ deployment checklist:
 
 next time when developing, use selenium to simulate user activity on the browser, like filling forms and clicking buttons
 to eliminate the need to have to manually simulate user activity
+
+subscribing to items, the charges must be applied to the invoices for the current terms
+should change the status of the invoice to unpaid when subscribing to items just in case the invoice was cleared
+ypu should have only one invoice for a given term/year
+
+it is critical that you validate the user's input! in all the applications
+
+get datables to display entries in a descending wise order

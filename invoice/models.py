@@ -39,7 +39,7 @@ class InvoiceNumber(models.Model):
 class Invoice(models.Model):
     """This is the invoice that has invoice items within it"""
     student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)  # added in views
-    created = models.DateField(auto_now_add=True)  # created on save()
+    created = models.DateTimeField(auto_now_add=True)  # created on save()
     year = models.IntegerField(null=True, default=None)  # added in views
     term = models.IntegerField(null=True, default=None)  # added in views
     amount = models.DecimalField(max_digits=8, decimal_places=2, null=True,

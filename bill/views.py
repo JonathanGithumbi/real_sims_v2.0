@@ -8,10 +8,10 @@ from .forms import CreateBillItemForm
 from django.urls import reverse
 from . import utils
 from bill_payment.models import BillPayment
-
+from .forms import EditBillItemForm
 from quickbooks import QuickBooks
 from quickbooks.objects import Customer
-
+from django.contrib import messages
 from user_account.models import Token
 from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings
@@ -33,78 +33,81 @@ def bills(request):
 
 
 def create_bill(request):
-    form = CreateBillItemForm()
+
     if request.method == 'GET':
+        form = CreateBillItemForm()
         return render(request, 'bill/create_bill.html',{'form':form})
     if request.method == 'POST':
         form=CreateBillItemForm(request.POST)
         if form.is_valid():
-            instance = form.save()
-            instance.bill_number = utils.generate_bill_number(instance.id)
-            instance.save()
+            bill_item_obj = form.save()
+
+            #also save the  bill to quickbooks
+            try:
+                qb_bill_item = bill_item_obj.create_qb_bill()
+            except:
+                pass
+            else:
+                bill_item_obj.qb_id = qb_bill_item.Id
+                bill_item_obj.synced = True
+                bill_item_obj.save(update_fields=['qb_id','synced'])
+            messages.success(request,"Bill recorded successfully",extra_tags='alert-success')
             return redirect(reverse('bills'))
         else:
+            messages.success(request, "Error during bill recording", extra_tags='alert-warning')
             return render(request, 'bill/create_bill.html',{'form':form})
 
 def pay_bill(request,id):
-    BillItem.objects.filter(pk=id).update(status='paid')
-    local_bill_obj = BillItem.objects.get(pk=id)
-        #Reflect changes in the quickbooks by sparse updating the iinvoice
-    access_token_obj = Token.objects.get(name='access_token')
-    refresh_token_obj = Token.objects.get(name='refresh_token')
-    realm_id_obj = Token.objects.get(name='realm_id')
-    #create an auth_client
-    auth_client = AuthClient(
-        client_id = settings.CLIENT_ID,
-        client_secret = settings.CLIENT_SECRET,
-        access_token = access_token_obj.key,
-        environment=settings.ENVIRONMENT,
-        redirect_uri = settings.REDIRECT_URI
+    bill_obj = BillItem.objects.get(pk=id)
+    # create a bill payment object.
+    # bill pay
+    bill_payment_obj = BillPayment.objects.create(
+        vendor=bill_obj.vendor,
+        amount=bill_obj.total,
+        bill=bill_obj,
     )
-    #create a quickboooks client
-    client = QuickBooks(
-        auth_client = auth_client,
-        refresh_token = refresh_token_obj.key,
-        company_id = realm_id_obj.key
-    )
+    bill_payment_obj.save()
+    bill_obj.fully_paid = True
+    bill_obj.save(update_fields=['fully_paid'])
 
-    #create bill payment object
-    local_bill_payment_obj = BillPayment.objects.create(
-        bill = local_bill_obj,
-        vendor = local_bill_obj.vendor
-    )#qb_id,created, and synced to be updadted in .save() method
-
-    local_bill_payment_obj.save()
-
-    #get the qb_bill_item
-    qb_bill_item = qb_bill.get(local_bill_obj.qb_id,qb=client)
-
-    #Linked Txn
-    lnk_txn = LinkedTxn()
-    lnk_txn.TxnId = qb_bill_item.Id
-    lnk_txn.TxnType = 'Bill'
-    
-    #construct bill payment line
-    bill_paym_line = BillPaymentLine()
-    bill_paym_line.Amount = local_bill_obj.total
-    bill_paym_line.LinkedTxn.append(lnk_txn)
-    #get vendor bject 
-    qb_vendor_obj = qb_vendor.get(local_bill_obj.vendor.qb_id, qb=client)
-    #create qb bill payment object
-    bill_paym_obj = QB_BillPayment()
-    bill_paym_obj.VendorRef = qb_vendor_obj.to_ref()
-    bill_paym_obj.TotalAmt = local_bill_obj.total
-    bill_paym_obj.Line.append(bill_paym_line)
-    bill_paym_obj.PayType = "Check"
-    #get qb_account 
-    #first get local
-    local_qb_acc = Local_Account.objects.get(name='Checking Bank Account')
-    qb_acc_obj = QB_Account.get(local_qb_acc.qb_id,qb=client)
-    #create checkpayment object
-    check_paym_obj = CheckPayment()
-    check_paym_obj.BankAccountRef = qb_acc_obj.to_ref()
-    bill_paym_obj.CheckPayment = check_paym_obj
-    bill_paym_obj.save(qb=client)
-
+    try:
+        qb_bill_payment_obj = bill_payment_obj.create_qb_bill_payment_obj()
+    except:
+        pass
+    else:
+        bill_payment_obj.qb_id = qb_bill_payment_obj.Id
+        bill_payment_obj.synced = True
+        bill_payment_obj.save(update_fields=['qb_id', 'synced'])
+    messages.success(request,"Bill Payment recorded Successfully",extra_tags='alert-success')
     return redirect('bills')
+def edit_bill(request,id):
+    bill_obj = BillItem.objects.get(pk=id)
+
+    if request.method=='GET':
+        bill_edit_form = EditBillItemForm(instance=bill_obj)
+        return render(request,'bill/edit_bill.html',{'form':bill_edit_form,'bill':bill_obj})
+    if request.method == 'POST':
+        initial_data = {
+            'vendor':bill_obj.vendor,
+            'description':bill_obj.description,
+            'quantity':bill_obj.quantity,
+            'price_per_quantity':bill_obj.price_per_quantity,
+            'total':bill_obj.total
+        }
+        bill_edit_form = EditBillItemForm(request.POST,initial=initial_data)
+        if bill_edit_form.is_valid():
+            if bill_edit_form.has_changed():
+                edited_bill_obj = bill_edit_form.save()
+                try:
+                    qb_bill = edited_bill_obj.edit_qb_bill()
+                except:
+                    pass
+                messages.info(request,"Details changed successfully",extra_tags='alert-success')
+                return redirect('bills')
+            else:
+                messages.info(request,"No Data Changed on Bill",extra_tags='alert-info')
+                return redirect('bills')
+        else:
+            bill_edit_form = EditBillItemForm(request.POST)
+            return render(request,'bill/edit_bill.html',{'form':bill_edit_form})
 

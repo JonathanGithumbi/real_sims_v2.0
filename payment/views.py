@@ -38,7 +38,7 @@ def make_payment(request, id):
 
                 #if you do have a valid  PaymentCreation form you create a payment object that holds the amount of money
                 #paid and the date it was paid
-                payment_obj = form_obj.save()  # Payment Object (amount, an date)
+                #payment_obj = form_obj.save()  # Payment Object (amount, an date)
 
                 #Check if there are any unpaid invoices , because it does not make sense making a payment for a new \
                 #invoice while you stilll have previously unpaid ones
@@ -46,12 +46,12 @@ def make_payment(request, id):
                     'created')  # Student's unpaid invoices if any, with the oldest one first
 
 
-                if unpaid_invoices.exists():  # Are there any unapid invoices ?
+                if unpaid_invoices.exists() is True:  # Are there any unapid invoices ?
                     # yes
                     unpaid_invoices_list = list(unpaid_invoices)  # #make a list of them
                     unpaid_invoices_iterator = iter(unpaid_invoices_list)  # turn list to an iterator so that i can call next()
 
-                    payment_amount = payment_obj.amount  # the amount to be applied to invoices (amount paid)
+                    payment_amount = form_obj.cleaned_data['amount']  # the amount to be applied to invoices (amount paid)
 
                     while payment_amount != 0:  # Make payments until the amount is spent up
 
@@ -64,11 +64,13 @@ def make_payment(request, id):
                             # Modify the payment object so that it pays the invoice exactly(to 0) in Quickbooks
                             # Apply the payment for accounting_sims
                             # Minus the excess amount so that it doesnt overpay the qb_invoice.
-                            payment_obj.amount = payment_obj.amount - excess_amount
-                            payment_obj.student = student_obj  # payment was applied for this student
-                            payment_obj.invoice = invoice  # payment was applied to this invoice
-                            payment_obj.note = "Payment Split. Overflow to next invoice"
-                            payment_obj.save(update_fields=['amount', 'student', 'invoice','note'])  # save the payment both to db and to QB
+                            payment_obj = Payment.objects.create(
+                                amount = payment_amount - excess_amount,
+                                student = student_obj,  # payment was applied for this student
+                                invoice = invoice , # payment was applied to this invoice
+                                note = "Payment Split. Overflow to next invoice"
+                            )
+                            payment_obj.save()  # save the payment both to db and to QB
 
                             # Apply payment to invoice, for local sims
                             invoice.balance = 0
@@ -92,10 +94,12 @@ def make_payment(request, id):
                         if invoice != "end" and payment_amount < invoice.balance:
                             # now the payment amount is less than the invoice_balance either from paying a previous invoice or the payment_obj.amount was that way initially
                             # sav the payment object
-                            payment_obj.amount = payment_amount
-                            payment_obj.student = student_obj
-                            payment_obj.invoice = invoice
-                            payment_obj.save(update_fields=['student', 'invoice'])
+                            payment_obj = Payment.objects.create(
+                                amount = payment_amount,
+                                student = student_obj,
+                                invoice = invoice
+                            )
+                            payment_obj.save()
 
                             # apply payment to the invoice
                             invoice.balance = invoice.balance - payment_amount
@@ -120,9 +124,11 @@ def make_payment(request, id):
                             # Apply payment to that invoice
 
                             # save the payment object
-                            payment_obj.amount = payment_amount
-                            payment_obj.student = student_obj
-                            payment_obj.invoice = invoice
+                            payment_obj = Payment.objects.create(
+                                amount=payment_amount,
+                                student=student_obj,
+                                invoice=invoice
+                            )
                             payment_obj.save(update_fields=['student', 'invoice'])
 
                             invoice.balance = 0
@@ -162,11 +168,13 @@ def make_payment(request, id):
                                 prev_term = previous_invoice.term
                                 prev_grade = previous_invoice.grade
 
+                                #if the kids are still in the current year
+                                next_grade = prev_grade
+                                next_year = prev_year
                                 next_term = prev_term + 1
-
-
                                 # get the next term year
-                                if next_term > 3:  # if term 3 and overpayment is made, make an invoice for the next year
+                                if prev_term + 1 > 3:  # if term 3 and overpayment is made, make an invoice for the next year
+                                    #Children graduating to a new year, term 1 , next grade
                                     if prev_grade.number == 6:
                                         # student goes off to junior secondary.ie extra pay
                                         # deposit that amount to the student's overpay
@@ -174,30 +182,30 @@ def make_payment(request, id):
                                         # create an empty invoice
                                         # return
                                         pass
-                                    elif prev_grade.number == 8:
+                                    if prev_grade.number == 8:
                                         # this is a edge case, to facilitate the transitioning of
                                         # class 8 is being phased out
                                         # if youre in grade 8 and you over pay 3rd term's fees, where do we put the money
                                         # return
                                         pass
 
-                                    elif prev_grade.number == 101:  # 101 is code for PP1
+                                    if prev_grade.number == 101:  # 101 is code for PP1
                                         next_grade = Grade.objects.get(number=102)
                                         next_year = prev_year + 1
                                         next_term = 1
 
-                                    elif prev_grade.number == 102:  # 102 is code for PP2
+                                    if prev_grade.number == 102:  # 102 is code for PP2
                                         next_grade = Grade.objects.get(number=1)
                                         next_year = prev_year + 1
                                         next_term = 1
-                                    elif prev_grade.number == 0:  # 0 is code for play group
+                                    if prev_grade.number == 0:  # 0 is code for play group
                                         next_grade = Grade.objects.get(number=1)
                                         next_year = prev_year + 1
                                         next_term = 1
-                                else:
-                                    next_grade = prev_grade
-                                    next_year = prev_year
-                                    next_term = prev_term + 1
+                                    else:
+                                        next_grade = Grade.objects.get(number = prev_grade.number + 1)
+                                        next_year = prev_year + 1
+                                        next_term = 1
 
                                 # get the amount to be paid for that term
                                 # add an invoice for the coming term
@@ -242,12 +250,13 @@ def make_payment(request, id):
                                     # Modify the payment object so that it pays the invoice exactly(to 0) in Quickbooks
                                     # Apply the payment for accounting_sims
                                     # Minus the excess amount so that it doesnt overpay the qb_invoice.
-                                    payment_obj.amount = payment_obj.amount - excess_amount
-                                    payment_obj.student = student_obj  # payment was applied for this student
-                                    payment_obj.invoice = invoice  # payment was applied to this invoice
-                                    payment_obj.note = "Payment Split. Overflow to next invoice"
-                                    payment_obj.save(update_fields=['amount', 'student', 'invoice',
-                                                                    'note'])  # save the payment both to db and to QB
+                                    payment_obj = Payment.objects.create(
+                                        amount = payment_obj.amount - excess_amount,
+                                        student = student_obj,  # payment was applied for this student
+                                        invoice = invoice,  # payment was applied to this invoice
+                                        note = "Payment Split. Overflow to next invoice"
+                                    )
+                                    payment_obj.save()  # save the payment both to db and to QB
 
                                     # Apply payment to invoice, for local sims
                                     invoice.balance = 0
@@ -271,10 +280,12 @@ def make_payment(request, id):
                                 if payment_amount < invoice.balance:
                                     # now the payment amount is less than the invoice_balance either from paying a previous invoice or the payment_obj.amount was that way initially
                                     # sav the payment
-                                    payment_obj.amount = payment_amount
-                                    payment_obj.student = student_obj
-                                    payment_obj.invoice = invoice
-                                    payment_obj.save(update_fields=['amount','student', 'invoice'])
+                                    payment_obj = Payment.objects.create(
+                                        amount = payment_amount,
+                                        student = student_obj,
+                                        invoice = invoice
+                                    )
+                                    payment_obj.save()
 
                                     # apply payment to the invoice
                                     invoice.balance = invoice.balance - payment_amount
@@ -299,10 +310,12 @@ def make_payment(request, id):
                                     # Apply payment to that invoice
 
                                     # save the payment object
-                                    payment_obj.amount = payment_amount
-                                    payment_obj.student = student_obj
-                                    payment_obj.invoice = invoice
-                                    payment_obj.save(update_fields=['student', 'invoice'])
+                                    payment_obj = Payment.objects.create(
+                                        amount=payment_amount,
+                                        student=student_obj,
+                                        invoice=invoice
+                                    )
+                                    payment_obj.save()
 
                                     invoice.balance = 0
                                     invoice.paid = True
@@ -330,18 +343,22 @@ def make_payment(request, id):
                 # there are unpaid invoices
                 else:
                     # when there are no unpaid invoices and the student makes another payment
-                    payment_amount = payment_obj.amount  # the amount to applied to invoices (amount paid)
+                    payment_amount = form_obj.cleaned_data['amount']  # the amount to applied to invoices (amount paid)
                     while payment_amount != 0:
-                        #maybe its best t0 fetch the term, grade and year from the previous invoice
-                        previous_invoice = Invoice.objects.filter(student=student_obj).order_by('-created').first()
+                        # maybe its best t0 fetch the term, grade and year from the previous invoice
+                        previous_invoice = Invoice.objects.filter(student=student_obj).order_by(
+                            '-created').first()
                         prev_year = previous_invoice.year
                         prev_term = previous_invoice.term
                         prev_grade = previous_invoice.grade
 
+                        # if the kids are still in the current year
+                        next_grade = prev_grade
+                        next_year = prev_year
                         next_term = prev_term + 1
-
-                        #get the next term year
-                        if next_term > 3:  # if term 3 and overpayment is made, make an invoice for the next year
+                        # get the next term year
+                        if prev_term + 1 > 3:  # if term 3 and overpayment is made, make an invoice for the next year
+                            # Children graduating to a new year, term 1 , next grade
                             if prev_grade.number == 6:
                                 # student goes off to junior secondary.ie extra pay
                                 # deposit that amount to the student's overpay
@@ -349,30 +366,30 @@ def make_payment(request, id):
                                 # create an empty invoice
                                 # return
                                 pass
-                            elif prev_grade.number == 8:
+                            if prev_grade.number == 8:
                                 # this is a edge case, to facilitate the transitioning of
                                 # class 8 is being phased out
                                 # if youre in grade 8 and you over pay 3rd term's fees, where do we put the money
                                 # return
                                 pass
 
-                            elif prev_grade.number == 101:  # 101 is code for PP1
+                            if prev_grade.number == 101:  # 101 is code for PP1
                                 next_grade = Grade.objects.get(number=102)
                                 next_year = prev_year + 1
                                 next_term = 1
 
-                            elif prev_grade.number == 102:  # 102 is code for PP2
+                            if prev_grade.number == 102:  # 102 is code for PP2
                                 next_grade = Grade.objects.get(number=1)
                                 next_year = prev_year + 1
                                 next_term = 1
-                            elif prev_grade.number == 0:  # 0 is code for play group
+                            if prev_grade.number == 0:  # 0 is code for play group
                                 next_grade = Grade.objects.get(number=1)
                                 next_year = prev_year + 1
                                 next_term = 1
-                        else:
-                            next_grade = prev_grade
-                            next_year = prev_year
-                            next_term = prev_term + 1
+                            else:
+                                next_grade = Grade.objects.get(number=prev_grade.number + 1)
+                                next_year = prev_year + 1
+                                next_term = 1
 
                         # get the amount to be paid for that term
                         # add an invoice for the coming term
@@ -410,19 +427,20 @@ def make_payment(request, id):
                         bal_table.balance = bal_table.balance + -total_amount
                         bal_table.save(update_fields=['balance'])
 
-                        if payment_amount > invoice.balance and invoice != "end":  # if the payment amount overpays that invoice
+                        if payment_amount > invoice.balance:  # if the payment amount overpays that invoice
                             # Excess amount being payed
                             excess_amount = payment_amount - invoice.balance  # get the amount overpaid
 
                             # Modify the payment object so that it pays the invoice exactly(to 0) in Quickbooks
                             # Apply the payment for accounting_sims
                             # Minus the excess amount so that it doesnt overpay the qb_invoice.
-                            payment_obj.amount = payment_obj.amount - excess_amount
-                            payment_obj.student = student_obj  # payment was applied for this student
-                            payment_obj.invoice = invoice  # payment was applied to this invoice
-                            payment_obj.note = "Payment Split. Overflow to next invoice"
-                            payment_obj.save(update_fields=['amount', 'student', 'invoice',
-                                                            'note'])  # save the payment both to db and to QB
+                            payment_obj = Payment.objects.create(
+                                amount=payment_amount - excess_amount,
+                                student=student_obj,  # payment was applied for this student
+                                invoice=invoice,  # payment was applied to this invoice
+                                note="Payment Split. Overflow to next invoice"
+                            )
+                            payment_obj.save()  # save the payment both to db and to QB
 
                             # Apply payment to invoice, for local sims
                             invoice.balance = 0
@@ -445,11 +463,13 @@ def make_payment(request, id):
 
                         if payment_amount < invoice.balance:
                             # now the payment amount is less than the invoice_balance either from paying a previous invoice or the payment_obj.amount was that way initially
-                            # sav the payment
-                            payment_obj.amount = payment_amount
-                            payment_obj.student = student_obj
-                            payment_obj.invoice = invoice
-                            payment_obj.save(update_fields=['amount', 'student', 'invoice'])
+                            # sav the payment object
+                            payment_obj = Payment.objects.create(
+                                amount=payment_amount,
+                                student=student_obj,
+                                invoice=invoice
+                            )
+                            payment_obj.save()
 
                             # apply payment to the invoice
                             invoice.balance = invoice.balance - payment_amount
@@ -474,9 +494,11 @@ def make_payment(request, id):
                             # Apply payment to that invoice
 
                             # save the payment object
-                            payment_obj.amount = payment_amount
-                            payment_obj.student = student_obj
-                            payment_obj.invoice = invoice
+                            payment_obj = Payment.objects.create(
+                                amount=payment_amount,
+                                student=student_obj,
+                                invoice=invoice
+                            )
                             payment_obj.save(update_fields=['student', 'invoice'])
 
                             invoice.balance = 0
@@ -496,7 +518,7 @@ def make_payment(request, id):
 
                             # now all the money iis spent up
                             payment_amount = 0
-
+                            break
                     # After everything return to student profile
                     messages.success(request,"Payment applied successfully",extra_tags="alert-success")
                     return redirect('student_profile', id)

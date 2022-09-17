@@ -172,8 +172,9 @@ def edit_student_profile(request, student_id):
                     lunch_item = SalesItem.objects.get(name='Lunch')
                     if form.cleaned_data['lunch'] == True:
                         # This is subscribing a student to lunch 
-                        # 1. Fetch the student's latest invoice 
-                        latest_invoice = Invoice.objects.filter(student=student).order_by('-created')[0]
+                        # fetch the student's invoice for the current term
+                        ac_cal = AcademicCalendar()
+                        current_invoice = Invoice.objects.get(year=ac_cal.get_year(),term=ac_cal.get_term(),student=student)
 
                         # 2 Add Lunch to that invoice
                         # get academic calendar obj
@@ -185,18 +186,18 @@ def edit_student_profile(request, student_id):
                         invoice_item = Item.objects.create(
                             invoice_item=lunch_item,
                             amount=fees_struc.amount,
-                            invoice=latest_invoice)
+                            invoice=current_invoice)
                         # save the invoice_item, i.e increase the invoice item to the invoice.
                         invoice_item.save()
                         # increase the amount on the invoice by the amount of this item
-                        latest_invoice.amount = latest_invoice.amount + invoice_item.amount
+                        current_invoice.amount = current_invoice.amount + invoice_item.amount
                         # increae the balance on the invoice by the amount of this item
-                        latest_invoice.balance = latest_invoice.balance + invoice_item.amount
-                        latest_invoice.save(update_fields=['amount', 'balance'])
+                        current_invoice.balance = current_invoice.balance + invoice_item.amount
+                        current_invoice.save(update_fields=['amount', 'balance'])
 
                         # save the transaction to quickbooks
                         try:
-                            latest_invoice.update_qb_invoice(lunch_item)
+                            current_invoice.update_qb_invoice(lunch_item)
                         except:
                             # what do i do when the update fails to add the item to the invoice ?
                             pass
@@ -214,9 +215,9 @@ def edit_student_profile(request, student_id):
                     transport_item = SalesItem.objects.get(name='Transport')
                     if form.cleaned_data['transport'] == True:
                         # This is subscribing a student to transport 
-                        # 1. Fetch the student's latest invoice 
-                        latest_invoice = Invoice.objects.filter(student=student).order_by('-created')[0]
-
+                        # fetch the student's invoice for the current term
+                        ac_cal = AcademicCalendar()
+                        current_invoice = Invoice.objects.get(year=ac_cal.get_year(), term=ac_cal.get_term(),student=student)
                         # 2 Add Lunch to that invoice
                         # get academic calendar obj
                         cal_obj = AcademicCalendar()
@@ -227,18 +228,18 @@ def edit_student_profile(request, student_id):
                         invoice_item = Item.objects.create(
                             invoice_item=transport_item,
                             amount=fees_struc.amount,
-                            invoice=latest_invoice
+                            invoice=current_invoice
                         )
                         # save the invoice_item
                         invoice_item.save()
                         # increase the amount on the invoice by the amount of this item
-                        latest_invoice.amount = latest_invoice.amount + invoice_item.amount
+                        current_invoice.amount = current_invoice.amount + invoice_item.amount
                         # increae the balance on the invoice by the amount of this item
-                        latest_invoice.balance = latest_invoice.balance + invoice_item.amount
-                        latest_invoice.save(update_fields=['amount', 'balance'])
+                        current_invoice.balance = current_invoice.balance + invoice_item.amount
+                        current_invoice.save(update_fields=['amount', 'balance'])
 
                         try:
-                            latest_invoice.update_qb_invoice(transport_item)
+                            current_invoice.update_qb_invoice(transport_item)
                         except :
                             pass
 

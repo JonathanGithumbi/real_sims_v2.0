@@ -56,27 +56,7 @@
 <a href="{%url 'edit_student_profile' student.id%} "class='btn btn-primary'>Edit Profile</a>
 <a href="{%url 'delete_student' student.id%} "class='btn btn-danger'>Delete Student</a>
 
-<hr>
-<h3>Payments</h3>
-<hr>
-<table id="all_payments" class="display table table-bordered table-hover">
-    <thead class="thead-light">
-        <tr>
-            <th>Date Paid</th>
-            <th>For Invoice</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for payment in payments %}
-        <tr>
-            <td>{{payment.date_paid}}</td>
-            <td>{{payment.invoice.invoice_number_formatted}}</td>
-            <td>{{payment.amount}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+
 <a href="{% url 'create_payment' student.id %}" class='btn btn-primary'>New Payment </a>
 <hr>
 <h3>Invoices</h3>
@@ -87,7 +67,7 @@
             <th>Year</th>
             <th>Term</th>
             <th>Total Amount</th>
-            <th>Paid</th>
+            <th>Paid Amount </th>
             <th>Balance</th>
             <th>Details</th>
         </tr>
