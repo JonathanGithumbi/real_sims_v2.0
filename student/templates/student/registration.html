@@ -1,11 +1,82 @@
 {% extends 'dashboard/layout.html' %}
 {% block content_area %}
-<h1>Student Registration Form</h1>
-<hr>
-<form action="{%url 'register_student'%}" method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" class="btn btn-primary mb-3" value="Submit">
-</form>
+    <h1>Student Registration Form</h1>
+    <hr>
+    <form action="{% url 'register_student' %}" method="post" name="student_registration_form">
+        {% csrf_token %}
+        {{ form.as_p }}
 
+        <button type="button" onclick="confirm_registration()" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#student_regisration_modal">
+            Submit
+        </button>
+        <div class="modal fade" id="student_regisration_modal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Register Student</h4>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <b>Name:</b> <small id="student_name_area"></small>
+                        <br>
+                        <b>Joining grade:</b> <small id="grade_area"></small>
+                        <br>
+                        <b>Primary Contact Name:</b> <small id="prim_cont_name_area"></small>
+                        <br>
+                        <b>Primary Contact Phone Number: </b><small id="prim_cont_no_area"></small>
+                        <br>
+                        <b>Secondary Contact Name: </b><small id="sec_cont_name_area"></small>
+                        <br>
+                        <b>Secondary Contact Phone Number: </b><small id="sec_cont_no_area"></small>
+                        <br>
+                        <b>Lunch:</b> <small id="lunch_area"></small>
+                        <br>
+                        <b>Transport: </b><small id="transport_area"></small>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary mb-3" value="Submit" data-bs-dismiss="modal">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        function confirm_registration() {
+            const first_name = document.forms['student_registration_form']['first_name'].value;
+            const middle_name = document.forms['student_registration_form']['middle_name'].value;
+            const last_name = document.forms['student_registration_form']['last_name'].value;
+            document.getElementById("student_name_area").innerHTML = first_name + ' ' + middle_name + ' ' + last_name;
+            const grade_admitted_to = document.forms['student_registration_form']['grade_admitted_to'].value;
+            document.getElementById("grade_area").innerHTML = grade_admitted_to;
+            const primary_contact_name = document.forms['student_registration_form']['primary_contact_name'].value;
+            document.getElementById("prim_cont_name_area").innerHTML = primary_contact_name;
+            const primary_contact_phone_number = document.forms['student_registration_form']['primary_contact_phone_number'].value;
+            document.getElementById("prim_cont_no_area").innerHTML = primary_contact_phone_number;
+            const secondary_contact_name = document.forms['student_registration_form']['secondary_contact_name'].value;
+            document.getElementById("sec_cont_name_area").innerHTML = secondary_contact_name;
+            const secondary_contact_phone_number = document.forms['student_registration_form']['secondary_contact_phone_number'].value;
+            document.getElementById("sec_cont_no_area").innerHTML = secondary_contact_phone_number;
+            const lunch = document.forms['student_registration_form']['lunch'];
+            if (lunch.checked  ==  true){
+                document.getElementById("lunch_area").innerHTML = "Subscribed";
+            }else{
+                document.getElementById("lunch_area").innerHTML = "Not Subscribed";
+            }
+            const transport = document.forms['student_registration_form']['transport'];
+            if (transport.checked == true){
+                document.getElementById("transport_area").innerHTML = "Subscribed";
+            }else{
+                document.getElementById("transport_area").innerHTML = "Not Subscribed";
+            }
+
+        }
+    </script>
 {% endblock content_area %}

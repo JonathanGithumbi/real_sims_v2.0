@@ -11,11 +11,12 @@
             {% endfor %}
         </ul>
     {% endif %}
-<a href="{% url 'create_bill'%}" class='btn btn-primary'>New Bill <img src="{% static 'bootstrap_icons/plus-circle.svg'%}" alt="Bootstrap" width="30" height="30"></a>
-<hr>
-<h1>Bills</h1>
-<table id="all_bills" class="display table table-bordered table-hover">
-    <thead class="thead-light">
+    <a href="{% url 'create_bill' %}" class='btn btn-primary'>New Bill <img
+            src="{% static 'bootstrap_icons/plus-circle.svg' %}" alt="Bootstrap" width="30" height="30"></a>
+    <hr>
+    <h1>Bills</h1>
+    <table id="all_bills" class="display table table-bordered table-hover">
+        <thead class="thead-light">
         <tr>
             <th>Date Created</th>
             <th>Decription</th>
@@ -24,42 +25,69 @@
             <th>Price per Quantity</th>
             <th>Total Amount</th>
             <th>Actions</th>
-            
+
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {% for bill in bills %}
-        <tr>
-            <td>{{bill.created}}</td>
-            <td>{{bill.description}}</td>
-            <td>
-                {% if bill.fully_paid == True %}
-                Paid
-                {% endif %}
+            <tr>
+                <td>{{ bill.created }}</td>
+                <td>{{ bill.description }}</td>
+                <td>
+                    {% if bill.fully_paid == True %}
+                        Paid
+                    {% endif %}
 
-                {% if bill.fully_paid == False %}
-                Unpaid
-                {% endif %}
-            </td>
-            <td>{{bill.quantity}}</td>
-            <td>{{bill.price_per_quantity}}</td>
-            <td>{{bill.total}}</td>
-            <td>
-                {% if bill.fully_paid == False %}
-                <a href="{% url 'pay_bill' bill.id %}" class='btn btn-primary'>Pay Bill</a>
-                    <a href="{% url 'edit_bill' bill.id %}" class='btn btn-primary'>Edit Bill</a>
+                    {% if bill.fully_paid == False %}
+                        Unpaid
+                    {% endif %}
+                </td>
+                <td>{{ bill.quantity }}</td>
+                <td>{{ bill.price_per_quantity }}</td>
+                <td>{{ bill.total }}</td>
+                <td>
+                    {% if bill.fully_paid == False %}
+                        <button type="button" class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#bill_payment_modal">
+                            Mark Paid
+                        </button>
+                        <div class="modal fade" id="bill_payment_modal">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Confirm Bill Payment</h4>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        Bill: {{ bill.description }}
+                                        Amount: {{ bill.total }}
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <a href="{% url 'pay_bill' bill.id %}" class="btn btn-primary">Submit</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{% url 'edit_bill' bill.id %}" class='btn btn-primary'>Edit Bill</a>
                     {% else %}
-                    No actions on Paid bill
-                {% endif %}
-            </td>
-        </tr>
+                        No actions on Paid bill
+                    {% endif %}
+                </td>
+            </tr>
         {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
-<script>
-    $(document).ready( function () {
-        $('#all_bills').DataTable();
-    } );
-</script>
+    <script>
+        $(document).ready(function () {
+            $('#all_bills').DataTable();
+        });
+    </script>
 {% endblock content_area %}

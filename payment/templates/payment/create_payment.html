@@ -5,9 +5,45 @@
 {% for error in form.errors %}
 <p>{{error}}</p>
 {% endfor %}
-    <form method="post" action="{% url 'create_payment' student.id%}">
+    <form method="post" action="{% url 'create_payment' student.id%}" name="payment_form">
         {% csrf_token %}
         {{form.as_p}}
-        <input type="submit" class="btn btn-primary" value="Submit">
-    </form>    
+        <button type="button" onclick="confirm_payment()" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#payment_modal">
+            Submit
+        </button>
+        <div class="modal fade" id="payment_modal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Confirm Payment Details</h4>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <b>Payment Amount:</b> <small id="payment_amount_area"></small>
+                        <br>
+                        <b>Date Paid:</b> <small id="date_area"></small>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary mb-3" value="Submit" data-bs-dismiss="modal">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        function confirm_payment() {
+            const payment_amount = document.forms['payment_form']['amount'].value;
+            const payment_date = document.forms['payment_form']['date_paid'].value;
+            document.getElementById("payment_amount_area").innerHTML = payment_amount;
+            document.getElementById("date_area").innerHTML = payment_date;
+        }
+    </script>
 {% endblock content_area %}

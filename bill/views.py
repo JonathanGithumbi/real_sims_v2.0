@@ -27,7 +27,7 @@ from account.models import Account as Local_Account
 from quickbooks.objects.billpayment import CheckPayment
 
 def bills(request):
-    bills = BillItem.objects.all()
+    bills = BillItem.objects.all().order_by('created')
 
     return render(request, 'bill/bills.html',{'bills':bills})
 
@@ -51,10 +51,9 @@ def create_bill(request):
                 bill_item_obj.qb_id = qb_bill_item.Id
                 bill_item_obj.synced = True
                 bill_item_obj.save(update_fields=['qb_id','synced'])
-            messages.success(request,"Bill recorded successfully",extra_tags='alert-success')
+            messages.success(request,"{0} Bill recorded successfully".format(bill_item_obj.description),extra_tags='alert-success')
             return redirect(reverse('bills'))
         else:
-            messages.success(request, "Error during bill recording", extra_tags='alert-warning')
             return render(request, 'bill/create_bill.html',{'form':form})
 
 def pay_bill(request,id):
@@ -78,7 +77,7 @@ def pay_bill(request,id):
         bill_payment_obj.qb_id = qb_bill_payment_obj.Id
         bill_payment_obj.synced = True
         bill_payment_obj.save(update_fields=['qb_id', 'synced'])
-    messages.success(request,"Bill Payment recorded Successfully",extra_tags='alert-success')
+    messages.success(request,"{0} Bill Payment recorded Successfully".format(bill_obj.description),extra_tags='alert-success')
     return redirect('bills')
 def edit_bill(request,id):
     bill_obj = BillItem.objects.get(pk=id)
@@ -97,15 +96,20 @@ def edit_bill(request,id):
         bill_edit_form = EditBillItemForm(request.POST,initial=initial_data)
         if bill_edit_form.is_valid():
             if bill_edit_form.has_changed():
-                edited_bill_obj = bill_edit_form.save()
+                bill_obj.vendor = bill_edit_form.cleaned_data['vendor']
+                bill_obj.description = bill_edit_form.cleaned_data['description']
+                bill_obj.quantity = bill_edit_form.cleaned_data['quantity']
+                bill_obj.price_per_quantity = bill_edit_form.cleaned_data['price_per_quantity']
+                bill_obj.total = bill_edit_form.cleaned_data['total']
+                bill_obj.save(update_fields=None)
                 try:
-                    qb_bill = edited_bill_obj.edit_qb_bill()
+                    qb_bill = bill_obj.edit_qb_bill()
                 except:
                     pass
-                messages.info(request,"Details changed successfully",extra_tags='alert-success')
+                messages.info(request,"{0} Bill Details changed successfully".format(bill_obj.description),extra_tags='alert-success')
                 return redirect('bills')
             else:
-                messages.info(request,"No Data Changed on Bill",extra_tags='alert-info')
+                messages.info(request,"No Data Changed on {0} Bill".format(bill_obj.description),extra_tags='alert-info')
                 return redirect('bills')
         else:
             bill_edit_form = EditBillItemForm(request.POST)

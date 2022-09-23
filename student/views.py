@@ -124,6 +124,7 @@ def register_student(request):
                 balance=-(invoice.get_amount())  # a negative number indicates that the student owes the school money
             )
             balance_obj.save()
+            messages.success(request,"{0} {1} {2} registered successfully.".format(student.first_name,student.middle_name,student.last_name),extra_tags="alert-success")
             return redirect(reverse('student_profile', args=[student.id]))
         else:
             return render(request, 'student/registration.html', {'form': form})
@@ -208,8 +209,7 @@ def edit_student_profile(request, student_id):
 
                         # update the student subscripiton to lunnch
                         Student.objects.filter(pk=student_id).update(lunch=True)
-                        messages.success(request, "SUCCESS: student subscribed to lunch successfully",
-                                         extra_tags='alert-success')
+                        messages.success(request,"{0} {1} {2} subscribed to lunch successfully.".format(student.first_name,student.middle_name,student.last_name),extra_tags="alert-success")
 
                 if 'transport' in form.changed_data:
                     transport_item = SalesItem.objects.get(name='Transport')
@@ -249,8 +249,7 @@ def edit_student_profile(request, student_id):
 
                         # update model
                         Student.objects.filter(pk=student_id).update(transport=True)
-                        messages.success(request, "SUCCESS: student subscribed to Transportation successfully",
-                                         extra_tags='alert-success')
+                        messages.success(request,"{0} {1} {2} subscribed to transport successfully.".format(student.first_name,student.middle_name,student.last_name),extra_tags="alert-success")
 
                 # Name change triggers name change in quickbooks
                 if 'first_name' in form.changed_data or 'middle_name' in form.changed_data or 'last_name ' in form.changed_data:
@@ -265,33 +264,29 @@ def edit_student_profile(request, student_id):
                         student.update_qb_customer(student)
                     except:
                         pass
-                    messages.success(request, "SUCCESS: Student's name changed successfully", extra_tags='alert-success')
+                    messages.success(request,"Name Changed to {0} {1} {2}.".format(student.first_name,student.middle_name,student.last_name),extra_tags="alert-success")
 
                 if 'primary_contact_name' in form.changed_data:
                     Student.objects.filter(pk=student_id).update(
                         primary_contact_name=form.cleaned_data['primary_contact_name'])
-                    messages.success(request, "SUCCESS: primary contact's name changed successfully",
-                                     extra_tags='alert-success')
+                    messages.success(request,"Primary Contact Changed to :  {0}".format(form.cleaned_data['primary_contact_name']),extra_tags="alert-success")
                 if 'primary_contact_phone_number' in form.changed_data:
                     Student.objects.filter(pk=student_id).update(
                         primary_contact_phone_number=form.cleaned_data['primary_contact_phone_number'])
-                    messages.success(request, "SUCCESS: primary contact's phone number changed successfully",
-                                     extra_tags='alert-success')
+                    messages.success(request,"Primary Contact Phone Number Changed to :  {0}".format(form.cleaned_data['primary_contact_phone_number']),extra_tags="alert-success")
                 if 'secondary_contact_name' in form.changed_data:
                     Student.objects.filter(pk=student_id).update(
                         secondary_contact_name=form.cleaned_data['secondary_contact_name'])
-                    messages.success(request, "SUCCESS: secondary contact's name changed successfully.",
-                                     extra_tags='alert-success')
+                    messages.success(request,"Secondary Contact Changed to :  {0}".format(form.cleaned_data['secondary_contact_name']),extra_tags="alert-success")
                 if 'secondary_contact_phone_number' in form.changed_data:
                     Student.objects.filter(pk=student_id).update(
                         secondary_contact_phone_number=form.cleaned_data['secondary_contact_phone_number'])
-                    messages.success(request, "SUCCESS: secondary contact's phone number changed successfully.",
-                                     extra_tags='alert-success')
+                    messages.success(request, "Secondary Contact Phone Number Changed to :  {0}".format(form.cleaned_data['secondary_contact_phone_number']),extra_tags="alert-success")
                 #after everything redirect back to the stuudent profile
                 return redirect(student_profile,student.id)
             else:
                 #form has not changed
-                messages.info(request,"INFO: No changes made to the student's profile",extra_tags='alert-info')
+                messages.info(request,"No changes made to the student's profile",extra_tags='alert-info')
                 return redirect(student_profile,student.id)
         else:
             #form is not valid
@@ -304,5 +299,5 @@ def edit_student_profile(request, student_id):
 def delete_student(request, id):
     student = Student.objects.get(pk=id)
     student.delete()
-    messages.add_message(request, messages.SUCCESS, "Student Deleted Successfully")
+    messages.add_message(request, messages.SUCCESS, "{0} {1} {2} Unregistered Successfully".format(student.first_name,student.middle_name,student.last_name))
     return redirect(reverse('students'))

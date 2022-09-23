@@ -106,3 +106,10 @@ ypu should have only one invoice for a given term/year
 it is critical that you validate the user's input! in all the applications
 
 get datables to display entries in a descending wise order
+
+20/09/2022
+>add success notification message on every successfully created object
+    >prevent button from submitting the same data twice or submitting the data twice
+    >add confirmaiton modal
+
+>We should

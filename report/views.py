@@ -7,7 +7,7 @@ def reports(request):
     return render(request, 'report/reports.html')
 
 def generate_fees_arrears_report(request):
-    students = BalanceTable.objects.filter(balance__gt= 0).order_by('-balance')
+    students = BalanceTable.objects.filter(balance__lt= 0).order_by('balance')
     context = {'students':students}
     template_name = 'report/fees_arrears_report.html'
     pdf = render_to_pdf(template_name,context)

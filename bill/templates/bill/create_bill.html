@@ -1,29 +1,79 @@
 {% extends 'dashboard/layout.html' %}
 {% block content_area %}
-<h1>Create Bill</h1>
-<hr>
-{% for error in form.errors %}
-<p>{{error}}</p>
-{% endfor %}
-    <form method="post" action="{% url 'create_bill'%}">
+    <h1>Create Bill</h1>
+    <hr>
+    {% for error in form.errors %}
+        <p>{{ error }}</p>
+    {% endfor %}
+    <form method="post" action="{% url 'create_bill' %}" name="bill_creation_form">
         {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" class="btn btn-primary" value="Submit">
-    </form>    
+        {{ form.as_p }}
+        <button type="button" onclick="confirm_bill_creation()" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#confirm_bill_creation_modal">
+            Submit
+        </button>
+        <div class="modal fade" id="confirm_bill_creation_modal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Record Bill</h4>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <b>Vendor:</b> <small id="vendor_area"></small>
+                        <br>
+                        <b>Description:</b> <small id="description_area"></small>
+                        <br>
+                        <b>Quantity:</b> <small id="quantity_area"></small>
+                        <br>
+                        <b>Price per Quantity: </b><small id="price_per_quantity_area"></small>
+                        <br>
+                        <b>Total: </b><small id="total_area"></small>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary mb-3" value="Submit" data-bs-dismiss="modal">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
     <script>
-        $(document).ready(function(){
-            $("#quantity").change(function(){
+        $(document).ready(function () {
+            $("#quantity").change(function () {
                 var quantity = $("#quantity").val();
                 var price_per_quantity = $("#price_per_quantity").val();
                 var total = quantity * price_per_quantity;
                 $("#total").val(total);
             });
-            $("#price_per_quantity").change(function(){
+            $("#price_per_quantity").change(function () {
                 var quantity = $("#quantity").val();
                 var price_per_quantity = $("#price_per_quantity").val();
                 var total = quantity * price_per_quantity;
                 $("#total").val(total);
             });
         });
+
+        function confirm_bill_creation() {
+
+            const vendor = document.getElementById("vendor");
+            const vendor_name = vendor.options[vendor.selectedIndex].text;
+            const description = document.forms['bill_creation_form']['description'].value;
+            const quantity = document.forms['bill_creation_form']['quantity'].value;
+            const price_per_quantity = document.forms['bill_creation_form']['price_per_quantity'].value;
+            const total = document.forms['bill_creation_form']['total'].value;
+
+            document.getElementById("vendor_area").innerHTML = vendor_name;
+            document.getElementById("description_area").innerHTML = description;
+            document.getElementById("quantity_area").innerHTML = quantity;
+            document.getElementById("price_per_quantity_area").innerHTML = price_per_quantity;
+            document.getElementById("total_area").innerHTML = total;
+        }
     </script>
 {% endblock content_area %}

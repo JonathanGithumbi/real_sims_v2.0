@@ -1,22 +1,82 @@
 {% extends 'dashboard/layout.html' %}
 {% block content_area %}
-<h1>Edit Student Profile</h1>
+    <h1>Edit Student Profile</h1>
 
-<hr>
-<form action="{%url 'edit_student_profile' student.id%}" method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Submit" class='btn btn-primary'>
-</form>
-<script>
-    $(document).ready(function(){
-        if ($("#lunch").is(':checked')){
-            $("#lunch").attr("disabled", true);
+    <hr>
+    <form action="{% url 'edit_student_profile' student.id %}" method="post" name="confirm_edit_form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="button" onclick="confirm_edit()" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#confirm_edit_modal">
+            Submit
+        </button>
+        <div class="modal fade" id="confirm_edit_modal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Student Information</h4>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <b>Name:</b> <small id="student_name_area_edit"></small>
+                        <br>
+
+                        <b>Primary Contact Name:</b> <small id="prim_cont_name_area_edit"></small>
+                        <br>
+                        <b>Primary Contact Phone Number: </b><small id="prim_cont_no_area_edit"></small>
+                        <br>
+                        <b>Secondary Contact Name: </b><small id="sec_cont_name_area_edit"></small>
+                        <br>
+                        <b>Secondary Contact Phone Number: </b><small id="sec_cont_no_area_edit"></small>
+                        <br>
+                        <b>Lunch:</b> <small id="lunch_area_edit"></small>
+                        <br>
+                        <b>Transport: </b><small id="transport_area_edit"></small>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary mb-3" value="Submit" data-bs-dismiss="modal">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        function confirm_edit() {
+            const first_name = document.forms['confirm_edit_form']['first_name'].value;
+            const middle_name = document.forms['confirm_edit_form']['middle_name'].value;
+            const last_name = document.forms['confirm_edit_form']['last_name'].value;
+            document.getElementById("student_name_area_edit").innerHTML = first_name + ' ' + middle_name + ' ' + last_name;
+
+            const primary_contact_name = document.forms['confirm_edit_form']['primary_contact_name'].value;
+            document.getElementById("prim_cont_name_area_edit").innerHTML = primary_contact_name;
+            const primary_contact_phone_number = document.forms['confirm_edit_form']['primary_contact_phone_number'].value;
+            document.getElementById("prim_cont_no_area_edit").innerHTML = primary_contact_phone_number;
+            const secondary_contact_name = document.forms['confirm_edit_form']['secondary_contact_name'].value;
+            document.getElementById("sec_cont_name_area_edit").innerHTML = secondary_contact_name;
+            const secondary_contact_phone_number = document.forms['confirm_edit_form']['secondary_contact_phone_number'].value;
+            document.getElementById("sec_cont_no_area_edit").innerHTML = secondary_contact_phone_number;
+            const lunch = document.forms['confirm_edit_form']['lunch'];
+            if (lunch.checked == true) {
+                document.getElementById("lunch_area_edit").innerHTML = "Subscribed";
+            } else {
+                document.getElementById("lunch_area_edit").innerHTML = "Not Subscribed";
+            }
+            const transport = document.forms['confirm_edit_form']['transport'];
+            if (transport.checked == true) {
+                document.getElementById("transport_area_edit").innerHTML = "Subscribed";
+            } else {
+                document.getElementById("transport_area_edit").innerHTML = "Not Subscribed";
+            }
+
         }
-        if ($("#transport").is(':checked')){
-            $("#transport").attr("disabled", true);
-        }
-      });
-</script>
+    </script>
 {% endblock content_area %}
 
