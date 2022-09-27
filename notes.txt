@@ -1,28 +1,30 @@
+Registration should only be done after the beginning of the term (disable register student )-DONE
 
-#pending: registration should only be done after the beginning of the term (disable register student )
+Add poliicy to have a preapporved list of vendors - PENDING
 
-#pending: add poliicy to have a preapporved list of vendors 
+(non-essential)add back navigation and from navigation - PENDING
 
-#pending (non-essential)add back navigation and fron navogation 
-put in a plcae a feature that can restrict a child from progressing to the next grade(is there still such a thing as repeating a class?)
-many fees structure querie rely on the student's current grade
+put in a place a feature that can restrict a child from progressing to the
+next grade(is there still such a thing as repeating a class?)-PENDING
 
-remember to add try..block statements to the API calls
+many fees structure queries rely on the student's current grade --
 
-the the customers are being invoice 2 times
+remember to add try..block statements to the API calls-DONE
+
+the the customers are being invoice 2 times-FIXED
 
 if the current term's fees is fully paid, and an excess amount is payed, then a new invoice should be created for the next term and 
 the excess amount be added there.
 therefore, whenever the new term script is run(that invoices students every new term) it should check whether an invoice for that term and year
-already exists
+already exists --DONE
 
-make the system refresh the token call upon login
+make the system refresh the token call upon login - PENDING
 
 
 
-Login must be done with the school's official email address
+Login must be done with the school's official email address - PENDING
 
-make sure to put a timer to update the token whenever its about to expire 
+make sure to put a timer to update the token whenever its about to expire - PENDING (schedule a API reresh while the user is still loged in)
 
 
 more fatures down the road (further recommendations)
@@ -30,9 +32,10 @@ more fatures down the road (further recommendations)
 >Mass SMS and Email (Mass Communications)
 
 
-we need retry workflows so that we can decouple SIMS from the bookkeeping aspect of the system
+we need retry workflows so that we can decouple SIMS from the bookkeeping aspect of the system - PENDING(
+sims decoupled but retry workflow not yet)
 
-i should have a limit to how much is allowed as payments 
+i should have a limit to how much is allowed as payments - PENDING
 
 
 12/09/2022 System Notes
@@ -105,11 +108,9 @@ ypu should have only one invoice for a given term/year
 
 it is critical that you validate the user's input! in all the applications
 
-get datables to display entries in a descending wise order
-
 20/09/2022
->add success notification message on every successfully created object
+>add success notification message on every successfully created object- DONE
     >prevent button from submitting the same data twice or submitting the data twice
-    >add confirmaiton modal
+    >add confirmaiton modal -DONE
 
 >We should

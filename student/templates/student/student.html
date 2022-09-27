@@ -1,6 +1,6 @@
 {% extends 'dashboard/layout.html' %}
 {% load static %}
-{% block content_area %}
+{% block page %}
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -11,37 +11,48 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <a href="{% url 'register_student' %}" class='btn btn-primary'>New Student <img
-            src="{% static 'bootstrap_icons/plus-circle.svg' %}" alt="Bootstrap" width="30" height="30"></a>
+
     <hr>
 
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">View Students</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="all_students" class="table table-bordered"
+                ">
+                <thead class="thead-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Grade</th>
+                    <th>Registered</th>
+                    <th>Total Amount Due</th>
+                    <th>Profile</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student }}</td>
+                        <td>{{ student.current_grade }}</td>
+                        <td>{{ student.date_of_admission }}</td>
+                        <td>{{ student.balancetable.balance }}</td>
+                        <td><a href="{% url 'student_profile' student.id %} " class='btn btn-primary'>View Profile</a>
+                        </td>
+                    </tr>
+                {% endfor %}
 
-    <table id="all_students" class="display table table-bordered table-hover">
-        <thead class="thead-light">
-        <tr>
-            <th>Name</th>
-            <th>Grade</th>
-            <th>Registered</th>
-            <th>Total Amount Due</th>
-            <th>Profile</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for student in students %}
-            <tr>
-                <td>{{ student }}</td>
-                <td>{{ student.current_grade }}</td>
-                <td>{{ student.date_of_admission }}</td>
-                <td>{{ student.balancetable.balance }}</td>
-                <td><a href="{% url 'student_profile' student.id %} " class='btn btn-primary'>View Profile</a></td>
-            </tr>
-        {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        </tbody>
-    </table>
     <script>
         $(document).ready(function () {
             $('#all_students').DataTable();
         });
     </script>
-{% endblock content_area %}
+{% endblock %}

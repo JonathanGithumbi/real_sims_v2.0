@@ -1,6 +1,6 @@
 {% extends 'dashboard/layout.html' %}
-{% block content_area %}
-    <h1>Student Registration Form</h1>
+{% block page %}
+    <h1>Register Student</h1>
     <hr>
     <form action="{% url 'register_student' %}" method="post" name="student_registration_form">
         {% csrf_token %}
@@ -79,4 +79,4 @@
 
         }
     </script>
-{% endblock content_area %}
+{% endblock page %}

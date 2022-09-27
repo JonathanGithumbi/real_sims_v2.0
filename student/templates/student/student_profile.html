@@ -1,6 +1,6 @@
 {% extends 'dashboard/layout.html' %}
 {% load static %}
-{% block content_area %}
+{% block page %}
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -57,7 +57,7 @@
 
     <button type="button"  class="btn btn-danger" data-bs-toggle="modal"
             data-bs-target="#delete_modal">
-        unregister
+        Unregister
     </button>
     <div class="modal fade" id="delete_modal">
         <div class="modal-dialog modal-dialog-centered">
@@ -75,7 +75,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <a href="{% url 'delete_student' student.id %}" class="btn btn-danger">Delete</a>
+                    <a href="{% url 'delete_student' student.id %}" class="btn btn-danger">Unregister</a>
                 </div>
 
             </div>
@@ -123,4 +123,4 @@
             $('#all_invoices').DataTable();
         });
     </script>
-{% endblock content_area %}
+{% endblock  %}

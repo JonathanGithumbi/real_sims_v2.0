@@ -1,5 +1,5 @@
 {% extends 'dashboard/layout.html' %}
-{% block content_area %}
+{% block page %}
     <h1>Create Bill</h1>
     <hr>
     {% for error in form.errors %}
@@ -76,4 +76,4 @@
             document.getElementById("total_area").innerHTML = total;
         }
     </script>
-{% endblock content_area %}
+{% endblock  %}

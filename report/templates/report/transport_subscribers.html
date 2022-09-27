@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,6 +33,7 @@
 </head>
 <body>
     <div class="container mt-3">
+     <img src="{% static 'logo.svg' %}" class="mx-auto d-block">
         <h2>Students taking Transport</h2>            
         <table class="table table-bordered" id="transport">
           <thead>
