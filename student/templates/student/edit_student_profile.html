@@ -1,52 +1,157 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'layout.html' %}
 {% block page %}
-    <h1>Edit Student Profile</h1>
-
-    <hr>
-    <form action="{% url 'edit_student_profile' student.id %}" method="post" name="confirm_edit_form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="button" onclick="confirm_edit()" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#confirm_edit_modal">
-            Submit
-        </button>
-        <div class="modal fade" id="confirm_edit_modal">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Edit Student Information</h4>
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+    <br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show small">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
                     </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <b>Name:</b> <small id="student_name_area_edit"></small>
-                        <br>
+        <div class="card o-hidden border-0 shadow-sm my-5">
+            <div class="card-body p-0">
 
-                        <b>Primary Contact Name:</b> <small id="prim_cont_name_area_edit"></small>
-                        <br>
-                        <b>Primary Contact Phone Number: </b><small id="prim_cont_no_area_edit"></small>
-                        <br>
-                        <b>Secondary Contact Name: </b><small id="sec_cont_name_area_edit"></small>
-                        <br>
-                        <b>Secondary Contact Phone Number: </b><small id="sec_cont_no_area_edit"></small>
-                        <br>
-                        <b>Lunch:</b> <small id="lunch_area_edit"></small>
-                        <br>
-                        <b>Transport: </b><small id="transport_area_edit"></small>
+                <!-- Nested Row within Card Body -->
+                <div class="row">
 
+                    <div class="col-sm">
+                        <div class="p-5">
+                            <div class="text-left">
+                                <h5>Edit Profile</h5>
+                            </div>
+                            <hr>
+                            <form action="{% url 'edit_student_profile' student.id %}" method="post"
+                                  name="confirm_edit_form">
+                                {% csrf_token %}
+
+                                <div class="row">
+
+                                    <div class="col">
+                                        {{ form.first_name.errors }}
+                                        <label for="{{ form.first_name.id_for_label }}">First Name:</label>
+                                        {{ form.first_name }}</div>
+
+                                    <div class="col">
+                                        {{ form.middle_name.errors }}
+                                        <label for="{{ form.middle_name.id_for_label }}">Middle Name:</label>
+                                        {{ form.middle_name }}</div>
+
+                                    <div class="col">
+                                        {{ form.last_name.errors }}
+                                        <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+                                        {{ form.last_name }}</div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.primary_contact_name.errors }}
+                                        <label for="{{ form.primary_contact_name.id_for_label }}">Name of Primary
+                                            Contact</label>
+                                        {{ form.primary_contact_name }}</div>
+                                    <div class="col">
+                                        {{ form.primary_contact_phone_number.errors }}
+                                        <label for="{{ form.primary_contact_phone_number.id_for_label }}">Phone Number
+                                            of Primary Contact:</label>
+                                        {{ form.primary_contact_phone_number }}</div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.secondary_contact_name.errors }}
+                                        <label for="{{ form.secondary_contact_name.id_for_label }}">Name of Secondary
+                                            Contact:</label>
+                                        {{ form.secondary_contact_name }}</div>
+                                    <div class="col">
+                                        {{ form.secondary_contact_phone_number.errors }}
+                                        <label for="{{ form.secondary_contact_phone_number.id_for_label }}">Secondary
+                                            Contact Phone Number:</label>
+                                        {{ form.secondary_contact_phone_number }}</div>
+                                </div>
+                                <hr class="sidebar-divider">
+                                <div class="row">
+                                    <div class="form-check">
+                                        {{ form.lunch.errors }}
+                                        <label class="form-check-label"
+                                               for="{{ form.lunch.id_for_label }}">{{ form.lunch }}Subscribe to lunch
+                                            :</label>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-check">
+                                        {{ form.transport.errors }}
+                                        <label class="form-check-label" for="{{ form.transport.id_for_label }}"
+                                               class="form-check-label">
+                                            {{ form.transport }}Subscribe to transport:</label>
+
+                                    </div>
+
+                                </div>
+
+                                <br>
+
+                                <a class="btn btn-primary btn-sm" onclick="confirm_edit()" href="#" data-toggle="modal"
+                                   data-target="#confirm_edit_modal">Submit</a>
+                                <div class="modal fade" id="confirm_edit_modal">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Edit Student Information</h4>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                <b>Name:</b> <small id="student_name_area_edit"></small>
+                                                <br>
+
+                                                <b>Primary Contact Name:</b> <small
+                                                    id="prim_cont_name_area_edit"></small>
+                                                <br>
+                                                <b>Primary Contact Phone Number: </b><small
+                                                    id="prim_cont_no_area_edit"></small>
+                                                <br>
+                                                <b>Secondary Contact Name: </b><small
+                                                    id="sec_cont_name_area_edit"></small>
+                                                <br>
+                                                <b>Secondary Contact Phone Number: </b><small
+                                                    id="sec_cont_no_area_edit"></small>
+                                                <br>
+                                                <b>Lunch:</b> <small id="lunch_area_edit"></small>
+                                                <br>
+                                                <b>Transport: </b><small id="transport_area_edit"></small>
+
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary btn-sm" type="button"
+                                                        data-dismiss="modal">Cancel
+                                                </button>
+                                                <input type="submit" class="btn btn-success  btn-sm" value="Submit"
+                                                       data-bs-dismiss="modal">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary mb-3" value="Submit" data-bs-dismiss="modal">
-
-                    </div>
-
                 </div>
             </div>
         </div>
+
+    </div>
+
     </form>
     <script>
         function confirm_edit() {
@@ -78,5 +183,5 @@
 
         }
     </script>
-{% endblock  %}
+{% endblock %}
 

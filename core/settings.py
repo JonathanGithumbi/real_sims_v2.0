@@ -170,4 +170,10 @@ REALM_ID = '<EnterHere>'
 ALLOWED_HOSTS=["http://127.0.0.1:8000/",'127.0.0.1','localhost']
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 AUTHENTICATION_BACKENDS = ['user_account.backends.AuthBackend']
+DEFAULT_FROM_EMAIL = "jonathan.m.githumbi@gmail.com"
+#EMAIL_HOST =
+#EMAIL_PORT =
+#EMAIL_HOST_PASSWORD=
+#EMAIL_HOST_USER =
+#EMAIL_PORT =
 

@@ -8,7 +8,7 @@ from intuitlib.client import AuthClient
 from intuitlib.migration import migrate
 from intuitlib.enums import Scopes
 from intuitlib.exceptions import AuthClientError
-
+from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.conf import settings
@@ -25,9 +25,9 @@ from .forms import AuthFormWithBootstrapSpecifics
 # Create your views here.
 def oauth(request):
     auth_client = AuthClient(
-        settings.CLIENT_ID, 
-        settings.CLIENT_SECRET, 
-        settings.REDIRECT_URI, 
+        settings.CLIENT_ID,
+        settings.CLIENT_SECRET,
+        settings.REDIRECT_URI,
         settings.ENVIRONMENT,
     )
 
@@ -37,27 +37,27 @@ def oauth(request):
 
 def callback(request):
     auth_client = AuthClient(
-        settings.CLIENT_ID, 
-        settings.CLIENT_SECRET, 
-        settings.REDIRECT_URI, 
-        settings.ENVIRONMENT, 
+        settings.CLIENT_ID,
+        settings.CLIENT_SECRET,
+        settings.REDIRECT_URI,
+        settings.ENVIRONMENT,
         state_token=request.session.get('state', None),
     )
 
     state_tok = request.GET.get('state', None)
     error = request.GET.get('error', None)
-    
+
     if error == 'access_denied':
         messages.add_message(request, messages.WARNING,"Access Denied")
         return redirect('disconnected_dashboard')
         #messages outside the if clause
-    
+
     if state_tok is None:
         return HttpResponseBadRequest()
 
-    if state_tok != auth_client.state_token: 
+    if state_tok != auth_client.state_token:
         return HttpResponse('unauthorized', status=401)
-    
+
     auth_code = request.GET.get('code', None)
     realm_id = request.GET.get('realmId', None)
     realm_id_token = Token.objects.create()
@@ -98,12 +98,12 @@ def callback(request):
 
 def connected(request):
     auth_client = AuthClient(
-        settings.CLIENT_ID, 
-        settings.CLIENT_SECRET, 
-        settings.REDIRECT_URI, 
-        settings.ENVIRONMENT, 
-        access_token=request.session.get('access_token', None), 
-        refresh_token=request.session.get('refresh_token', None), 
+        settings.CLIENT_ID,
+        settings.CLIENT_SECRET,
+        settings.REDIRECT_URI,
+        settings.ENVIRONMENT,
+        access_token=request.session.get('access_token', None),
+        refresh_token=request.session.get('refresh_token', None),
         id_token=request.session.get('id_token', None),
     )
 
@@ -117,12 +117,12 @@ def qbo_request(request):
     refresh_token_obj = Token.objects.get(name='refresh_token')
     realm_id_obj = Token.objects.get(name='realm_id')
     auth_client = AuthClient(
-        settings.CLIENT_ID, 
-        settings.CLIENT_SECRET, 
-        settings.REDIRECT_URI, 
-        settings.ENVIRONMENT, 
-        access_token=access_token_obj.key, 
-        refresh_token=refresh_token_obj.key, 
+        settings.CLIENT_ID,
+        settings.CLIENT_SECRET,
+        settings.REDIRECT_URI,
+        settings.ENVIRONMENT,
+        access_token=access_token_obj.key,
+        refresh_token=refresh_token_obj.key,
         realm_id = realm_id_obj.key,
     )
 
@@ -132,7 +132,7 @@ def qbo_request(request):
     if auth_client.realm_id is None:
         raise ValueError('Realm id not specified.')
     response = qbo_api_call(auth_client.access_token, auth_client.realm_id)
-    
+
     if not response.ok:
         return HttpResponse(' '.join([response.content, str(response.status_code)]))
     else:
@@ -140,12 +140,12 @@ def qbo_request(request):
 
 def user_info(request):
     auth_client = AuthClient(
-        settings.CLIENT_ID, 
-        settings.CLIENT_SECRET, 
-        settings.REDIRECT_URI, 
-        settings.ENVIRONMENT, 
-        access_token=request.session.get('access_token', None), 
-        refresh_token=request.session.get('refresh_token', None), 
+        settings.CLIENT_ID,
+        settings.CLIENT_SECRET,
+        settings.REDIRECT_URI,
+        settings.ENVIRONMENT,
+        access_token=request.session.get('access_token', None),
+        refresh_token=request.session.get('refresh_token', None),
         id_token=request.session.get('id_token', None),
     )
 
@@ -157,21 +157,21 @@ def user_info(request):
         print(e.status_code)
         print(e.intuit_tid)
     return HttpResponse(response.content)
-        
+
 def refresh(request):
     access_token_obj = Token.objects.get(name='access_token')
     refresh_token_obj = Token.objects.get(name='refresh_token')
     auth_client = AuthClient(
-        settings.CLIENT_ID, 
-        settings.CLIENT_SECRET, 
-        settings.REDIRECT_URI, 
-        settings.ENVIRONMENT, 
-        access_token=access_token_obj.key, 
-        refresh_token=refresh_token_obj.key, 
+        settings.CLIENT_ID,
+        settings.CLIENT_SECRET,
+        settings.REDIRECT_URI,
+        settings.ENVIRONMENT,
+        access_token=access_token_obj.key,
+        refresh_token=refresh_token_obj.key,
     )
 
     try:
-        auth_client.refresh() 
+        auth_client.refresh()
     except AuthClientError as e:
         print(e.status_code)
         print(e.intuit_tid)
@@ -185,12 +185,12 @@ def revoke(request):
     access_token_obj = Token.objects.get(name='access_token')
     refresh_token_obj = Token.objects.get(name='refresh_token')
     auth_client = AuthClient(
-        settings.CLIENT_ID, 
-        settings.CLIENT_SECRET, 
-        settings.REDIRECT_URI, 
-        settings.ENVIRONMENT, 
-        access_token=access_token_obj.key, 
-        refresh_token=refresh_token_obj.key, 
+        settings.CLIENT_ID,
+        settings.CLIENT_SECRET,
+        settings.REDIRECT_URI,
+        settings.ENVIRONMENT,
+        access_token=access_token_obj.key,
+        refresh_token=refresh_token_obj.key,
     )
     try:
         is_revoked = auth_client.revoke()
@@ -206,31 +206,29 @@ def login_user(request):
         auth_backend = AuthBackend()
         user = auth_backend.authenticate(request,username=username,password=password)
         if user is not None:
-            #try to refresh tokens 
+            #try to refresh tokens purely quickbooks related
             try:
                 refresh()
-                #PUT TIMER HERE TO AUTOMATICALLY UPDATE THE REFRESH TOKEN EVERY HOUR IF THE USER IS STIL LOGGED IN 
-                login(request,user)
-                request.session['qb_synced'] = True
-                return redirect('dashboard')
-                #set the qb_synced=True in the User's session
-                #then redirect to the dashboard
-            
-            #catch more exceptions and maybe put in a retry workflow
-            
             except:
-                login(request,user)
                 request.session['qb_synced'] = False
+            else:
+                request.session['qb_synced'] = True
+
+            finally:
+                login(request, user)
                 return redirect('dashboard')
-                #capture all exception
-                #sets qb_synced=False in the user's session
-                #then redirect to the dashboard
+
         else:
             #Invalid logins
-            form = AuthFormWithBootstrapSpecifics(request.POST)
-            form.add_error("Invalid Username/Password.")
-            return render(request,'user_account/registration/login.html',{'form':form})
+            messages.error(request,"Invalid login credentials",extra_tags='alert-error')
+            return redirect(login_user)
     else:
         #called with get
         form = AuthFormWithBootstrapSpecifics()
         return render(request,'user_account/registration/login.html',{'form':form})
+
+def logout_view(request):
+    messages.success(request,"Logged out",extra_tags="alert-danger")
+    logout(request)
+
+    return redirect('login')

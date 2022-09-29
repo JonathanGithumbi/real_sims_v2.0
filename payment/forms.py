@@ -6,10 +6,11 @@ from .models import Payment
 class PaymentCreationForm(forms.ModelForm):
     class Meta:
         model = Payment
-        exclude = ['qb_id','synced','invoice','student','note']
+        exclude = ['qb_id','synced','invoice','note']
         widgets={
-        'date_paid': forms.DateInput(attrs={'class':'form-control', 'id':'floatingInput','type':'date'}), 
-        'amount': forms.NumberInput(attrs={'class':'form-control', 'id':'quantity','value':0,'min':1}),
+        'student':Select(attrs={'class':'form-select form-control form-control-sm','id':'student'}),
+        'date_paid': forms.DateInput(attrs={'class':'form-control form-control-sm', 'id':'floatingInput','type':'date'}),
+        'amount': forms.NumberInput(attrs={'class':'form-control form-control-sm', 'id':'quantity','value':0,'min':1}),
         }
 
     #You have to validate that the amount is greatter than 1

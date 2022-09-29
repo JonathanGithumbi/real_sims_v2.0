@@ -51,6 +51,7 @@ class Student(models.Model):
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 
+
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse("student_profile", kwargs={"student_id": self.id})

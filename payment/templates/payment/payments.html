@@ -1,8 +1,51 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'layout.html' %}
 {% load static %}
-{% block content_area %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
 
-<hr>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show small">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
+        <br>
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold ">Fees Payments</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="dataTable" width="100%" cellspacing="0" class="table table-bordered table-sm text-gray-900">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Date Paid</th>
+                            <th>Note</th>
+                            <th>Amount</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for payment in payments %}
+                            <tr>
+                                <td>{{ payment.date_paid }}</td>
+                                <td>{{ payment.note }}</td>
+                                <td>{{ payment.amount }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-{% endblock content_area %}
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock page %}

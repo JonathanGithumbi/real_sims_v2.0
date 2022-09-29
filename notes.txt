@@ -114,3 +114,24 @@ it is critical that you validate the user's input! in all the applications
     >add confirmaiton modal -DONE
 
 >We should
+
+
+
+-make the sidebar stick to the top of the page and the rest of the page to scroll up and down
+-add chart to show the distribution of unpaid fees per grade
+-make sure to validate the bill form so that the price_per_quantity* amount = total
+-and make sure to auto-calculate the total for the user
+-disable bill buttons instead or removing
+-add select 2.js to the record payment form, and bill forms
+- add date to record bill
+-hover dropdown- make sidebar button dropdown on hover
+make form inputs small
+give buttons icons
+-modals are not displaying names of select inputs only showing ID
+-review what you should put in the datatables
+
+-dont forget the task that runse at tevery beginning of the year, graduating students to the next grade
+-and the scheduler that runs every beginning of the term to invoice the students
+-you should definitely allow a user to changer their password
+
+-use django-mailer to send emails

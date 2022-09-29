@@ -1,103 +1,120 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 {% block page %}
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <div class="alert {{ message.tags }} alert-dismissible">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+<br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible small fade show">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-    <hr>
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Bills</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-
-                <table class="table table-bordered" id="all_bills" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                    <tr>
-                        <th>Date Created</th>
-                        <th>Decription</th>
-                        <th>status</th>
-                        <th>Quantiy</th>
-                        <th>Price per Quantity</th>
-                        <th>Total Amount</th>
-                        <th>Actions</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for bill in bills %}
+        <br>
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold ">Bills</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm text-gray-900" id="dataTable" width="100%"
+                           cellspacing="0">
+                        <thead class="thead-light">
                         <tr>
-                            <td>{{ bill.created }}</td>
-                            <td>{{ bill.description }}</td>
-                            <td>
-                                {% if bill.fully_paid == True %}
-                                    Paid
-                                {% endif %}
+                            <th>Date Created</th>
+                            <th>Decription</th>
+                            <th>status</th>
+                            <th>Quantiy</th>
+                            <th>Price per Quantity</th>
+                            <th>Total Amount</th>
+                            <th>Actions</th>
 
-                                {% if bill.fully_paid == False %}
-                                    Unpaid
-                                {% endif %}
-                            </td>
-                            <td>{{ bill.quantity }}</td>
-                            <td>{{ bill.price_per_quantity }}</td>
-                            <td>{{ bill.total }}</td>
-                            <td>
-                                {% if bill.fully_paid == False %}
-                                    <button type="button" class="btn btn-primary"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#bill_payment_modal">
-                                        Mark Paid
-                                    </button>
-                                    <div class="modal fade" id="bill_payment_modal">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for bill in bills %}
+                            <tr>
+                                <td>{{ bill.created }}</td>
+                                <td>{{ bill.description }}</td>
+                                <td>
+                                    {% if bill.fully_paid == True %}
+                                        Paid
+                                    {% endif %}
 
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Confirm Bill Payment</h4>
+                                    {% if bill.fully_paid == False %}
+                                        Unpaid
+                                    {% endif %}
+                                </td>
+                                <td>{{ bill.quantity }}</td>
+                                <td>{{ bill.price_per_quantity }}</td>
+                                <td>{{ bill.total }}</td>
+                                <td>
+                                    {% if bill.fully_paid == False %}
+
+                                        <a class="btn btn-primary btn-icon-split btn-sm" href="#" data-toggle="modal"
+                                           data-target="#bill_payment_modal">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                            <span class="text">Mark as Paid</span></a>
+                                        <div class="modal fade" id="bill_payment_modal">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Confirm Bill Payment</h4>
+                                                    </div>
+
+                                                    <!-- Modal body -->
+                                                    <div class="modal-body">
+                                                        Bill: {{ bill.description }}
+                                                        <br>
+                                                        Amount: {{ bill.total }}
+                                                    </div>
+
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-secondary btn-sm" type="button"
+                                                                data-dismiss="modal">Cancel
+                                                        </button>
+                                                        <a class="btn btn-success btn-sm"
+                                                           href="{% url 'pay_bill' bill.id %}"
+                                                        >
+
+                                                            <span class="text">submit</span></a>
+                                                    </div>
+
                                                 </div>
-
-                                                <!-- Modal body -->
-                                                <div class="modal-body">
-                                                    Bill: {{ bill.description }}
-                                                    Amount: {{ bill.total }}
-                                                </div>
-
-                                                <!-- Modal footer -->
-                                                <div class="modal-footer">
-                                                    <a href="{% url 'pay_bill' bill.id %}" class="btn btn-primary">Submit</a>
-                                                </div>
-
                                             </div>
                                         </div>
-                                    </div>
-                                    <a href="{% url 'edit_bill' bill.id %}" class='btn btn-primary'>Edit Bill</a>
-                                {% else %}
-                                    No actions on Paid bill
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                                        <a class="btn btn-primary btn-icon-split btn-sm"
+                                           href="{% url 'edit_bill' bill.id %}"
+                                        >
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-pen"></i>
+                                        </span>
+                                            <span class="text">Edit </span></a>
+                                    {% else %}
+                                        No actions on Paid bill
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
     </div>
+    <!-- /.container-fluid -->
 
 
-    <script>
-        $(document).ready(function () {
-            $('#all_bills').DataTable();
-        });
-    </script>
 {% endblock %}

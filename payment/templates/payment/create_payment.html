@@ -1,49 +1,116 @@
-{% extends 'dashboard/layout.html' %}
-{% block content_area %}
-<h1>Create Payment</h1>
-<hr>
-{% for error in form.errors %}
-<p>{{error}}</p>
-{% endfor %}
-    <form method="post" action="{% url 'create_payment' student.id%}" name="payment_form">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="button" onclick="confirm_payment()" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#payment_modal">
-            Submit
-        </button>
-        <div class="modal fade" id="payment_modal">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Confirm Payment Details</h4>
+{% extends 'layout.html' %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+<br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show small">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
                     </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <b>Payment Amount:</b> <small id="payment_amount_area"></small>
-                        <br>
-                        <b>Date Paid:</b> <small id="date_area"></small>
+        <div class="card o-hidden border-0 shadow-sm my-5">
+            <div class="card-body p-0">
 
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+
+                    <div class="col-sm">
+                        <div class="p-5">
+                            <div class="text-left">
+                                <h5>Record Fees Payment</h5>
+                            </div>
+                            <hr>
+                            <form action="{% url 'create_payment' %}" method="post" name="payment_form">
+                                {% csrf_token %}
+
+                                <div class="row">
+
+                                    <div class="col">
+                                        {{ form.student.errors }}
+                                        <label for="{{ form.student.id_for_label }}">Student:</label>
+                                        {{ form.student }}</div>
+
+                                </div>
+                                <div class="row">
+
+                                    <div class="col">
+                                        {{ form.date_paid.errors }}
+                                        <label for="{{ form.date_paid.id_for_label }}">Date Paid:</label>
+                                        {{ form.date_paid }}</div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.amount.errors }}
+                                        <label for="{{ form.amount.id_for_label }}">Amount:</label>
+                                        {{ form.amount }}</div>
+                                </div>
+
+
+                                <br>
+
+
+                                <a class="btn btn-primary btn-sm " onclick="confirm_payment()" href="#"
+                                   data-toggle="modal"
+                                   data-target="#payment_modal">Submit</a>
+                                <div class="modal fade" id="payment_modal">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Confirm Payment Details</h4>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+
+                                                <b>Student:</b> <small id="student_area"></small>
+                                                <br>
+                                                <b>Payment Amount:</b> <small id="payment_amount_area"></small>
+                                                <br>
+                                                <b>Date Paid:</b> <small id="payment_date_area"></small>
+
+
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary btn-sm" type="button"
+                                                        data-dismiss="modal">Cancel
+                                                </button>
+                                                <input type="submit" class="btn btn-success btn-sm" value="Submit"
+                                                       data-bs-dismiss="modal">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary mb-3" value="Submit" data-bs-dismiss="modal">
-                    </div>
-
                 </div>
             </div>
         </div>
-    </form>
+
+    </div>
+    <!-- /.container-fluid -->
+
     <script>
         function confirm_payment() {
+            const student = document.forms['payment_form']['student'].value;
             const payment_amount = document.forms['payment_form']['amount'].value;
             const payment_date = document.forms['payment_form']['date_paid'].value;
+            document.getElementById("student_area").innerHTML = student
             document.getElementById("payment_amount_area").innerHTML = payment_amount;
-            document.getElementById("date_area").innerHTML = payment_date;
+            document.getElementById("payment_date_area").innerHTML = payment_date;
         }
     </script>
-{% endblock content_area %}
+{% endblock page %}

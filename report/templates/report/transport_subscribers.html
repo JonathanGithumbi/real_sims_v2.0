@@ -1,63 +1,51 @@
+{% extends 'layout.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        #transport {
-          font-family: Arial, Helvetica, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-        }
-        
-        #transport td, #transport th {
-          border: 1px solid #ddd;
-          padding: 8px;
-        }
-        
-        #transport tr:nth-child(even){background-color: #f2f2f2;}
-        
-        #transport tr:hover {background-color: #ddd;}
-        
-        #transport th {
-          padding-top: 12px;
-          padding-bottom: 12px;
-          text-align: left;
-          background-color: #04AA6D;
-          color: white;
-        }
-        </style>
-    <title>Transport Subscribers Report</title>
-</head>
-<body>
-    <div class="container mt-3">
-     <img src="{% static 'logo.svg' %}" class="mx-auto d-block">
-        <h2>Students taking Transport</h2>            
-        <table class="table table-bordered" id="transport">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Grade</th>
-              <th>Primary Contact phone Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for student in students %}
-            <tr>
-                <td>{{forloop.counter}}</td>
-                <td>{{student.first_name}} {{student.middle_name}} {{student.last_name}}</td>
-                <td>{{student.current_grade}}</td>
-                <td>{{student.primary_contact_phone_number}}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-</body>
-</html>
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+                <br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show small">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold ">Students Subscribed to Transport</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered text-gray-900 table-sm" id="dataTable">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Grade</th>
+                            <th>Primary Contact phone Number</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }}</td>
+                                <td>{{ student.current_grade }}</td>
+                                <td>{{ student.primary_contact_phone_number }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
+    </div>
+    <!-- /.container-fluid -->
 
-  
+{% endblock %}

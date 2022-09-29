@@ -1,40 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        #fees_arrears {
-          font-family: Arial, Helvetica, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-        }
-        
-        #fees_arrears td, #fees_arrears th {
-          border: 1px solid #ddd;
-          padding: 8px;
-        }
-        
-        #fees_arrears tr:nth-child(even){background-color: #f2f2f2;}
-        
-        #fees_arrears tr:hover {background-color: #ddd;}
-        
-        #fees_arrears th {
-          padding-top: 12px;
-          padding-bottom: 12px;
-          text-align: left;
-          background-color: #04AA6D;
-          color: white;
-        }
-        </style>
-    <title>Fees Arrears Report</title>
-</head>
-<body>
-    <div class="container mt-3">
-        <h2>Fees Arrears Report</h2>            
-        <table class="table table-bordered" id="fees_arrears">
-          <thead>
+{% extends 'layout.html' %}
+{% load static %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+                <br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show small">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold ">Students with Fees Arrears</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-sm text-gray-900" id="dataTable">
+          <thead class="thead-light">
             <tr>
               <th>#</th>
               <th>Name</th>
@@ -55,9 +45,11 @@
             {% endfor %}
           </tbody>
         </table>
-      </div>
-</body>
-</html>
+                </div>
+            </div>
+        </div>
 
+    </div>
+    <!-- /.container-fluid -->
 
-  
+{% endblock %}

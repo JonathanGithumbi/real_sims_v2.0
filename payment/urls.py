@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
 
-    path('create/<int:id>/',views.make_payment,name='create_payment')
+    path('record/payment/',views.make_payment,name='create_payment'),
+    path('search/payments/',views.payments,name='payments')
 
 ]
