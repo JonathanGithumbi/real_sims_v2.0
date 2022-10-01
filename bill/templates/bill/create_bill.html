@@ -123,6 +123,7 @@
     <script>
         $(document).ready(function () {
             $("#quantity").change(function () {
+                alert("quantity ");
                 var quantity = $("#quantity").val();
                 var price_per_quantity = $("#price_per_quantity").val();
                 var total = quantity * price_per_quantity;

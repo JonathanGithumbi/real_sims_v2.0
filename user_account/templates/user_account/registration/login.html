@@ -30,8 +30,10 @@
                             <div class="p-5">
                                 <div class="text-center">
                                     <img src="{% static 'logo.svg' %}" style="width: 40%;">
-                                    <p class="small"><b>Kings Educational Centre - Karagita</b></p>
+                                    <p class="small"><b>Kings Education Centre - Karagita</b></p>
+                                    <span class="small">School Information Management System</span>
                                 </div>
+                                <hr class="">
                                 <form class="user" action="{% url 'login' %}" method="post">
                                     {% csrf_token %}
                                     <div class="form-group">

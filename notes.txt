@@ -1,41 +1,20 @@
-Registration should only be done after the beginning of the term (disable register student )-DONE
+Backlog
 
 Add poliicy to have a preapporved list of vendors - PENDING
+propose policy to have a preapproved list of recurring items to purchase
 
-(non-essential)add back navigation and from navigation - PENDING
+(non-essential)add back navigation and from navigation - PENDING - i.e as well as breadcrumbs to help the user identifyy
+where they are
 
-put in a place a feature that can restrict a child from progressing to the
+-put in a place a feature that can restrict a child from progressing to the
 next grade(is there still such a thing as repeating a class?)-PENDING
+-should not allow a child to be unregistered if they still have a balance,rather they should be deactivated
+and the invoicer will skip all the students who are inactive
 
-many fees structure queries rely on the student's current grade --
-
-remember to add try..block statements to the API calls-DONE
-
-the the customers are being invoice 2 times-FIXED
-
-if the current term's fees is fully paid, and an excess amount is payed, then a new invoice should be created for the next term and 
-the excess amount be added there.
-therefore, whenever the new term script is run(that invoices students every new term) it should check whether an invoice for that term and year
-already exists --DONE
-
-make the system refresh the token call upon login - PENDING
+make the system refresh the token call upon login and keep refreshing every hour as long as the user is still active- PENDING
 
 
-
-Login must be done with the school's official email address - PENDING
-
-make sure to put a timer to update the token whenever its about to expire - PENDING (schedule a API reresh while the user is still loged in)
-
-
-more fatures down the road (further recommendations)
->Bank Intergration to automatically make payments
->Mass SMS and Email (Mass Communications)
-
-
-we need retry workflows so that we can decouple SIMS from the bookkeeping aspect of the system - PENDING(
-sims decoupled but retry workflow not yet)
-
-i should have a limit to how much is allowed as payments - PENDING
+we need retry workflows so that we make sure that the data is persisted to quickbooks
 
 
 12/09/2022 System Notes
@@ -67,19 +46,7 @@ i should have a limit to how much is allowed as payments - PENDING
 >add a method,'pay_bill' to the class
 >>decouple the sims and qb sims by removing the create_qb_bill_payment from the bill payment item's save method, and instead call that method from the view togetheer with a try...except clause
 
-5.core
-6.dashboard
->remember to add analytics:
-    >dashbord summaries:
-    >total amount of unpaid bills
-    >total amount of unpaid fees arrears
-    >total amount of paid fees
-    >total number of students taking transport
-    >total number of students taking lunch
-    >total number of students in each grade (Table)
 
-7. FeesStructure
-8.grade
 9.invoice
 >Change the source of an invoice number so that the invoice number comes from a saved invoice
 >>>decouple the sims and qb sims by removing the create_qb_invoice from the invoice's save method, and instead call that method from the view togetheer with a try...except clause
@@ -87,10 +54,9 @@ i should have a limit to how much is allowed as payments - PENDING
 9.student
 >validate form
 
-
-
 should not allow the student to subscribe to two of the same items
 policy: subscription to lunch and transport should be done at the earliest, preferably beefore making any payment
+any student taking lunch should make it known at the beginning of the term
 
 deployment checklist:
     > Verify the academic calendar has the correct start and end dates of each term
@@ -103,17 +69,11 @@ next time when developing, use selenium to simulate user activity on the browser
 to eliminate the need to have to manually simulate user activity
 
 subscribing to items, the charges must be applied to the invoices for the current terms
+
 should change the status of the invoice to unpaid when subscribing to items just in case the invoice was cleared
-ypu should have only one invoice for a given term/year
+ypu should have only one invoice for a given term/year pair
 
 it is critical that you validate the user's input! in all the applications
-
-20/09/2022
->add success notification message on every successfully created object- DONE
-    >prevent button from submitting the same data twice or submitting the data twice
-    >add confirmaiton modal -DONE
-
->We should
 
 
 
@@ -121,17 +81,19 @@ it is critical that you validate the user's input! in all the applications
 -add chart to show the distribution of unpaid fees per grade
 -make sure to validate the bill form so that the price_per_quantity* amount = total
 -and make sure to auto-calculate the total for the user
--disable bill buttons instead or removing
--add select 2.js to the record payment form, and bill forms
-- add date to record bill
--hover dropdown- make sidebar button dropdown on hover
-make form inputs small
-give buttons icons
--modals are not displaying names of select inputs only showing ID
--review what you should put in the datatables
 
--dont forget the task that runse at tevery beginning of the year, graduating students to the next grade
+
+-add select 2.js to the record all recording forms
+
+-hover dropdown- make sidebar button dropdown on hover - NON ESSENTIAL
+
+-add export to pdf and csv buttons to tables
+
+-dont forget the task that run at tevery beginning of the year, graduating students to the next grade
 -and the scheduler that runs every beginning of the term to invoice the students
--you should definitely allow a user to changer their password
+
 
 -use django-mailer to send emails
+-make datatables load the most recent records first in all tables -important
+-make total field in edit and record bill forms autocalculate
+ - the student's active field will only prevent him from being invoices, but the systems should not allow his

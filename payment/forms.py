@@ -10,7 +10,7 @@ class PaymentCreationForm(forms.ModelForm):
         widgets={
         'student':Select(attrs={'class':'form-select form-control form-control-sm','id':'student'}),
         'date_paid': forms.DateInput(attrs={'class':'form-control form-control-sm', 'id':'floatingInput','type':'date'}),
-        'amount': forms.NumberInput(attrs={'class':'form-control form-control-sm', 'id':'quantity','value':0,'min':1}),
+        'amount': forms.NumberInput(attrs={'class':'form-control form-control-sm', 'id':'quantity','min':1}),
         }
 
     #You have to validate that the amount is greatter than 1

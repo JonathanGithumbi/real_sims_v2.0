@@ -156,12 +156,14 @@
     <!-- /.container-fluid -->
     <script>
         function confirm_registration() {
+            const grade = document.getElementById("grade_admitted_to");
+            const grade_name = grade.options[grade.selectedIndex].text;
             const first_name = document.forms['student_registration_form']['first_name'].value;
             const middle_name = document.forms['student_registration_form']['middle_name'].value;
             const last_name = document.forms['student_registration_form']['last_name'].value;
             document.getElementById("student_name_area").innerHTML = first_name + ' ' + middle_name + ' ' + last_name;
-            const grade_admitted_to = document.forms['student_registration_form']['grade_admitted_to'].value;
-            document.getElementById("grade_area").innerHTML = grade_admitted_to;
+
+            document.getElementById("grade_area").innerHTML = grade_name;
             const primary_contact_name = document.forms['student_registration_form']['primary_contact_name'].value;
             document.getElementById("prim_cont_name_area").innerHTML = primary_contact_name;
             const primary_contact_phone_number = document.forms['student_registration_form']['primary_contact_phone_number'].value;

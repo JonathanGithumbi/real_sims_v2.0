@@ -3,7 +3,7 @@
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
-
+<br>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -26,8 +26,9 @@
                     <table id="dataTable" width="100%" cellspacing="0" class="table table-bordered table-sm text-gray-900">
                         <thead class="thead-light">
                         <tr>
-                            <th>Date Paid</th>
-                            <th>Note</th>
+                            <th>Payment Date</th>
+                            <th>Payment type</th>
+                            <th>Student</th>
                             <th>Amount</th>
                         </tr>
                         </thead>
@@ -36,6 +37,7 @@
                             <tr>
                                 <td>{{ payment.date_paid }}</td>
                                 <td>{{ payment.note }}</td>
+                                <td>{{ payment.student }}</td>
                                 <td>{{ payment.amount }}</td>
                             </tr>
                         {% endfor %}

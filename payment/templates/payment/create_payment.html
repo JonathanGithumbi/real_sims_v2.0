@@ -105,10 +105,12 @@
 
     <script>
         function confirm_payment() {
-            const student = document.forms['payment_form']['student'].value;
+            const student = document.getElementById("student");
+            const student_name = student.options[student.selectedIndex].text;
+
             const payment_amount = document.forms['payment_form']['amount'].value;
             const payment_date = document.forms['payment_form']['date_paid'].value;
-            document.getElementById("student_area").innerHTML = student
+            document.getElementById("student_area").innerHTML = student_name;
             document.getElementById("payment_amount_area").innerHTML = payment_amount;
             document.getElementById("payment_date_area").innerHTML = payment_date;
         }

@@ -42,6 +42,9 @@ class Student(models.Model):
     primary_contact_phone_number = models.CharField(max_length=255, blank=True)
     secondary_contact_name = models.CharField(max_length=255)
     secondary_contact_phone_number = models.CharField(max_length=255, blank=True)
+
+    #This active flag defines whether or not the student gets  invoiced
+    active = models.BooleanField(null=True,default=True)
     synced = models.BooleanField(default=False)
     # optionals 
     lunch = models.BooleanField(default=False)

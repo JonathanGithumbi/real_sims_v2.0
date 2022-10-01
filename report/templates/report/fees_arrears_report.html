@@ -29,7 +29,6 @@
               <th>#</th>
               <th>Name</th>
               <th>Grade</th>
-              <th>Primary Contact phone Number</th>
               <th>Amount Due</th>
             </tr>
           </thead>
@@ -39,7 +38,6 @@
                 <td>{{forloop.counter}}</td>
                 <td>{{student.student.first_name}} {{student.student.middle_name}} {{student.student.last_name}}</td>
                 <td>{{student.student.current_grade}}</td>
-                <td>{{student.student.primary_contact_phone_number}}</td>
                 <td>{{student.balance}}</td>
               </tr>
             {% endfor %}

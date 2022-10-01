@@ -66,6 +66,7 @@ def make_payment(request):
                         # Apply the payment for accounting_sims
                         # Minus the excess amount so that it doesnt overpay the qb_invoice.
                         payment_obj = Payment.objects.create(
+                            date_paid = form_obj.cleaned_data['date_paid'],
                             amount=payment_amount - excess_amount,
                             student=student_obj,  # payment was applied for this student
                             invoice=invoice,  # payment was applied to this invoice
@@ -96,6 +97,7 @@ def make_payment(request):
                         # now the payment amount is less than the invoice_balance either from paying a previous invoice or the payment_obj.amount was that way initially
                         # sav the payment object
                         payment_obj = Payment.objects.create(
+                            date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount,
                             student=student_obj,
                             invoice=invoice
@@ -126,6 +128,7 @@ def make_payment(request):
 
                         # save the payment object
                         payment_obj = Payment.objects.create(
+                            date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount,
                             student=student_obj,
                             invoice=invoice
@@ -209,6 +212,7 @@ def make_payment(request):
                             # get the amount to be paid for that term
                             # add an invoice for the coming term
                             invoice = Invoice.objects.create(
+
                                 student=student_obj,
                                 year=next_year,
                                 term=next_term,
@@ -250,6 +254,7 @@ def make_payment(request):
                                 # Apply the payment for accounting_sims
                                 # Minus the excess amount so that it doesnt overpay the qb_invoice.
                                 payment_obj = Payment.objects.create(
+                                    date_paid=form_obj.cleaned_data['date_paid'],
                                     amount=payment_obj.amount - excess_amount,
                                     student=student_obj,  # payment was applied for this student
                                     invoice=invoice,  # payment was applied to this invoice
@@ -280,6 +285,7 @@ def make_payment(request):
                                 # now the payment amount is less than the invoice_balance either from paying a previous invoice or the payment_obj.amount was that way initially
                                 # sav the payment
                                 payment_obj = Payment.objects.create(
+                                    date_paid=form_obj.cleaned_data['date_paid'],
                                     amount=payment_amount,
                                     student=student_obj,
                                     invoice=invoice
@@ -310,6 +316,7 @@ def make_payment(request):
 
                                 # save the payment object
                                 payment_obj = Payment.objects.create(
+                                    date_paid=form_obj.cleaned_data['date_paid'],
                                     amount=payment_amount,
                                     student=student_obj,
                                     invoice=invoice
@@ -432,6 +439,7 @@ def make_payment(request):
                         # Apply the payment for accounting_sims
                         # Minus the excess amount so that it doesnt overpay the qb_invoice.
                         payment_obj = Payment.objects.create(
+                            date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount - excess_amount,
                             student=student_obj,  # payment was applied for this student
                             invoice=invoice,  # payment was applied to this invoice
@@ -462,6 +470,7 @@ def make_payment(request):
                         # now the payment amount is less than the invoice_balance either from paying a previous invoice or the payment_obj.amount was that way initially
                         # sav the payment object
                         payment_obj = Payment.objects.create(
+                            date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount,
                             student=student_obj,
                             invoice=invoice
@@ -492,6 +501,7 @@ def make_payment(request):
 
                         # save the payment object
                         payment_obj = Payment.objects.create(
+                            date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount,
                             student=student_obj,
                             invoice=invoice
@@ -518,7 +528,7 @@ def make_payment(request):
                         break
                 # After everything return to student profile
                 messages.success(request, "Payment applied successfully", extra_tags="alert-success")
-                return redirect('student_profile', id)
+                return redirect('payments')
             # there are no unpaid invoices
             # now you start the process of applying payments
         else:

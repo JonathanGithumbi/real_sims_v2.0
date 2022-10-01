@@ -29,7 +29,7 @@
                         <tr>
                             <th>Date Created</th>
                             <th>Decription</th>
-                            <th>status</th>
+                            <th>Status</th>
                             <th>Quantiy</th>
                             <th>Price per Quantity</th>
                             <th>Total Amount</th>
@@ -44,11 +44,11 @@
                                 <td>{{ bill.description }}</td>
                                 <td>
                                     {% if bill.fully_paid == True %}
-                                        Paid
+                                        <span class="badge badge-success">Paid</span>
                                     {% endif %}
 
                                     {% if bill.fully_paid == False %}
-                                        Unpaid
+                                        <span class="badge badge-danger">Unpaid</span>
                                     {% endif %}
                                 </td>
                                 <td>{{ bill.quantity }}</td>
@@ -102,7 +102,51 @@
                                         </span>
                                             <span class="text">Edit </span></a>
                                     {% else %}
-                                        No actions on Paid bill
+
+                                        <button disabled class="btn btn-primary btn-icon-split btn-sm" href="#" data-toggle="modal"
+                                           data-target="#bill_payment_modal">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                            <span class="text">Mark as Paid</span></button>
+                                        <div class="modal fade" id="bill_payment_modal">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Confirm Bill Payment</h4>
+                                                    </div>
+
+                                                    <!-- Modal body -->
+                                                    <div class="modal-body">
+                                                        Bill: {{ bill.description }}
+                                                        <br>
+                                                        Amount: {{ bill.total }}
+                                                    </div>
+
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-secondary btn-sm" type="button"
+                                                                data-dismiss="modal">Cancel
+                                                        </button>
+                                                        <a class="btn btn-success btn-sm"
+                                                           href="{% url 'pay_bill' bill.id %}"
+                                                        >
+
+                                                            <span class="text">submit</span></a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button  disabled class="btn btn-primary btn-icon-split btn-sm"
+                                           href="{% url 'edit_bill' bill.id %}"
+                                        >
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-pen"></i>
+                                        </span>
+                                            <span class="text">Edit </span></button>
                                     {% endif %}
                                 </td>
                             </tr>

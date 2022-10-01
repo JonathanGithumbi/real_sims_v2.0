@@ -183,7 +183,7 @@ class Invoice(models.Model):
 
         return amount
     def get_balance(self):
-        #payment amount - amount
+        #amount-payment amount
         payments = self.payment_set.filter(invoice=self)
         payment_amount = 0
         for payment in payments:
