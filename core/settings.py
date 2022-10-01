@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'item',
     'bill_payment'
 ]
-
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

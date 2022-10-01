@@ -1,6 +1,6 @@
 from django.urls import path, reverse
 from django.contrib.auth import views as auth_views
-from django.conf.urls import url
+from django.urls import re_path as  url
 from .forms import AuthFormWithBootstrapSpecifics, PasswordResetFormWithBootstrapSpecifics,SetPasswordFormBS,PasswordChangeFormBS
 from . import views
 
