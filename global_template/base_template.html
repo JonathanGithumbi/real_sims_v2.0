@@ -17,6 +17,7 @@
 
     {% block style %}
     {% endblock style %}
+    {{ form.media.css }}
     <title>SIMS</title>
 </head>
 
@@ -38,5 +39,6 @@
 
 <!-- Page level custom scripts -->
 <script src={% static "js/demo/datatables-demo.js" %}></script>
+{{ form.media.js }}
 </body>
 </html>

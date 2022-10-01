@@ -17,12 +17,12 @@ from django.contrib.messages import constants as messages
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 MESSAGE_TAGS = {
-        messages.DEBUG: 'alert-secondary',
-        messages.INFO: 'alert-info',
-        messages.SUCCESS: 'alert-success',
-        messages.WARNING: 'alert-warning',
-        messages.ERROR: 'alert-danger',
- }
+    messages.DEBUG: 'alert-secondary',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -33,7 +33,6 @@ SECRET_KEY = 'f8y-ks$a%-86&fn&^#kxc_v=u)revm8(dq8*p3oaz98530tbem'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -57,7 +56,8 @@ INSTALLED_APPS = [
     'vendor',
     'account',
     'item',
-    'bill_payment'
+    'bill_payment',
+    'django_select2'
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 MIDDLEWARE = [
@@ -75,7 +75,9 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'global_template/'),os.path.join(BASE_DIR,'user_account/templates/user_account/'),os.path.join(BASE_DIR,'user_account/templates/user_account/registration')],
+        'DIRS': [os.path.join(BASE_DIR, 'global_template/'),
+                 os.path.join(BASE_DIR, 'user_account/templates/user_account/'),
+                 os.path.join(BASE_DIR, 'user_account/templates/user_account/registration')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,14 +85,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
+
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -99,13 +100,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sims_v2.0',
-        'USER':'root',
-        'PASSWORD':'',
-        'HOST':'127.0.0.1',
-        'PORT':'3306'
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -125,7 +125,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -139,13 +138,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR ,'static')
+    os.path.join(BASE_DIR, 'static')
 ]
 AUTH_USER_MODEL = 'user_account.User'
 LOGOUT_REDIRECT_URL = '/'
@@ -167,13 +165,12 @@ ACCESS_SECRET = '<EnterHere>'
 
 REALM_ID = '<EnterHere>'
 
-ALLOWED_HOSTS=["http://127.0.0.1:8000/",'127.0.0.1','localhost']
+ALLOWED_HOSTS = ["http://127.0.0.1:8000/", '127.0.0.1', 'localhost']
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 AUTHENTICATION_BACKENDS = ['user_account.backends.AuthBackend']
 DEFAULT_FROM_EMAIL = "jonathan.m.githumbi@gmail.com"
-#EMAIL_HOST =
-#EMAIL_PORT =
-#EMAIL_HOST_PASSWORD=
-#EMAIL_HOST_USER =
-#EMAIL_PORT =
-
+# EMAIL_HOST =
+# EMAIL_PORT =
+# EMAIL_HOST_PASSWORD=
+# EMAIL_HOST_USER =
+# EMAIL_PORT =
