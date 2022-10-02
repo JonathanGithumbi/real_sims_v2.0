@@ -298,6 +298,12 @@ def edit_student_profile(request, student_id):
 
 def delete_student(request, id):
     student = Student.objects.get(pk=id)
-    student.delete()
-    messages.add_message(request, messages.SUCCESS, "{0} {1} {2} Unregistered Successfully".format(student.first_name,student.middle_name,student.last_name))
-    return redirect(reverse('students'))
+    balance = BalanceTable.objects.get(student=student)
+    if balance.balance < 0:
+        #student has balance sp dont delete
+        messages.info(request,"Cannot Unregister Student Until Fees Arrears Cleared.",extra_tags="alert-danger")
+        return redirect(reverse('students'))
+    else:
+        student.delete()
+        messages.add_message(request, messages.SUCCESS, "{0} {1} {2} Unregistered Successfully".format(student.first_name,student.middle_name,student.last_name))
+        return redirect(reverse('students'))
