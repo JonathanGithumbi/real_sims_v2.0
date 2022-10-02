@@ -121,20 +121,20 @@
     <!-- /.container-fluid -->
 
     <script>
-        $(document).ready(function () {
-            $("#quantity").change(function () {
-                alert("quantity ");
+        $(function () {
+            $("#quantity").keyup(function () {
+
                 var quantity = $("#quantity").val();
                 var price_per_quantity = $("#price_per_quantity").val();
                 var total = quantity * price_per_quantity;
-                $("#total").innerHTML(total);
+
                 $("#total").val(total);
             });
-            $("#price_per_quantity").change(function () {
+            $("#price_per_quantity").keyup(function () {
                 var quantity = $("#quantity").val();
                 var price_per_quantity = $("#price_per_quantity").val();
                 var total = quantity * price_per_quantity;
-                $("#total").innerHTML(total);
+
                 $("#total").val(total);
             });
         });

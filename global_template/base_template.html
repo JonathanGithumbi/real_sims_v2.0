@@ -19,16 +19,19 @@
     {% endblock style %}
     {{ form.media.css }}
     <title>SIMS</title>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src={% static "vendor/chart.js/Chart.js" %}></script>
 </head>
 
 <body class="bg-gray-300" id="page-top">
+
 <!--The layout goes in the base_template-->
 <!--The base template for importing dependacy files-->
 {% block content %}
 {% endblock content %}
 
 
-<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+
 <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src={% static "vendor/jquery-easing/jquery.easing.min.js" %}></script>
 <script src={% static "js/sb-admin-2.min.js" %}></script>
@@ -36,9 +39,14 @@
 <script src="{% static "vendor/datatables/jquery.dataTables.min.js" %}"></script>
 <script src={% static "vendor/datatables/dataTables.bootstrap4.min.js" %}></script>
 
-
+<script src={% static "buttons.html5.min.js" %}></script>
+<script src={% static "dataTables.buttons.min.js" %}></script>
+<script src={% static "jszip.min.js" %}></script>
+<script src={% static "pdfmake.min.js" %}></script>
+<script src={% static "vfs_fonts.js" %}></script>
 <!-- Page level custom scripts -->
 <script src={% static "js/demo/datatables-demo.js" %}></script>
-{{ form.media.js }}
+
+
 </body>
 </html>

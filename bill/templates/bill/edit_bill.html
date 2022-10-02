@@ -59,7 +59,9 @@
 
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
-                                                <input type="submit" class="btn btn-primary mb-3 btn-sm" value="Submit"
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+
+                                                <input type="submit" class="btn btn-success btn-sm" value="Submit"
                                                        data-bs-dismiss="modal">
                                             </div>
 
@@ -79,13 +81,13 @@
 
     <script>
         $(document).ready(function () {
-            $("#quantity").change(function () {
+            $("#quantity").keyup(function () {
                 var quantity = $("#quantity").val();
                 var price_per_quantity = $("#price_per_quantity").val();
                 var total = quantity * price_per_quantity;
                 $("#total").val(total);
             });
-            $("#price_per_quantity").change(function () {
+            $("#price_per_quantity").keyup(function () {
                 var quantity = $("#quantity").val();
                 var price_per_quantity = $("#price_per_quantity").val();
                 var total = quantity * price_per_quantity;

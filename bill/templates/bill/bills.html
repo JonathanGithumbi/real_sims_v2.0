@@ -3,7 +3,7 @@
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
-<br>
+        <br>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -58,12 +58,14 @@
                                     {% if bill.fully_paid == False %}
 
                                         <a class="btn btn-primary btn-icon-split btn-sm" href="#" data-toggle="modal"
-                                           data-target="#bill_payment_modal">
+                                           data-target="#bill_payment_modal{{ forloop.counter }}">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-check"></i>
                                         </span>
                                             <span class="text">Mark as Paid</span></a>
-                                        <div class="modal fade" id="bill_payment_modal">
+
+                                        <!--Modal-->
+                                        <div class="modal fade" id="bill_payment_modal{{ forloop.counter }}">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
 
@@ -103,45 +105,16 @@
                                             <span class="text">Edit </span></a>
                                     {% else %}
 
-                                        <button disabled class="btn btn-primary btn-icon-split btn-sm" href="#" data-toggle="modal"
-                                           data-target="#bill_payment_modal">
+                                        <button disabled class="btn btn-primary btn-icon-split btn-sm" href="#"
+                                                data-toggle="modal"
+                                                data-target="#bill_payment_modal">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-check"></i>
                                         </span>
                                             <span class="text">Mark as Paid</span></button>
-                                        <div class="modal fade" id="bill_payment_modal">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
 
-                                                    <!-- Modal Header -->
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Confirm Bill Payment</h4>
-                                                    </div>
-
-                                                    <!-- Modal body -->
-                                                    <div class="modal-body">
-                                                        Bill: {{ bill.description }}
-                                                        <br>
-                                                        Amount: {{ bill.total }}
-                                                    </div>
-
-                                                    <!-- Modal footer -->
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-secondary btn-sm" type="button"
-                                                                data-dismiss="modal">Cancel
-                                                        </button>
-                                                        <a class="btn btn-success btn-sm"
-                                                           href="{% url 'pay_bill' bill.id %}"
-                                                        >
-
-                                                            <span class="text">submit</span></a>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button  disabled class="btn btn-primary btn-icon-split btn-sm"
-                                           href="{% url 'edit_bill' bill.id %}"
+                                        <button disabled class="btn btn-primary btn-icon-split btn-sm"
+                                                href="{% url 'edit_bill' bill.id %}"
                                         >
                                         <span class="icon text-white-50">
                                             <i class="fas fa-pen"></i>
@@ -159,6 +132,5 @@
 
     </div>
     <!-- /.container-fluid -->
-
 
 {% endblock %}

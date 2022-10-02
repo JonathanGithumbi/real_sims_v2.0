@@ -39,9 +39,9 @@ class BillItem(models.Model):
     """A bill is created whenever third party services are rendered"""
     vendor = models.ForeignKey(Vendor, on_delete=models.DO_NOTHING, null=True, default=None)
     description = models.CharField(max_length=255)
-    quantity = models.DecimalField(max_digits=7, decimal_places=2)
-    price_per_quantity = models.IntegerField()
-    total = models.IntegerField()
+    quantity = models.DecimalField(max_digits=7, decimal_places=2,default=0)
+    price_per_quantity = models.IntegerField(default=0)
+    total = models.IntegerField(default=0)
     synced = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     qb_id = models.CharField(max_length=255, null=True, default=None)

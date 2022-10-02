@@ -97,3 +97,5 @@ it is critical that you validate the user's input! in all the applications
 -make datatables load the most recent records first in all tables -important
 -make total field in edit and record bill forms autocalculate
  - the student's active field will only prevent him from being invoices, but the systems should not allow his
+- there's a bug in the mark bill as paid where the button is pointing to the first unpaid bill, not the current bill
+which i want to pay
