@@ -26,22 +26,30 @@
                            cellspacing="0">
                         <thead class="thead-light">
                         <tr>
+                            <th>Date Registered</th>
                             <th>Admission Number</th>
                             <th>Name</th>
+                            <th>Status</th>
                             <th>Current Grade</th>
 
-                            <th>Date Registered</th>
                             <th>Profile</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for student in students %}
                             <tr>
+                                <td>{{ student.date_of_admission }}</td>
                                 <td>{{ student.admission_number_formatted }}</td>
                                 <td>{{ student }}</td>
+                                <td>
+                                    {% if student.active == True %}
+                                        <span class="badge badge-success">Active</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Inactive</span>
+                                    {% endif %}
+                                </td>
                                 <td>{{ student.current_grade }}</td>
 
-                                <td>{{ student.date_of_admission }}</td>
                                 <td>
                                     <a href="{% url 'student_profile' student.id %} "
                                        class="btn btn-primary  btn-sm">

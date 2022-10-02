@@ -4,7 +4,7 @@
 
     <!-- Begin Page Content -->
     <div class="container-fluid">
-<br>
+        <br>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -64,8 +64,8 @@
                     <a href="{% url 'edit_student_profile' student.id %} " class='btn btn-sm btn-primary'>Edit
                         Profile</a>
 
-                    <a class="btn btn-danger btn-sm"  href="#" data-toggle="modal"
-                                   data-target="#delete_modal">Unregister</a>
+                    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
+                       data-target="#delete_modal">Unregister</a>
                     <div class="modal fade" id="delete_modal">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
@@ -77,14 +77,26 @@
 
                                 <!-- Modal body -->
                                 <div class="modal-body">
-                                    Unregister
+                                    {% if student.balancetable.balance < 0 %}
+
+                                    <b>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }} still has uncleared fees arrears.<br> Inactivate instead. </b>
+                                    {% else %}
+                                        Unregister
                                     <b>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }} ? </b>
+                                    {% endif %}
+
                                 </div>
 
                                 <!-- Modal footer -->
                                 <div class="modal-footer">
-                                    <a href="{% url 'delete_student' student.id %}"
-                                       class="btn btn-danger btn-sm">Unregister</a>
+                                    {% if student.balancetable.balance < 0 %}
+                                        <a href="{% url 'inactivate_student' student.id %}"
+                                           class="btn btn-danger btn-sm">Inactivate</a>
+                                    {% else %}
+                                        <a href="{% url 'delete_student' student.id %}"
+                                           class="btn btn-danger btn-sm">Unregister</a>
+                                    {% endif %}
+
                                 </div>
 
                             </div>

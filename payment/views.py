@@ -188,7 +188,7 @@ def make_payment(request):
                                     # this is a edge case, to facilitate the transitioning of
                                     # class 8 is being phased out
                                     # if youre in grade 8 and you over pay 3rd term's fees, where do we put the money
-                                    # return
+                                    #  return
                                     pass
 
                                 if prev_grade.number == 101:  # 101 is code for PP1

@@ -307,3 +307,10 @@ def delete_student(request, id):
         student.delete()
         messages.add_message(request, messages.SUCCESS, "{0} {1} {2} Unregistered Successfully".format(student.first_name,student.middle_name,student.last_name))
         return redirect(reverse('students'))
+
+def inactivate_student(request,id):
+    student = Student.objects.get(pk=id)
+    student.active = False
+    student.save(update_fields=['active'])
+    messages.success(request,"Student Inactivated Successfully ")
+    return redirect(reverse('students'))
