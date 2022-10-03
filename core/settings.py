@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'account',
     'item',
     'bill_payment',
-    'django_select2'
+    'django_select2',
+    's'
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 MIDDLEWARE = [
