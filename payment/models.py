@@ -24,8 +24,8 @@ class Payment(models.Model):
     date_paid = models.DateField(default=None, null=True)
     qb_id = models.CharField(max_length=255, null=True, default=None)
     synced = models.BooleanField(default=False, null=True)
-    invoice = models.ForeignKey(Invoice, on_delete=models.DO_NOTHING,null=True, default=None)
-    student = models.ForeignKey(Student,on_delete=models.DO_NOTHING,null=True,default=None)
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE,null=True, default=None)
+    student = models.ForeignKey(Student,on_delete=models.CASCADE,null=True,default=None)
     note = models.CharField(max_length=255,null=True,default="Single Payment")
     created = models.DateTimeField(auto_now_add=True,null=True)
 

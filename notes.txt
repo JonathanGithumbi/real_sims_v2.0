@@ -99,3 +99,8 @@ it is critical that you validate the user's input! in all the applications
  - the student's active field will only prevent him from being invoices, but the systems should not allow his
 - there's a bug in the mark bill as paid where the button is pointing to the first unpaid bill, not the current bill
 which i want to pay
+
+
+PRIORITIES:
+1.SELECT2JS ON PAYMENT FORMS
+2.EXPORT BUTTONS ON REPORT TABLES
