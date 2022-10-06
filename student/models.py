@@ -29,6 +29,7 @@ class Student(models.Model):
     class Meta:
         ordering = ['-date_of_admission']
 
+
     admission_number = models.IntegerField(null=True, default=None)
     admission_number_formatted = models.CharField(max_length=255, default=None, null=True)
     first_name = models.CharField(max_length=255)

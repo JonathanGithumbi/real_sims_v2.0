@@ -105,3 +105,17 @@ PRIORITIES:
 1.SELECT2JS ON PAYMENT FORMS
 2.EXPORT BUTTONS ON REPORT TABLES
 3.DATATABLE CHATS ON DASHBOARD
+
+
+Next time do test driven developments, and always make sure you write tests the next time you make a change or add
+another feature
+
+should make the submit button turn into a spinner to indicate loding
+05/10/2022
+-Invoice Payments are not being recorded
+-Bills ar bing recorded with the incorrect date
+-Invoicing is sending the wrong amount to quickbooks
+
+- definitely use class based views next time
+
+-- give the urls a more appealing urul scheme

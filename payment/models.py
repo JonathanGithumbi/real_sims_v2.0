@@ -72,11 +72,11 @@ class Payment(models.Model):
         #now for the line object
         payment_line_obj = PaymentLine()
         payment_line_obj.Amount = self.amount
-        payment_line_obj.LinkedTxn.append(linked_invoice) 
+        payment_line_obj.LinkedTxn.append(linked_invoice)
 
         # Apply attributes
         qb_payment_obj.TotalAmt = self.amount
-        qb_payment_obj.CustomerRef = customer_obj.to_ref() 
+        qb_payment_obj.CustomerRef = customer_obj.to_ref()
         qb_payment_obj.DepositToAccountRef=qb_dep_acc_obj.to_ref()
         qb_payment_obj.ARAccountRef = qb_acc_rec_obj.to_ref()
         qb_payment_obj.Line.append(payment_line_obj)
@@ -84,3 +84,4 @@ class Payment(models.Model):
         qb_payment_obj.save(qb=client)
         #return the object
         return qb_payment_obj
+

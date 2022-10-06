@@ -5,7 +5,7 @@ from .forms import AuthFormWithBootstrapSpecifics, PasswordResetFormWithBootstra
 from . import views
 
 urlpatterns = [
-    path('', views.login_user, name='login'),
+    path('login/', views.login_user, name='login'),
     path('logout/', views.logout_view, name='logout'),
 
     # Passowrd Change lets the user to change their password by themselves

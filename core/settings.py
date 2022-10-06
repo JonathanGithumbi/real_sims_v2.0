@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'item',
     'bill_payment',
     'django_select2',
-    's'
+
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 MIDDLEWARE = [
@@ -148,6 +148,7 @@ STATICFILES_DIRS = [
 ]
 AUTH_USER_MODEL = 'user_account.User'
 LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = 'user_account/login/'
 # OAauth2 config here
 CLIENT_ID = 'ABqj7EU6zlngD2KKw34dy6Z7SzVwF7XcHP7c6EOr2GCZUiSOZI'
 CLIENT_SECRET = 'KgY50RPimjKkz4shvDb2PRrIKADSadw8ysWIuOhA'

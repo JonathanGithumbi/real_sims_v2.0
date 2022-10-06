@@ -30,9 +30,10 @@ def payments(request):
 def make_payment(request):
     # Make a payment for student
     # Get the student the payment is being made for
-
+    #make_paymnt_POST
     if request.method == 'POST':
         form_obj = PaymentCreationForm(request.POST)
+
 
         if form_obj.is_valid():
 
@@ -46,6 +47,7 @@ def make_payment(request):
             unpaid_invoices = Invoice.objects.filter(student=student_obj, paid=False).order_by(
                 'created')  # Student's unpaid invoices if any, with the oldest one first
 
+            # there are unpaid invoices
             if unpaid_invoices.exists() is True:  # Are there any unapid invoices ?
                 # yes
                 unpaid_invoices_list = list(unpaid_invoices)  # #make a list of them
@@ -344,7 +346,8 @@ def make_payment(request):
                 # When payment amount is spent up, means the payment was made successfully
                 messages.success(request, "Payment made successfully", extra_tags="alert-success")
                 return redirect('payments')
-            # there are unpaid invoices
+
+            # there are no unpaid invoices
             else:
                 # when there are no unpaid invoices and the student makes another payment
                 payment_amount = form_obj.cleaned_data['amount']  # the amount to applied to invoices (amount paid)
@@ -533,8 +536,7 @@ def make_payment(request):
             # now you start the process of applying payments
         else:
             # form != valid
-            form = PaymentCreationForm(request.POST)
-            return render(request, 'payments/create_payment.html', {'form': form})
+            return render(request, 'payments/create_payment.html', {'form': form_obj})
     if request.method == 'GET':
         # request method
         # make a new payment creation form

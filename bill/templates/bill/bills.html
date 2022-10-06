@@ -33,7 +33,9 @@
                             <th>Quantiy</th>
                             <th>Price per Quantity</th>
                             <th>Total Amount</th>
+                            {% if perms.bill.can_edit_bill %}
                             <th>Actions</th>
+                            {% endif %}
 
                         </tr>
                         </thead>
@@ -54,6 +56,7 @@
                                 <td>{{ bill.quantity }}</td>
                                 <td>{{ bill.price_per_quantity }}</td>
                                 <td>{{ bill.total }}</td>
+                                {% if perms.bill.can_edit_bill  %}
                                 <td>
                                     {% if bill.fully_paid == False %}
 
@@ -122,6 +125,7 @@
                                             <span class="text">Edit </span></button>
                                     {% endif %}
                                 </td>
+                            {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>

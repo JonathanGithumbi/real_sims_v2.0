@@ -18,28 +18,41 @@ from quickbooks.objects import Account as qb_account
 from account.models import Account
 
 
-# Bill(models.Model):
-##    bill_number = models.CharField(max_length=30, null=True,default=None,unique=True)
-##    created = models.DateField(auto_now_add=True)
-##    amount = models.DecimalField(max_digits=7,decimal_places=2,null=True, default=None)
-##    synced = models.BooleanField(default=False)
-##
-#   def __str__(self):
-#       return self.bill_number
+class Bill(models.Model):
+
+    bill_number = models.CharField(max_length=30, null=True, default=None, unique=True)
+    created = models.DateField(auto_now_add=True)
+    amount = models.DecimalField(max_digits=7, decimal_places=2, null=True, default=None)
+    synced = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return self.bill_number
+
 
 PAYMENT_STATUS = [
-    ('Fully Paid','Fully Paid'),
-    ('Partly Paid','Partly Paid'),
-    ('Unpaid','Unpaid')
+    ('Fully Paid', 'Fully Paid'),
+    ('Partly Paid', 'Partly Paid'),
+    ('Unpaid', 'Unpaid')
 ]
+
+
 class BillItem(models.Model):
+    class Meta:
+        permissions = [
+            ("can_create_bill", "can create the bill"),
+            ("can_edit_bill", "can edit the bill"),
+            ("can_view_bill", "can view the bill"),
+            ("can_delete_bill", "can delete the bill"),
+            ("can_pay_bill", "can pay the bill")
+        ]
     """This model represents a bill item from a third party vendor,"""
     """This bill records the bills that the school incurs, or the models records the money going out of the school 
     for any purpose."""
     """A bill is created whenever third party services are rendered"""
     vendor = models.ForeignKey(Vendor, on_delete=models.DO_NOTHING, null=True, default=None)
     description = models.CharField(max_length=255)
-    quantity = models.DecimalField(max_digits=7, decimal_places=2,default=0)
+    quantity = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     price_per_quantity = models.IntegerField(default=0)
     total = models.IntegerField(default=0)
     synced = models.BooleanField(default=False)
@@ -50,9 +63,9 @@ class BillItem(models.Model):
     def __str__(self):
         return self.description
 
-
     def update_qb_bill(self):
         pass
+
     def create_qb_bill(self):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
@@ -95,5 +108,3 @@ class BillItem(models.Model):
         bill.Line.append(acc_based_expense_line)
         saved_bill = bill.save(qb=client)
         return saved_bill
-
-

@@ -29,5 +29,4 @@ urlpatterns = [
     path('payments/', include('payment.urls')),
     path('vendor/',include('vendor.urls')),
 
-    
 ]

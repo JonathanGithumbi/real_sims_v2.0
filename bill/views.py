@@ -1,37 +1,22 @@
-from django import forms
 from django.shortcuts import redirect, render
 from .models import BillItem
-from django.forms import modelformset_factory
-from .utils import generate_bill_number
-from django import forms
 from .forms import CreateBillItemForm
 from django.urls import reverse
-from . import utils
 from bill_payment.models import BillPayment
 from .forms import EditBillItemForm
-from quickbooks import QuickBooks
-from quickbooks.objects import Customer
 from django.contrib import messages
-from user_account.models import Token
-from intuitlib.client import AuthClient
-from django.conf import ENVIRONMENT_VARIABLE, settings
+from django.contrib.auth.decorators import login_required, permission_required
 
-from quickbooks.objects import BillPayment as QB_BillPayment
-from quickbooks.objects import BillPaymentLine
-from quickbooks.objects import Vendor as qb_vendor
-from quickbooks.objects import Bill as qb_bill
-from quickbooks.objects.base import LinkedTxn
-from quickbooks.objects import Account as QB_Account
-
-from account.models import Account as Local_Account
-from quickbooks.objects.billpayment import CheckPayment
-
+login_required()
+#@permission_required("can_view_bill")
 def bills(request):
-    bills = BillItem.objects.all().order_by('created')
+    bills = BillItem.objects.all().order_by('-created')
 
     return render(request, 'bill/bills.html',{'bills':bills})
 
 
+login_required()
+#@permission_required("can_create_bill")
 def create_bill(request):
 
     if request.method == 'GET':
@@ -56,6 +41,8 @@ def create_bill(request):
         else:
             return render(request, 'bill/create_bill.html',{'form':form})
 
+login_required()
+#@permission_required("can_pay_bill")
 def pay_bill(request,id):
     bill_obj = BillItem.objects.get(pk=id)
     # create a bill payment object.
@@ -79,6 +66,10 @@ def pay_bill(request,id):
         bill_payment_obj.save(update_fields=['qb_id', 'synced'])
     messages.success(request,"{0} Bill Payment recorded Successfully".format(bill_obj.description),extra_tags='alert-success')
     return redirect('bills')
+
+
+login_required()
+#@permission_required("can_edit_bill")
 def edit_bill(request,id):
     bill_obj = BillItem.objects.get(pk=id)
 

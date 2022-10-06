@@ -208,7 +208,7 @@ def login_user(request):
         if user is not None:
             #try to refresh tokens purely quickbooks related
             try:
-                refresh()
+                refresh(request)
             except:
                 request.session['qb_synced'] = False
             else:
