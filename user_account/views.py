@@ -21,8 +21,9 @@ from django.contrib.auth import authenticate,login
 
 from .backends import AuthBackend
 from .forms import AuthFormWithBootstrapSpecifics
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+
 def oauth(request):
     auth_client = AuthClient(
         settings.CLIENT_ID,
@@ -34,6 +35,7 @@ def oauth(request):
     url = auth_client.get_authorization_url([Scopes.ACCOUNTING])
     request.session['state'] = auth_client.state_token
     return redirect(url)
+
 
 def callback(request):
     auth_client = AuthClient(
@@ -199,6 +201,7 @@ def revoke(request):
         print(e.intuit_tid)
     return HttpResponse('Revoke successful')
 
+
 def login_user(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -227,6 +230,7 @@ def login_user(request):
         form = AuthFormWithBootstrapSpecifics()
         return render(request,'user_account/registration/login.html',{'form':form})
 
+@login_required()
 def logout_view(request):
     messages.success(request,"Logged out",extra_tags="alert-danger")
     logout(request)

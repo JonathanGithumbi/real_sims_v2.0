@@ -119,3 +119,4 @@ should make the submit button turn into a spinner to indicate loding
 - definitely use class based views next time
 
 -- give the urls a more appealing urul scheme
+- comment out qb related code in fovour of a dedicated view for different types of users

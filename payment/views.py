@@ -20,13 +20,15 @@ from academic_calendar.models import AcademicCalendar
 from django.contrib import messages
 from invoice.models import Item as Invoice_Item
 from grade.models import Grade
+from django.contrib.auth.decorators import login_required
 
-
+@login_required()
 def payments(request):
     all_payments = Payment.objects.all()
     return render(request, 'payment/payments.html', {'payments': all_payments})
 
 
+@login_required()
 def make_payment(request):
     # Make a payment for student
     # Get the student the payment is being made for

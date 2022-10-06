@@ -30,13 +30,15 @@ from quickbooks.objects import Item as QB_Item
 from quickbooks.exceptions import QuickbooksException
 from datetime import date
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
-
+@login_required()
 def students(request):
     all_students = Student.objects.all().order_by('date_of_admission')
     return render(request, 'student/student.html', {'students': all_students})
 
 
+@login_required()
 def register_student(request):
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
@@ -141,6 +143,7 @@ def register_student(request):
             return redirect(students)
 
 
+@login_required()
 def student_profile(request, student_id):
     student = Student.objects.get(pk=student_id)
     invoices = Invoice.objects.filter(student=student)
@@ -148,7 +151,7 @@ def student_profile(request, student_id):
     return render(request, 'student/student_profile.html',
                   {'student': student, 'invoices': invoices, 'payments': payments})
 
-
+@login_required()
 def edit_student_profile(request, student_id):
     student = Student.objects.get(pk=student_id)
     if request.method == 'POST':
@@ -295,7 +298,7 @@ def edit_student_profile(request, student_id):
         form = EditStudentProfileForm(instance=student)
         return render(request, 'student/edit_student_profile.html', {'form': form, 'student': student})
 
-
+@login_required()
 def delete_student(request, id):
     student = Student.objects.get(pk=id)
     balance = BalanceTable.objects.get(student=student)
@@ -308,6 +311,7 @@ def delete_student(request, id):
         messages.add_message(request, messages.SUCCESS, "{0} {1} {2} Unregistered Successfully".format(student.first_name,student.middle_name,student.last_name))
         return redirect(reverse('students'))
 
+@login_required()
 def inactivate_student(request,id):
     student = Student.objects.get(pk=id)
     student.active = False
