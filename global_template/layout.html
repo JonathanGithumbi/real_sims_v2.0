@@ -15,11 +15,11 @@
             <a class="sidebar-brand d-flex bg-danger align-items-center justify-content-center"
                href={% url 'dashboard' %}>
 
-                <span class="small bg-danger">School Information Management System</span>
+                <span class="small">School Information Management System</span>
             </a>
 
 
-            <span class="small text-center">{{ user.email }}</span>
+            <span class="small text-center text-success">{{ user.email }}</span>
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
@@ -28,7 +28,7 @@
                     <span>Dashboard</span></a>
             </li>
 
-            {% if perms.student.can_add_student and perms.student.can_view_student %}
+            {% if perms.student.add_student and perms.student.view_student %}
                 <!-- Divider -->
                 <hr class="sidebar-divider">
                 <!-- Heading -->
@@ -95,7 +95,7 @@
                     </div>
                 </div>
             </li>
-            {% if perms.report.can_view_report %}
+            {% if perms.report.view_report %}
                 <!-- Divider -->
             <hr class="sidebar-divider">
             <!-- Heading -->
