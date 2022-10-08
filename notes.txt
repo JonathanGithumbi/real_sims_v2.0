@@ -3,7 +3,7 @@ Backlog
 Add poliicy to have a preapporved list of vendors - PENDING
 propose policy to have a preapproved list of recurring items to purchase
 
-(non-essential)add back navigation and from navigation - PENDING - i.e as well as breadcrumbs to help the user identifyy
+(non-essential)add back navigation and from navigation - PENDING - i.e as well as breadcrumbs to help the user identify
 where they are
 
 -put in a place a feature that can restrict a child from progressing to the
@@ -119,4 +119,5 @@ should make the submit button turn into a spinner to indicate loding
 - definitely use class based views next time
 
 -- give the urls a more appealing urul scheme
-- comment out qb related code in fovour of a dedicated view for different types of users
+- comment out qb related code in favour of a dedicated view for different types of users
+- add accountant relevant charts and graphs to accountant dashboard

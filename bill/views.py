@@ -106,3 +106,5 @@ def edit_bill(request,id):
             bill_edit_form = EditBillItemForm(request.POST)
             return render(request,'bill/edit_bill.html',{'form':bill_edit_form})
 
+def view_summaries(request):
+    return render(request, 'bill/bill_summaries.html')

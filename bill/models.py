@@ -44,7 +44,8 @@ class BillItem(models.Model):
             ("can_edit_bill", "can edit the bill"),
             ("can_view_bill", "can view the bill"),
             ("can_delete_bill", "can delete the bill"),
-            ("can_pay_bill", "can pay the bill")
+            ("can_pay_bill", "can pay the bill"),
+            ("can_view_summaries","Can view bill summaries")
         ]
     """This model represents a bill item from a third party vendor,"""
     """This bill records the bills that the school incurs, or the models records the money going out of the school 

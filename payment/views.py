@@ -21,6 +21,9 @@ from django.contrib import messages
 from invoice.models import Item as Invoice_Item
 from grade.models import Grade
 from django.contrib.auth.decorators import login_required
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 
 @login_required()
 def payments(request):
@@ -544,3 +547,22 @@ def make_payment(request):
         # make a new payment creation form
         form = PaymentCreationForm()
         return render(request, 'payment/create_payment.html', {'form': form})
+
+@login_required()
+def payment_summaries(request):
+    return render(request,'payment/payment_summaries.html')
+
+from dal import autocomplete
+from student.models import Student
+
+class StudentAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Student.objects.none()
+
+        qs = Student.objects.all()
+
+        if self.q:
+            qs = qs.filter(first_name__istartswith=self.q)
+
+        return qs

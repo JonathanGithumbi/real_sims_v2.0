@@ -37,7 +37,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -57,7 +57,10 @@ INSTALLED_APPS = [
     'account',
     'item',
     'bill_payment',
-    'django_select2',
+    'dal',
+    'dal_select2',
+    'rest_framework',
+    'django.contrib.admin',
 
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -171,9 +174,9 @@ ALLOWED_HOSTS = ["http://127.0.0.1:8000/", '127.0.0.1', 'localhost']
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 AUTHENTICATION_BACKENDS = ['user_account.backends.AuthBackend']
 DEFAULT_FROM_EMAIL = "jonathan.m.githumbi@gmail.com"
-EMAIL_HOST ="smtp.gmail.com"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
-EMAIL_HOST_PASSWORD="1t$nAB01033!@#"
+EMAIL_HOST_PASSWORD = "1t$nAB01033!@#"
 EMAIL_HOST_USER = "jonathan.m.githumbi@gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

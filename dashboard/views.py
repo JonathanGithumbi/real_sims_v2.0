@@ -12,6 +12,9 @@ from invoice.models import Invoice
 from academic_calendar.models import AcademicCalendar
 from payment.models import Payment
 from django.contrib.auth.decorators import login_required
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 
 @login_required()
 def dashboard(request):
@@ -41,6 +44,7 @@ def get_tot_no_students(request):
     tot_no_stu = Student.objects.filter(active=True).count()
     return tot_no_stu
 
+
 @login_required()
 def get_tot_amt_unpaid_bills(reqeust):
     unpaid_bills = BillItem.objects.filter(fully_paid=False).aggregate(total=Sum('total'))
@@ -48,42 +52,69 @@ def get_tot_amt_unpaid_bills(reqeust):
         return 0
     else:
         return unpaid_bills['total']
+
+
 @login_required()
 def get_tot_amt_unpaid_fees_term(request):
     cal_obj = AcademicCalendar()
     current_year = cal_obj.get_year()
     current_term = cal_obj.get_term()
-    unpaid_invoices_for_this_term = Invoice.objects.filter(year=current_year,term=current_term,balance__gt =0).aggregate(total=Sum('balance'))
+    unpaid_invoices_for_this_term = Invoice.objects.filter(year=current_year, term=current_term,
+                                                           balance__gt=0).aggregate(total=Sum('balance'))
     if unpaid_invoices_for_this_term['total'] == None:
         return 0
     else:
         return unpaid_invoices_for_this_term['total']
+
 
 @login_required()
 def get_tot_amt_paid_fees_term(request):
     cal_obj = AcademicCalendar()
     current_year = cal_obj.get_year()
     current_term = cal_obj.get_term()
-    payments_made = Payment.objects.filter(invoice__year=current_year,invoice__term=current_term).aggregate(total=Sum('amount'))
+    payments_made = Payment.objects.filter(invoice__year=current_year, invoice__term=current_term).aggregate(
+        total=Sum('amount'))
     if payments_made['total'] == None:
         return 0
     else:
         return payments_made['total']
+
 
 @login_required()
 def get_tot_no_transport_subs(request):
     total_trans_sub = Student.objects.filter(transport=True).count()
     return total_trans_sub
 
+
 @login_required()
 def get_tot_no_lunch_subs(request):
     total_lunch_sub = Student.objects.filter(lunch=True).count()
     return total_lunch_sub
 
+
 @login_required()
 def get_arrears_distribution(request):
     pass
 
+
 @login_required()
 def get_no_students_per_grade(request):
     pass
+
+
+
+class ChartData(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        labels = [
+            'January', 'February', 'March', 'April', 'May', 'June', 'July'
+        ]
+        chartLabel = "my data"
+        chartdata = [0, 10, 5, 2, 20, 30, 45]
+        data = {
+            "labels": labels,
+            'chartLabel': chartLabel,
+            "chartdata": chartdata, }
+        return Response(data)

@@ -17,6 +17,10 @@ from quickbooks.objects import Invoice as QB_Invoice
 
 
 class Payment(models.Model):
+    class Meta:
+        permissions=[
+            ("can_view_summaries","can view payment summaries")
+        ]
 
     """this model represents a payment made for an invoice"""
     # This models is for making payments for invoices.
