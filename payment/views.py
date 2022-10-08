@@ -1,3 +1,4 @@
+from dal import autocomplete
 from email.policy import default
 from django.shortcuts import render, redirect
 
@@ -35,10 +36,9 @@ def payments(request):
 def make_payment(request):
     # Make a payment for student
     # Get the student the payment is being made for
-    #make_paymnt_POST
+    # make_paymnt_POST
     if request.method == 'POST':
         form_obj = PaymentCreationForm(request.POST)
-
 
         if form_obj.is_valid():
 
@@ -55,11 +55,13 @@ def make_payment(request):
             # there are unpaid invoices
             if unpaid_invoices.exists() is True:  # Are there any unapid invoices ?
                 # yes
-                unpaid_invoices_list = list(unpaid_invoices)  # #make a list of them
+                unpaid_invoices_list = list(
+                    unpaid_invoices)  # #make a list of them
                 unpaid_invoices_iterator = iter(
                     unpaid_invoices_list)  # turn list to an iterator so that i can call next()
 
-                payment_amount = form_obj.cleaned_data['amount']  # the amount to be applied to invoices (amount paid)
+                # the amount to be applied to invoices (amount paid)
+                payment_amount = form_obj.cleaned_data['amount']
 
                 while payment_amount != 0:  # Make payments until the amount is spent up
 
@@ -73,7 +75,7 @@ def make_payment(request):
                         # Apply the payment for accounting_sims
                         # Minus the excess amount so that it doesnt overpay the qb_invoice.
                         payment_obj = Payment.objects.create(
-                            date_paid = form_obj.cleaned_data['date_paid'],
+                            date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount - excess_amount,
                             student=student_obj,  # payment was applied for this student
                             invoice=invoice,  # payment was applied to this invoice
@@ -96,7 +98,8 @@ def make_payment(request):
                         payment_amount = excess_amount
 
                         # Update the Balance table
-                        bal_table = BalanceTable.objects.get(student=student_obj)
+                        bal_table = BalanceTable.objects.get(
+                            student=student_obj)
                         bal_table.balance = bal_table.balance + payment_obj.amount
                         bal_table.save(update_fields=['balance'])
 
@@ -122,7 +125,8 @@ def make_payment(request):
                             pass
 
                         # update the Balance table
-                        bal_table = BalanceTable.objects.get(student=student_obj)
+                        bal_table = BalanceTable.objects.get(
+                            student=student_obj)
                         bal_table.balance = bal_table.balance + payment_obj.amount
                         bal_table.save()
 
@@ -153,7 +157,8 @@ def make_payment(request):
                             pass
 
                         # update the balance table
-                        bal_table = BalanceTable.objects.get(student=student_obj)
+                        bal_table = BalanceTable.objects.get(
+                            student=student_obj)
                         bal_table.balance = bal_table.balance + payment_obj.amount
                         bal_table.save()
 
@@ -212,7 +217,8 @@ def make_payment(request):
                                     next_year = prev_year + 1
                                     next_term = 1
                                 else:
-                                    next_grade = Grade.objects.get(number=prev_grade.number + 1)
+                                    next_grade = Grade.objects.get(
+                                        number=prev_grade.number + 1)
                                     next_year = prev_year + 1
                                     next_term = 1
 
@@ -249,7 +255,8 @@ def make_payment(request):
                             invoice.save(update_fields=['balance', 'amount'])
 
                             # balance table
-                            bal_table = BalanceTable.objects.get(student=student_obj)
+                            bal_table = BalanceTable.objects.get(
+                                student=student_obj)
                             bal_table.balance = bal_table.balance + -total_amount
                             bal_table.save(update_fields=['balance'])
 
@@ -284,7 +291,8 @@ def make_payment(request):
                                 payment_amount = excess_amount
 
                                 # Update the Balance table
-                                bal_table = BalanceTable.objects.get(student=student_obj)
+                                bal_table = BalanceTable.objects.get(
+                                    student=student_obj)
                                 bal_table.balance = bal_table.balance + payment_obj.amount
                                 bal_table.save(update_fields=['balance'])
 
@@ -310,7 +318,8 @@ def make_payment(request):
                                     pass
 
                                 # update the Balance table
-                                bal_table = BalanceTable.objects.get(student=student_obj)
+                                bal_table = BalanceTable.objects.get(
+                                    student=student_obj)
                                 bal_table.balance = bal_table.balance + payment_obj.amount
                                 bal_table.save()
 
@@ -341,7 +350,8 @@ def make_payment(request):
                                     pass
 
                                 # update the balance table
-                                bal_table = BalanceTable.objects.get(student=student_obj)
+                                bal_table = BalanceTable.objects.get(
+                                    student=student_obj)
                                 bal_table.balance = bal_table.balance + payment_obj.amount
                                 bal_table.save()
 
@@ -349,13 +359,15 @@ def make_payment(request):
                                 payment_amount = 0
 
                 # When payment amount is spent up, means the payment was made successfully
-                messages.success(request, "Payment made successfully", extra_tags="alert-success")
+                messages.success(
+                    request, "Payment made successfully", extra_tags="alert-success")
                 return redirect('payments')
 
             # there are no unpaid invoices
             else:
                 # when there are no unpaid invoices and the student makes another payment
-                payment_amount = form_obj.cleaned_data['amount']  # the amount to applied to invoices (amount paid)
+                # the amount to applied to invoices (amount paid)
+                payment_amount = form_obj.cleaned_data['amount']
                 while payment_amount != 0:
                     # maybe its best t0 fetch the term, grade and year from the previous invoice
                     previous_invoice = Invoice.objects.filter(student=student_obj).order_by(
@@ -399,7 +411,8 @@ def make_payment(request):
                             next_year = prev_year + 1
                             next_term = 1
                         else:
-                            next_grade = Grade.objects.get(number=prev_grade.number + 1)
+                            next_grade = Grade.objects.get(
+                                number=prev_grade.number + 1)
                             next_year = prev_year + 1
                             next_term = 1
 
@@ -470,7 +483,8 @@ def make_payment(request):
                         payment_amount = excess_amount
 
                         # Update the Balance table
-                        bal_table = BalanceTable.objects.get(student=student_obj)
+                        bal_table = BalanceTable.objects.get(
+                            student=student_obj)
                         bal_table.balance = bal_table.balance + payment_obj.amount
                         bal_table.save(update_fields=['balance'])
 
@@ -496,7 +510,8 @@ def make_payment(request):
                             pass
 
                         # update the Balance table
-                        bal_table = BalanceTable.objects.get(student=student_obj)
+                        bal_table = BalanceTable.objects.get(
+                            student=student_obj)
                         bal_table.balance = bal_table.balance + payment_obj.amount
                         bal_table.save()
 
@@ -527,7 +542,8 @@ def make_payment(request):
                             pass
 
                         # update the balance table
-                        bal_table = BalanceTable.objects.get(student=student_obj)
+                        bal_table = BalanceTable.objects.get(
+                            student=student_obj)
                         bal_table.balance = bal_table.balance + payment_obj.amount
                         bal_table.save()
 
@@ -535,7 +551,8 @@ def make_payment(request):
                         payment_amount = 0
                         break
                 # After everything return to student profile
-                messages.success(request, "Payment applied successfully", extra_tags="alert-success")
+                messages.success(
+                    request, "Payment applied successfully", extra_tags="alert-success")
                 return redirect('payments')
             # there are no unpaid invoices
             # now you start the process of applying payments
@@ -548,12 +565,11 @@ def make_payment(request):
         form = PaymentCreationForm()
         return render(request, 'payment/create_payment.html', {'form': form})
 
+
 @login_required()
 def payment_summaries(request):
-    return render(request,'payment/payment_summaries.html')
+    return render(request, 'payment/payment_summaries.html')
 
-from dal import autocomplete
-from student.models import Student
 
 class StudentAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -566,3 +582,20 @@ class StudentAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(first_name__istartswith=self.q)
 
         return qs
+
+
+class PaymentTrendChart(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        labels = [
+            'January', 'February', 'March', 'April', 'May', 'June', 'July'
+        ]
+        chartLabel = "my data"
+        chartdata = [0, 10, 5, 2, 20, 30, 45]
+        data = {
+            "labels": labels,
+            'chartLabel': chartLabel,
+            "chartdata": chartdata, }
+        return Response(data)
