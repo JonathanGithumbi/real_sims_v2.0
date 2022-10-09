@@ -1,9 +1,8 @@
 {% extends 'layout.html' %}
 {% block page %}
-
     <!-- Begin Page Content -->
     <div class="container-fluid">
-<br>
+        <br>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -14,77 +13,78 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
-
         <div class="card o-hidden border-0 shadow-sm my-5">
             <div class="card-body p-0">
-
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-
                     <div class="col-sm">
                         <div class="p-5">
                             <div class="text-left">
                                 <h5>Record New Bill</h5>
                             </div>
                             <hr>
-                            <form action="{% url 'create_bill' %}" method="post" name="bill_creation_form">
+                            <form action="{% url 'create_bill' %}"
+                                  method="post"
+                                  name="bill_creation_form">
                                 {% csrf_token %}
-
                                 <div class="row">
-
                                     <div class="col">
                                         {{ form.vendor.errors }}
                                         <label for="{{ form.vendor.id_for_label }}">Vendor:</label>
-                                        {{ form.vendor }}</div>
-
+                                        {{ form.vendor }}
+                                    </div>
                                 </div>
                                 <div class="row">
-
                                     <div class="col">
                                         {{ form.description.errors }}
                                         <label for="{{ form.description.id_for_label }}">Description:</label>
-                                        {{ form.description }}</div>
-
+                                        {{ form.description }}
+                                    </div>
                                 </div>
-
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.vendor.errors }}
+                                        <label for="{{ form.category.id_for_label }}">Category:</label>
+                                        {{ form.category }}
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col">
                                         {{ form.quantity.errors }}
                                         <label for="{{ form.quantity.id_for_label }}">Quantity:</label>
-                                        {{ form.quantity }}</div>
+                                        {{ form.quantity }}
+                                    </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col">
                                         {{ form.price_per_quantity.errors }}
-                                        <label for="{{ form.price_per_quantity.id_for_label }}">Price Per
-                                            Quantity</label>
-                                        {{ form.price_per_quantity }}</div>
+                                        <label for="{{ form.price_per_quantity.id_for_label }}">
+                                            Price Per
+                                            Quantity
+                                        </label>
+                                        {{ form.price_per_quantity }}
+                                    </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col">
                                         {{ form.total.errors }}
                                         <label for="{{ form.total.id_for_label }}">Total:</label>
-                                        {{ form.total }}</div>
-
+                                        {{ form.total }}
+                                    </div>
                                 </div>
-
                                 <br>
-                                <a class="btn btn-primary btn-sm" onclick="confirm_bill_creation()" href="#" data-toggle="modal"
+                                <a class="btn btn-primary btn-sm"
+                                   onclick="confirm_bill_creation()"
+                                   href="#"
+                                   data-toggle="modal"
                                    data-target="#confirm_bill_creation_modal">Submit</a>
-
-
                                 <div class="modal fade" id="confirm_bill_creation_modal">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
-
                                             <!-- Modal Header -->
                                             <div class="modal-header">
                                                 <h4 class="modal-title">Record Bill</h4>
                                             </div>
-
                                             <!-- Modal body -->
                                             <div class="modal-body">
                                                 <b>Vendor:</b> <small id="vendor_area"></small>
@@ -96,17 +96,15 @@
                                                 <b>Price per Quantity: </b><small id="price_per_quantity_area"></small>
                                                 <br>
                                                 <b>Total: </b><small id="total_area"></small>
-
                                             </div>
-
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
-                                                   <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
-
-                                                <input type="submit" class="btn btn-success btn-sm" value="Submit"
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                                <input type="submit"
+                                                       class="btn btn-success btn-sm"
+                                                       value="Submit"
                                                        data-bs-dismiss="modal">
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -116,10 +114,8 @@
                 </div>
             </div>
         </div>
-
     </div>
     <!-- /.container-fluid -->
-
     <script>
         $(function () {
             $("#quantity").keyup(function () {

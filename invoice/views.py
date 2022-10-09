@@ -14,5 +14,6 @@ def invoice_detail(request,id):
     return render (request,'invoice/invoice_details.html',{'invoice':invoice,'items':items,'payments':payments})
 
 
-
+def print_invoice_details(request,id):
+    pass
 

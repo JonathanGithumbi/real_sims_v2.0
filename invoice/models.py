@@ -38,19 +38,28 @@ class InvoiceNumber(models.Model):
 
 class Invoice(models.Model):
     """This is the invoice that has invoice items within it"""
-    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)  # added in views
+    student = models.ForeignKey(
+        Student, on_delete=models.DO_NOTHING)  # added in views
     created = models.DateTimeField(auto_now_add=True)  # created on save()
     year = models.IntegerField(null=True, default=None)  # added in views
     term = models.IntegerField(null=True, default=None)  # added in views
     amount = models.DecimalField(max_digits=8, decimal_places=2, null=True,
                                  default=0)  # to be added in registration views
-    grade = models.ForeignKey(Grade, on_delete=models.DO_NOTHING,null=True,default=None)
+    grade = models.ForeignKey(
+        Grade, on_delete=models.DO_NOTHING, null=True, default=None)
 
     synced = models.BooleanField(default=False)  # added in save
-    paid = models.BooleanField(default=False, null=True)  # updated when creating payments
+    # updated when creating payments
+    paid = models.BooleanField(default=False, null=True)
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0,
                                   null=True)  # hOW MUCH IS LEFT ON THE PAYMENT
     qb_id = models.CharField(max_length=255, null=True, default=None)
+
+    def status(self):
+        if self.balance == 0:
+            return 'cleared'
+        else:
+            return 'not cleared'
 
     def create_qb_invoice(self):
         access_token_obj = Token.objects.get(name='access_token')
@@ -100,7 +109,8 @@ class Invoice(models.Model):
             calendar_obj = AcademicCalendar()
             current_grade = self.student.current_grade
             term = calendar_obj.get_term()
-            fee_structure_obj = FeesStructure.objects.get(item=item_obj, grade=current_grade, term=term)
+            fee_structure_obj = FeesStructure.objects.get(
+                item=item_obj, grade=current_grade, term=term)
             sales_item_line_detail.UnitPrice = fee_structure_obj.amount
 
             # create line
@@ -152,7 +162,8 @@ class Invoice(models.Model):
         calendar_obj = AcademicCalendar()
         current_grade = self.student.current_grade
         term = calendar_obj.get_term()
-        fee_structure_obj = FeesStructure.objects.get(item=item, grade=current_grade, term=term)
+        fee_structure_obj = FeesStructure.objects.get(
+            item=item, grade=current_grade, term=term)
         sales_item_line_detail.UnitPrice = fee_structure_obj.amount
 
         # create line
@@ -179,11 +190,12 @@ class Invoice(models.Model):
         amount = 0
         items = Item.objects.filter(invoice=self)
         for item in items:
-            amount=amount+item.amount
+            amount = amount+item.amount
 
         return amount
+
     def get_balance(self):
-        #amount-payment amount
+        # amount-payment amount
         payments = self.payment_set.filter(invoice=self)
         payment_amount = 0
         for payment in payments:
@@ -199,12 +211,12 @@ class Invoice(models.Model):
         return 'inv' + str(self.invoice_number).zfill(4)
 
 
-
 class Item(models.Model):
     """These are invoice items. i.e the items that compose the invoice"""
     """Whenever an invoice item is added to an invoice, the save method modifies the invoice by increasing the amount and balance of the invoice"""
     # item_description = models.CharField(max_length=255,null=True,default=None)
-    invoice_item = models.ForeignKey(sales_item, on_delete=models.DO_NOTHING, null=True, default=None)
+    invoice_item = models.ForeignKey(
+        sales_item, on_delete=models.DO_NOTHING, null=True, default=None)
     amount = models.IntegerField(null=True, default=None)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
     created = models.DateField(null=True, default=None)

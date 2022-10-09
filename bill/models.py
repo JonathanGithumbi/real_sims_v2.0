@@ -41,6 +41,13 @@ PAYMENT_STATUS = [
 
 
 class BillItem(models.Model):
+    CATEGORY_CHOICES = [
+        ("food", "Food"),
+        ("vehicle_repair", "Vehicle Repair"),
+        ("office_supplies", "Office Supplies"),
+        ("educational resources", "Educational Resources")
+    ]
+
     class Meta:
         permissions = [
             ("can_create_a_bill", "can create local bill"),
@@ -56,6 +63,8 @@ class BillItem(models.Model):
     """A bill is created whenever third party services are rendered"""
     vendor = models.ForeignKey(
         Vendor, on_delete=models.DO_NOTHING, null=True, default=None)
+    category = models.CharField(
+        max_length=22, choices=CATEGORY_CHOICES, default=None, null=True)
     description = models.CharField(max_length=255)
     quantity = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     price_per_quantity = models.IntegerField(default=0)

@@ -122,5 +122,7 @@ should make the submit button turn into a spinner to indicate loding
 - comment out qb related code in favour of a dedicated view for different types of users
 - add accountant relevant charts and graphs to accountant dashboard
 - datatables needs more attention- ordering , outputting reports,
--FEATURE TO PRINT A FEES INVOICE, CONTAINING ALSO PAYMENT HISTORY FOR STUDENTS WHO WANT 
+-FEATURE TO PRINT INVOICE DETAILS, WHICH INCLUDE PAYMENT HISTORY  
 -DISABLE THE USER FROM GOING BACK TO A CONFIRMATION MODAL TO SUBMIT ONCE FORM ONCE AGAIN
+-ADD CLEARED TAG TO INVOICES TABLES
+-

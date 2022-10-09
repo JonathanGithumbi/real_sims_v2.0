@@ -138,7 +138,7 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="all_invoices"
-                           class="display table-sm text-gray-900 table table-bordered table-hover">
+                           class="display table-sm text-gray-900 table table-bordered ">
                         <thead class="thead-light">
                             <tr>
                                 <th>
@@ -146,6 +146,9 @@
                                 </th>
                                 <th>
                                     Term
+                                </th>
+                                <th>
+                                    Status
                                 </th>
                                 <th>
                                     Total Amount
@@ -157,7 +160,7 @@
                                     Balance
                                 </th>
                                 <th>
-                                    Details
+                                    Actions
                                 </th>
                             </tr>
                         </thead>
@@ -171,6 +174,13 @@
                                         {{ invoice.term }}
                                     </td>
                                     <td>
+                                        {% if invoice.status == 'cleared' %}
+                                        <span class="badge success">{{invoice.status}}</span>
+                                        {% else %}
+                                        <span class="badge badge-warning">{{invoice.status}}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
                                         {{ invoice.amount }}
                                     </td>
                                     <td>
@@ -182,6 +192,8 @@
                                     <td>
                                         <a class="btn btn-primary btn-sm"
                                            href="{% url 'invoice_detail' invoice.id %}">Details</a>
+                                           <a class="btn btn-primary btn-sm"
+                                           href="{% url 'print_invoice_details' invoice.id %}">Print Details</a>
                                     </td>
                                 </tr>
                             {% endfor %}
