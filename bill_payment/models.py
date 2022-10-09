@@ -25,19 +25,22 @@ from account.models import Account as Local_Account
 from quickbooks.objects.billpayment import CheckPayment
 
 # Create your models here.
+
+
 class BillPayment(models.Model):
     """This model represents a payment for a bill"""
     """BillPayment holds the records for the payment of bills, until the bill is completely paid for,severals bill 
-    payments for one bill are to be expected."""#Only if the software has a bill management feature.
+    payments for one bill are to be expected."""  # Only if the software has a bill management feature.
     """But out of the box, this bill payment will only function to record full ayment of bills"""
-    qb_id = models.CharField(max_length=255,null=True,default=None)
-    vendor = models.ForeignKey(Vendor,on_delete=models.DO_NOTHING)
+    qb_id = models.CharField(max_length=255, null=True, default=None)
+    vendor = models.ForeignKey(Vendor, on_delete=models.DO_NOTHING)
     created = models.DateField(auto_now_add=True)
-    amount = models.IntegerField(null=True, default=0)#This is the amount paid for a particular period
-    bill = models.ForeignKey(BillItem,on_delete=models.DO_NOTHING)
-    synced = models.BooleanField(null=True,default=None)
+    # This is the amount paid for a particular period
+    amount = models.IntegerField(null=True, default=0)
+    bill = models.ForeignKey(BillItem, on_delete=models.DO_NOTHING)
+    synced = models.BooleanField(null=True, default=None)
 
-    def create_qb_bill_payment_obj(self,local_bill_obj):
+    def create_qb_bill_payment_obj(self, local_bill_obj):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')
@@ -95,4 +98,3 @@ class BillPayment(models.Model):
         bill_paym_obj.save(qb=client)
 
         return bill_paym_obj
-

@@ -17,7 +17,7 @@ from django.contrib import messages
 from user_account.services import qbo_api_call
 from user_account.models import Token
 
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate, login
 
 from .backends import AuthBackend
 from .forms import AuthFormWithBootstrapSpecifics
@@ -50,9 +50,9 @@ def callback(request):
     error = request.GET.get('error', None)
 
     if error == 'access_denied':
-        messages.add_message(request, messages.WARNING,"Access Denied")
+        messages.add_message(request, messages.WARNING, "Access Denied")
         return redirect('disconnected_dashboard')
-        #messages outside the if clause
+        # messages outside the if clause
 
     if state_tok is None:
         return HttpResponseBadRequest()
@@ -67,7 +67,6 @@ def callback(request):
     realm_id_token.key = realm_id
     realm_id_token.save()
     request.session['realm_id'] = realm_id
-
 
     if auth_code is None:
         return HttpResponseBadRequest()
@@ -98,6 +97,7 @@ def callback(request):
         print(e)
     return redirect('connected_dashboard')
 
+
 def connected(request):
     auth_client = AuthClient(
         settings.CLIENT_ID,
@@ -114,6 +114,7 @@ def connected(request):
     else:
         return render(request, 'connected.html', context={'openid': False})
 
+
 def qbo_request(request):
     access_token_obj = Token.objects.get(name='access_token')
     refresh_token_obj = Token.objects.get(name='refresh_token')
@@ -125,7 +126,7 @@ def qbo_request(request):
         settings.ENVIRONMENT,
         access_token=access_token_obj.key,
         refresh_token=refresh_token_obj.key,
-        realm_id = realm_id_obj.key,
+        realm_id=realm_id_obj.key,
     )
 
     if auth_client.access_token is not None:
@@ -139,6 +140,7 @@ def qbo_request(request):
         return HttpResponse(' '.join([response.content, str(response.status_code)]))
     else:
         return HttpResponse(response.content)
+
 
 def user_info(request):
     auth_client = AuthClient(
@@ -159,6 +161,7 @@ def user_info(request):
         print(e.status_code)
         print(e.intuit_tid)
     return HttpResponse(response.content)
+
 
 def refresh(request):
     access_token_obj = Token.objects.get(name='access_token')
@@ -182,6 +185,7 @@ def refresh(request):
     refresh_token_obj.key = auth_client.refresh_token
     refresh_token_obj.save()
     return HttpResponse('New access_token: {0}'.format(auth_client.access_token))
+
 
 def revoke(request):
     access_token_obj = Token.objects.get(name='access_token')
@@ -207,9 +211,10 @@ def login_user(request):
         username = request.POST['username']
         password = request.POST['password']
         auth_backend = AuthBackend()
-        user = auth_backend.authenticate(request,username=username,password=password)
+        user = auth_backend.authenticate(
+            request, username=username, password=password)
         if user is not None:
-            #try to refresh tokens purely quickbooks related
+            # try to refresh tokens purely quickbooks related
             try:
                 refresh(request)
             except:
@@ -222,17 +227,19 @@ def login_user(request):
                 return redirect('dashboard')
 
         else:
-            #Invalid logins
-            messages.error(request,"Invalid login credentials",extra_tags='alert-error')
+            # Invalid logins
+            messages.error(request, "Invalid login credentials",
+                           extra_tags='alert-error')
             return redirect(login_user)
     else:
-        #called with get
+        # called with get
         form = AuthFormWithBootstrapSpecifics()
-        return render(request,'user_account/registration/login.html',{'form':form})
+        return render(request, 'user_account/registration/login.html', {'form': form})
+
 
 @login_required()
 def logout_view(request):
-    messages.success(request,"Logged out",extra_tags="alert-danger")
+    messages.success(request, "Logged out", extra_tags="alert-danger")
     logout(request)
 
-    return redirect('login')
+    return redirect(reverse('login'))

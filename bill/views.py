@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from .models import BillItem
+from .models import Bill, BillItem
 from .forms import CreateBillItemForm
 from django.urls import reverse
 from bill_payment.models import BillPayment
@@ -14,8 +14,8 @@ login_required()
 
 
 def bills(request):
+    #!use some kind of limiter to reduce the load on the db server
     bills = BillItem.objects.all().order_by('-created')
-
     return render(request, 'bill/bills.html', {'bills': bills})
 
 
@@ -55,6 +55,7 @@ login_required()
 
 def pay_bill(request, id):
     bill_obj = BillItem.objects.get(pk=id)
+
     # create a bill payment object.
     # bill pay
     bill_payment_obj = BillPayment.objects.create(
@@ -65,17 +66,13 @@ def pay_bill(request, id):
     bill_payment_obj.save()
     bill_obj.fully_paid = True
     bill_obj.save(update_fields=['fully_paid'])
-
-    try:
-        qb_bill_payment_obj = bill_payment_obj.create_qb_bill_payment_obj()
-    except:
-        pass
+    paym_obj = bill_obj.pay_bill(bill_payment_obj)
+    if paym_obj is not None:
+        messages.success(request, "{0} Bill Payment recorded Successfully".format(
+            bill_obj.description), extra_tags='alert-success')
     else:
-        bill_payment_obj.qb_id = qb_bill_payment_obj.Id
-        bill_payment_obj.synced = True
-        bill_payment_obj.save(update_fields=['qb_id', 'synced'])
-    messages.success(request, "{0} Bill Payment recorded Successfully".format(
-        bill_obj.description), extra_tags='alert-success')
+        messages.error(
+            request, "There was an error recording your bill", extra_tags='alert-danger')
     return redirect('bills')
 
 
@@ -120,6 +117,13 @@ def edit_bill(request, id):
         else:
             bill_edit_form = EditBillItemForm(request.POST)
             return render(request, 'bill/edit_bill.html', {'form': bill_edit_form})
+
+
+def delete_bill(request, id):
+    bill_obj = BillItem.objects.get(pk=id)
+    bill_obj.delete()
+    messages.success(request, "Bill Deleted Successfully")
+    return redirect(reverse('bills'))
 
 
 def view_summaries(request):

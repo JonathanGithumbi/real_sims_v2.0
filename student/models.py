@@ -29,32 +29,34 @@ class Student(models.Model):
     class Meta:
         ordering = ['-date_of_admission']
 
-
     admission_number = models.IntegerField(null=True, default=None)
-    admission_number_formatted = models.CharField(max_length=255, default=None, null=True)
+    admission_number_formatted = models.CharField(
+        max_length=255, default=None, null=True)
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
-    grade_admitted_to = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name='grade_admitted_to')
-    current_grade = models.ForeignKey(Grade, on_delete=models.CASCADE, blank=True, null=True)
+    grade_admitted_to = models.ForeignKey(
+        Grade, on_delete=models.CASCADE, related_name='grade_admitted_to')
+    current_grade = models.ForeignKey(
+        Grade, on_delete=models.CASCADE, blank=True, null=True)
     date_of_admission = models.DateField(auto_now_add=True)
     created = models.DateTimeField(auto_now_add=True)
     primary_contact_name = models.CharField(max_length=255)
     primary_contact_phone_number = models.CharField(max_length=255, blank=True)
     secondary_contact_name = models.CharField(max_length=255)
-    secondary_contact_phone_number = models.CharField(max_length=255, blank=True)
+    secondary_contact_phone_number = models.CharField(
+        max_length=255, blank=True)
 
-    #This active flag defines whether or not the student gets  invoiced
-    active = models.BooleanField(null=True,default=True)
+    # This active flag defines whether or not the student gets  invoiced
+    active = models.BooleanField(null=True, default=True)
     synced = models.BooleanField(default=False)
-    # optionals 
+    # optionals
     lunch = models.BooleanField(default=False)
     transport = models.BooleanField(default=False)
     qb_id = models.CharField(max_length=20, null=True, default=None)
 
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
-
+        return self.first_name + ' ' + self.middle_name + ' ' + self.last_name
 
     def get_absolute_url(self):
         from django.urls import reverse
@@ -70,13 +72,12 @@ class Student(models.Model):
         return items
 
     def student_is_upper_class(self):
-        LOWER_CLASSES = ['Grade 1', 'Grade 2', 'Grade 3', 'Pre Primary 1', 'Pre Primary 2', 'Play Group']
+        LOWER_CLASSES = ['Grade 1', 'Grade 2', 'Grade 3',
+                         'Pre Primary 1', 'Pre Primary 2', 'Play Group']
         if self.current_grade.title in LOWER_CLASSES:
             return False
         else:
             return True
-
-
 
     def create_qb_customer(self):
         # create customer
@@ -99,11 +100,12 @@ class Student(models.Model):
         )
 
         customer = Customer()
-        customer.DisplayName = self.first_name + ' ' + self.middle_name + ' ' + self.last_name
+        customer.DisplayName = self.first_name + ' ' + \
+            self.middle_name + ' ' + self.last_name
         saved_customer = customer.save(qb=client)
         return saved_customer
 
-    def update_qb_customer(self,student):
+    def update_qb_customer(self, student):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')
@@ -122,7 +124,8 @@ class Student(models.Model):
             company_id=realm_id_obj.key
         )
         customer = Customer.get(student.qb_id, qb=client)
-        customer.DisplayName = student.first_name + ' ' + student.middle_name + ' ' + student.last_name
+        customer.DisplayName = student.first_name + ' ' + \
+            student.middle_name + ' ' + student.last_name
 
         customer.save(qb=client)
         return customer
@@ -132,7 +135,8 @@ class Student(models.Model):
         # Generate admission number
         self.adm_no = AdmissionNumber()
         self.adm_no.save()
-        self.admission_number = self.adm_no.id  # Assign the admission number object to the model's admission number
+        # Assign the admission number object to the model's admission number
+        self.admission_number = self.adm_no.id
         self.admission_number_formatted = self.format_adm_no()
 
         # Assign Initial Grade

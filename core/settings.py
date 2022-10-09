@@ -80,7 +80,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'global_template/'),
-                 os.path.join(BASE_DIR, 'user_account/templates/user_account/'),
+                 os.path.join(
+                     BASE_DIR, 'user_account/templates/user_account/'),
                  os.path.join(BASE_DIR, 'user_account/templates/user_account/registration')],
         'APP_DIRS': True,
         'OPTIONS': {

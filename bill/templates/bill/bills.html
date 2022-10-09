@@ -14,7 +14,6 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
         <br>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -23,118 +22,139 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-sm text-gray-900" id="dataTable" width="100%"
+                    <table class="table table-bordered table-sm text-gray-900"
+                           id="dataTable"
+                           width="100%"
                            cellspacing="0">
                         <thead class="thead-light">
-                        <tr>
-                            <th>Date Created</th>
-                            <th>Decription</th>
-                            <th>Status</th>
-                            <th>Quantiy</th>
-                            <th>Price per Quantity</th>
-                            <th>Total Amount</th>
-                            {% if perms.bill.can_edit_bill %}
-                            <th>Actions</th>
-                            {% endif %}
-
-                        </tr>
+                            <tr>
+                                <th>Date Created</th>
+                                <th>Decription</th>
+                                <th>Status</th>
+                                <th>Quantiy</th>
+                                <th>Price per Quantity</th>
+                                <th>Total Amount</th>
+                                {% if perms.bill.can_edit_bill %}<th>Actions</th>{% endif %}
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for bill in bills %}
-                            <tr>
-                                <td>{{ bill.created }}</td>
-                                <td>{{ bill.description }}</td>
-                                <td>
-                                    {% if bill.fully_paid == True %}
-                                        <span class="badge badge-success">Paid</span>
+                            {% for bill in bills %}
+                                <tr>
+                                    <td>{{ bill.created }}</td>
+                                    <td>{{ bill.description }}</td>
+                                    <td>
+                                        {% if bill.fully_paid == True %}<span class="badge badge-success">Paid</span>{% endif %}
+                                        {% if bill.fully_paid == False %}<span class="badge badge-danger">Unpaid</span>{% endif %}
+                                    </td>
+                                    <td>{{ bill.quantity }}</td>
+                                    <td>{{ bill.price_per_quantity }}</td>
+                                    <td>{{ bill.total }}</td>
+                                    {% if perms.bill.can_edit_bill  %}
+                                        <td class="">
+                                            {% if bill.fully_paid == False %}
+                                                <a class="btn btn-success btn-icon-split btn-sm "
+                                                   href="#"
+                                                   data-toggle="modal"
+                                                   data-target="#bill_payment_modal{{ forloop.counter }}">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                    <span class="text">Mark as Paid</span></a>
+                                                <a class="btn btn-primary btn-icon-split btn-sm "
+                                                   href="{% url 'edit_bill' bill.id %}">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-pen"></i>
+                                                    </span>
+                                                    <span class="text">Edit</span></a>
+                                                <br>
+                                                <a class="btn btn-danger btn-icon-split btn-sm "
+                                                   href="#"
+                                                   data-toggle="modal"
+                                                   data-target="#delete_payment_modal">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                    <span class="text">Delete</span></a>
+                                            {% else %}
+                                                <button disabled
+                                                        class="btn btn-primary btn-icon-split btn-sm"
+                                                        href="#"
+                                                        data-toggle="modal"
+                                                        data-target="#bill_payment_modal">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                    <span class="text">Mark as Paid</span>
+                                                </button>
+                                                <button disabled
+                                                        class="btn btn-primary btn-icon-split btn-sm"
+                                                        href="{% url 'edit_bill' bill.id %}">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-pen"></i>
+                                                    </span>
+                                                    <span class="text">Edit</span>
+                                                </button>
+                                                <button disabled
+                                                        class="btn btn-primary btn-icon-split btn-sm"
+                                                        href="#"
+                                                        data-toggle="modal"
+                                                        data-target="#delete_payment_modal">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                    <span class="text">Delete</span>
+                                                </button>
+                                            {% endif %}
+                                        </td>
                                     {% endif %}
-
-                                    {% if bill.fully_paid == False %}
-                                        <span class="badge badge-danger">Unpaid</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ bill.quantity }}</td>
-                                <td>{{ bill.price_per_quantity }}</td>
-                                <td>{{ bill.total }}</td>
-                                {% if perms.bill.can_edit_bill  %}
-                                <td>
-                                    {% if bill.fully_paid == False %}
-
-                                        <a class="btn btn-primary btn-icon-split btn-sm" href="#" data-toggle="modal"
-                                           data-target="#bill_payment_modal{{ forloop.counter }}">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                            <span class="text">Mark as Paid</span></a>
-
-                                        <!--Modal-->
-                                        <div class="modal fade" id="bill_payment_modal{{ forloop.counter }}">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-
-                                                    <!-- Modal Header -->
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Confirm Bill Payment</h4>
-                                                    </div>
-
-                                                    <!-- Modal body -->
-                                                    <div class="modal-body">
-                                                        Bill: {{ bill.description }}
-                                                        <br>
-                                                        Amount: {{ bill.total }}
-                                                    </div>
-
-                                                    <!-- Modal footer -->
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-secondary btn-sm" type="button"
-                                                                data-dismiss="modal">Cancel
-                                                        </button>
-                                                        <a class="btn btn-success btn-sm"
-                                                           href="{% url 'pay_bill' bill.id %}"
-                                                        >
-
-                                                            <span class="text">submit</span></a>
-                                                    </div>
-
-                                                </div>
+                                </tr>
+                                <!--Modal-->
+                                <div class="modal fade" id="bill_payment_modal{{ forloop.counter }}">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Confirm Bill Payment</h4>
+                                            </div>
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                Bill: {{ bill.description }}
+                                                <br>
+                                                Amount: {{ bill.total }}
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                                <a class="btn btn-success btn-sm" href="{% url 'pay_bill' bill.id %}">
+                                                    <span class="text">submit</span></a>
                                             </div>
                                         </div>
-                                        <a class="btn btn-primary btn-icon-split btn-sm"
-                                           href="{% url 'edit_bill' bill.id %}"
-                                        >
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-pen"></i>
-                                        </span>
-                                            <span class="text">Edit </span></a>
-                                    {% else %}
-
-                                        <button disabled class="btn btn-primary btn-icon-split btn-sm" href="#"
-                                                data-toggle="modal"
-                                                data-target="#bill_payment_modal">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                            <span class="text">Mark as Paid</span></button>
-
-                                        <button disabled class="btn btn-primary btn-icon-split btn-sm"
-                                                href="{% url 'edit_bill' bill.id %}"
-                                        >
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-pen"></i>
-                                        </span>
-                                            <span class="text">Edit </span></button>
-                                    {% endif %}
-                                </td>
-                            {% endif %}
-                            </tr>
-                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="delete_payment_modal">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Confirm Bill Deletion</h4>
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                                <a class="btn btn-success btn-sm" href="{% url 'delete_bill' bill.id %}">
+                                                    <span class="text">Submit</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
     </div>
     <!-- /.container-fluid -->
-
 {% endblock %}

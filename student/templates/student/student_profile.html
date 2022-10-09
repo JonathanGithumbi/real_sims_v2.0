@@ -1,7 +1,6 @@
 {% extends 'layout.html' %}
 {% load static %}
 {% block page %}
-
     <!-- Begin Page Content -->
     <div class="container-fluid">
         <br>
@@ -25,68 +24,66 @@
                     <table class="table table-bordered text-gray-900 table-hover table-sm">
                         <tr>
                             <th>Admission Number</th>
-                            <td>{{ student.admission_number_formatted }} </td>
+                            <td>{{ student.admission_number_formatted }}</td>
                         </tr>
                         <tr>
                             <th>Name</th>
-                            <td>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }} </td>
+                            <td>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }}</td>
                         </tr>
                         <tr>
                             <th>Grade</th>
-                            <td>{{ student.current_grade }} </td>
+                            <td>{{ student.current_grade }}</td>
                         </tr>
                         <tr>
                             <th>Primary Contact Name</th>
-                            <td>{{ student.primary_contact_name }} </td>
+                            <td>{{ student.primary_contact_name }}</td>
                         </tr>
                         <tr>
                             <th>Primary Contact Phone Number</th>
-                            <td>{{ student.primary_contact_phone_number }} </td>
+                            <td>{{ student.primary_contact_phone_number }}</td>
                         </tr>
                         <tr>
                             <th>Secondary Contact Name</th>
-                            <td>{{ student.secondary_contact_name }} </td>
+                            <td>{{ student.secondary_contact_name }}</td>
                         </tr>
                         <tr>
                             <th>Secondary Contact Phone Number</th>
-                            <td>{{ student.secondary_contact_phone_number }} </td>
+                            <td>{{ student.secondary_contact_phone_number }}</td>
                         </tr>
                         <tr>
                             <th>Taking Lunch</th>
-                            <td>{{ student.lunch }} </td>
+                            <td>{{ student.lunch }}</td>
                         </tr>
                         <tr>
                             <th>Taking Transport</th>
-                            <td>{{ student.transport }} </td>
+                            <td>{{ student.transport }}</td>
                         </tr>
-
                     </table>
-                    <a href="{% url 'edit_student_profile' student.id %} " class='btn btn-sm btn-primary'>Edit
-                        Profile</a>
-
-                    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
+                    <a href="{% url 'edit_student_profile' student.id %} "
+                       class='btn btn-sm btn-primary'>Edit
+                    Profile</a>
+                    <a class="btn btn-danger btn-sm"
+                       href="#"
+                       data-toggle="modal"
                        data-target="#delete_modal">Unregister</a>
                     <div class="modal fade" id="delete_modal">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
-
                                 <!-- Modal Header -->
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Unregister Student </h4>
+                                    <h4 class="modal-title">Unregister Student</h4>
                                 </div>
-
                                 <!-- Modal body -->
                                 <div class="modal-body">
                                     {% if student.balancetable.balance < 0 %}
-
-                                    <b>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }} still has uncleared fees arrears.<br> Inactivate instead. </b>
+                                        <b>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }} still has uncleared fees arrears.
+                                            <br>
+                                        Inactivate instead. </b>
                                     {% else %}
                                         Unregister
-                                    <b>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }} ? </b>
+                                        <b>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }} ? </b>
                                     {% endif %}
-
                                 </div>
-
                                 <!-- Modal footer -->
                                 <div class="modal-footer">
                                     {% if student.balancetable.balance < 0 %}
@@ -96,14 +93,15 @@
                                         <a href="{% url 'delete_student' student.id %}"
                                            class="btn btn-danger btn-sm">Unregister</a>
                                     {% endif %}
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
                     <!-- Payment Modal-->
-                    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
+                    <div class="modal fade"
+                         id="logoutModal"
+                         tabindex="-1"
+                         role="dialog"
                          aria-labelledby="exampleModalLabel"
                          aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -111,15 +109,18 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
+                                        <span aria-hidden="true">�</span>
                                     </button>
                                 </div>
-                                <div class="modal-body">Select "Logout" below if you are ready to end your current
+                                <div class="modal-body">
+                                    Select "Logout" below if you are ready to end your current
                                     session.
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                    <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">
+                                        Cancel
+                                    </button>
+                                    <a class="btn btn-primary" href="{% url 'logout_user' %}">Logout</a>
                                 </div>
                             </div>
                         </div>
@@ -127,41 +128,63 @@
                 </div>
             </div>
         </div>
-
         <!--Invoices Table-->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold ">Fees Invoices</h6>
+                <h6 class="m-0 font-weight-bold ">
+                    Fees Invoices
+                </h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-
-                    <table id="all_invoices" class="display table-sm text-gray-900 table table-bordered table-hover">
+                    <table id="all_invoices"
+                           class="display table-sm text-gray-900 table table-bordered table-hover">
                         <thead class="thead-light">
-                        <tr>
-                            <th>Year</th>
-                            <th>Term</th>
-                            <th>Total Amount</th>
-                            <th>Paid Amount</th>
-                            <th>Balance</th>
-                            <th>Details</th>
-                        </tr>
+                            <tr>
+                                <th>
+                                    Year
+                                </th>
+                                <th>
+                                    Term
+                                </th>
+                                <th>
+                                    Total Amount
+                                </th>
+                                <th>
+                                    Paid Amount
+                                </th>
+                                <th>
+                                    Balance
+                                </th>
+                                <th>
+                                    Details
+                                </th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for invoice in invoices %}
-                            <tr>
-
-                                <td>{{ invoice.year }}</td>
-                                <td>{{ invoice.term }}</td>
-                                <td>{{ invoice.amount }}</td>
-                                <td>{{ invoice.get_amount_paid }}</td>
-                                <td>{{ invoice.balance }}</td>
-
-
-                                <td><a class="btn btn-primary btn-sm" href="{% url 'invoice_detail' invoice.id %}">Details</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
+                            {% for invoice in invoices %}
+                                <tr>
+                                    <td>
+                                        {{ invoice.year }}
+                                    </td>
+                                    <td>
+                                        {{ invoice.term }}
+                                    </td>
+                                    <td>
+                                        {{ invoice.amount }}
+                                    </td>
+                                    <td>
+                                        {{ invoice.get_amount_paid }}
+                                    </td>
+                                    <td>
+                                        {{ invoice.balance }}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm"
+                                           href="{% url 'invoice_detail' invoice.id %}">Details</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -169,6 +192,4 @@
         </div>
     </div>
     <!-- /.container-fluid -->
-
-
 {% endblock %}
