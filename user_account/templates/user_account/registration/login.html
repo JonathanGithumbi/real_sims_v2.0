@@ -1,15 +1,13 @@
 {% extends 'base_template.html' %}
 {% load static %}
 {% block style %}
-
 {% endblock style %}
 {% block body_class %}
     bg-gray-300
 {% endblock body_class %}
 {% block content %}
-
     <div class="container text-gray-900 center">
-    <br>
+        <br>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -21,20 +19,20 @@
             </ul>
         {% endif %}
         <div class="row justify-content-center">
-            <div class="card o-hidden shadow-sm my-5" >
+            <div class="card o-hidden shadow-sm my-5">
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
-
                         <div class="col-sm">
                             <div class="p-5">
                                 <div class="text-center">
                                     <img src="{% static 'logo.svg' %}" style="width: 40%;">
-                                    <p class="small"><b>Kings Education Centre - Karagita</b></p>
-                                    <span class="small">School Information Management System</span>
+                                    <p class="small">
+                                        <b>Kings Education Centre - Karagita</b>
+                                    </p>
+                                    <span class="small">Information Management System</span>
                                 </div>
-                                <hr class="">
-                                <form class="user" action="{% url 'login' %}" method="post" >
+                                <form class="user" action="{% url 'login' %}" method="post">
                                     {% csrf_token %}
                                     <div class="form-group">
                                         {{ form.first_name.errors }}
@@ -45,28 +43,15 @@
                                         {{ form.first_name.errors }}
                                         <label for="{{ form.password.id_for_label }}">Password:</label>
                                         {{ form.password }}
-
                                     </div>
-
-                                    <button class="btn btn-primary btn-sm" type="submit">
-
-                                        Submit</button>
-
+                                    <button class="btn btn-primary btn-sm" type="submit">Submit</button>
                                 </form>
-                                <hr>
-                                <div class="text-center">
-                                    <a class="small" href="{% url 'password_reset' %}">Forgot Password</a>
-                                </div>
-
+                                <a class="small" href="{% url 'password_reset' %}">Forgot Password ?</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
-
     </div>
-
 {% endblock content %}
