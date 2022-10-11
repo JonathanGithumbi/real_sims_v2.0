@@ -30,6 +30,7 @@
                             <tr>
                                 <th>Date Created</th>
                                 <th>Decription</th>
+                                <th>Category</th>
                                 <th>Status</th>
                                 <th>Quantiy</th>
                                 <th>Price per Quantity</th>
@@ -42,6 +43,7 @@
                                 <tr>
                                     <td>{{ bill.created }}</td>
                                     <td>{{ bill.description }}</td>
+                                    <td>{{ bill.category }}</td>
                                     <td>
                                         {% if bill.fully_paid == True %}<span class="badge badge-success">Paid</span>{% endif %}
                                         {% if bill.fully_paid == False %}<span class="badge badge-danger">Unpaid</span>{% endif %}
@@ -77,7 +79,7 @@
                                                     <span class="text">Delete</span></a>
                                             {% else %}
                                                 <button disabled
-                                                        class="btn btn-primary btn-icon-split btn-sm"
+                                                        class="btn btn-secondary btn-icon-split btn-sm"
                                                         href="#"
                                                         data-toggle="modal"
                                                         data-target="#bill_payment_modal">
@@ -87,7 +89,7 @@
                                                     <span class="text">Mark as Paid</span>
                                                 </button>
                                                 <button disabled
-                                                        class="btn btn-primary btn-icon-split btn-sm"
+                                                        class="btn btn-secondary btn-icon-split btn-sm"
                                                         href="{% url 'edit_bill' bill.id %}">
                                                     <span class="icon text-white-50">
                                                         <i class="fas fa-pen"></i>
@@ -95,7 +97,7 @@
                                                     <span class="text">Edit</span>
                                                 </button>
                                                 <button disabled
-                                                        class="btn btn-primary btn-icon-split btn-sm"
+                                                        class="btn btn-secondary btn-icon-split btn-sm"
                                                         href="#"
                                                         data-toggle="modal"
                                                         data-target="#delete_payment_modal">
@@ -136,7 +138,9 @@
                                         <div class="modal-content">
                                             <!-- Modal Header -->
                                             <div class="modal-header">
-                                                <h4 class="modal-title">Confirm Bill Deletion</h4>
+                                                <h4 class="modal-title">
+                                                    Confirm Bill Deletion
+                                                </h4>
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">

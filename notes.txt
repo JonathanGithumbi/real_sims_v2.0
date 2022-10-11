@@ -3,7 +3,7 @@ Backlog
 Add poliicy to have a preapporved list of vendors - PENDING
 propose policy to have a preapproved list of recurring items to purchase
 
-(non-essential)add back navigation and from navigation - PENDING - i.e as well as breadcrumbs to help the user identify
+(non-essential)add back navigation and forward navigation - PENDING - i.e as well as breadcrumbs to help the user identify
 where they are
 
 -put in a place a feature that can restrict a child from progressing to the
@@ -119,10 +119,9 @@ should make the submit button turn into a spinner to indicate loding
 - definitely use class based views next time
 
 -- give the urls a more appealing urul scheme
-- comment out qb related code in favour of a dedicated view for different types of users
 - add accountant relevant charts and graphs to accountant dashboard
 - datatables needs more attention- ordering , outputting reports,
 -FEATURE TO PRINT INVOICE DETAILS, WHICH INCLUDE PAYMENT HISTORY  
 -DISABLE THE USER FROM GOING BACK TO A CONFIRMATION MODAL TO SUBMIT ONCE FORM ONCE AGAIN
--ADD CLEARED TAG TO INVOICES TABLES
--
+-you can get insight into which info to represent as charts from  the tables in your pages e.g the bill category column can be represented 
+    graphically by the use of a piechart
