@@ -1,7 +1,6 @@
 from django.db import models
 from student.models import Student
 from invoice.models import Invoice
-
 from quickbooks import QuickBooks
 from user_account.models import Token
 from intuitlib.client import AuthClient

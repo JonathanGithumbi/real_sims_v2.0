@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import timedelta
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class AcademicCalendar(models.Model):
@@ -20,7 +21,6 @@ class AcademicCalendar(models.Model):
         year = self.year
         year = str(year)
         return year
-
 
     def date_range(self, start, end):
         """This view returns a list of datetime instances  of days between 'start' day and 'end' day """
@@ -42,11 +42,17 @@ class AcademicCalendar(models.Model):
         """Uses date_range() to retrieve the list of days in a term"""
         if date is None:
             today = datetime.date.today()
-            calendar = AcademicCalendar.objects.get(year=today.year)
+            try:
+                calendar = AcademicCalendar.objects.get(year=today.year)
+            except ObjectDoesNotExist:
+                return None
 
-            term_1_days = self.date_range(calendar.term_1_start_date, calendar.term_1_end_date)
-            term_2_days = self.date_range(calendar.term_2_start_date, calendar.term_2_end_date)
-            term_3_days = self.date_range(calendar.term_3_start_date, calendar.term_3_end_date)
+            term_1_days = self.date_range(
+                calendar.term_1_start_date, calendar.term_1_end_date)
+            term_2_days = self.date_range(
+                calendar.term_2_start_date, calendar.term_2_end_date)
+            term_3_days = self.date_range(
+                calendar.term_3_start_date, calendar.term_3_end_date)
 
             if today in term_1_days:
                 return 1
@@ -58,9 +64,12 @@ class AcademicCalendar(models.Model):
         else:
             calendar = AcademicCalendar.objects.get(year=date.year)
 
-            term_1_days = self.date_range(calendar.term_1_start_date, calendar.term_1_end_date)
-            term_2_days = self.date_range(calendar.term_2_start_date, calendar.term_2_end_date)
-            term_3_days = self.date_range(calendar.term_3_start_date, calendar.term_3_end_date)
+            term_1_days = self.date_range(
+                calendar.term_1_start_date, calendar.term_1_end_date)
+            term_2_days = self.date_range(
+                calendar.term_2_start_date, calendar.term_2_end_date)
+            term_3_days = self.date_range(
+                calendar.term_3_start_date, calendar.term_3_end_date)
 
             if date in term_1_days:
                 return 1
@@ -69,13 +78,16 @@ class AcademicCalendar(models.Model):
             if date in term_3_days:
                 return 3
 
-    def term_begun(self,date):
+    def term_begun(self, date):
         """This function is used to check whether the date given falls within any term"""
         cal = AcademicCalendar.objects.get(year=date.year)
         if cal is not None:
-            term_1_days = self.date_range(cal.term_1_start_date, cal.term_1_end_date)
-            term_2_days = self.date_range(cal.term_2_start_date, cal.term_2_end_date)
-            term_3_days = self.date_range(cal.term_3_start_date, cal.term_3_end_date)
+            term_1_days = self.date_range(
+                cal.term_1_start_date, cal.term_1_end_date)
+            term_2_days = self.date_range(
+                cal.term_2_start_date, cal.term_2_end_date)
+            term_3_days = self.date_range(
+                cal.term_3_start_date, cal.term_3_end_date)
 
             if date in term_1_days:
                 return True

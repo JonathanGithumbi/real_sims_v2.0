@@ -2,7 +2,6 @@
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
-
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -13,35 +12,34 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
         <div class="card o-hidden border-0 shadow-sm my-5">
             <div class="card-body p-0">
-
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-
                     <div class="col-sm">
                         <div class="p-5">
                             <div class="text-left">
                                 <h5>Edit Bill</h5>
                             </div>
                             <hr>
-                            <form method="post" action="{% url 'edit_bill' bill.id %}" name="bill_edit_form">
+                            <form method="post"
+                                  action="{% url 'edit_bill' bill.id %}"
+                                  name="bill_edit_form">
                                 {% csrf_token %}
                                 {{ form.as_p }}
-
                                 <br>
-                                <a class="btn btn-primary btn-sm" onclick="confirm_bill_edit()" href="#" data-toggle="modal"
+                                <a class="btn btn-primary btn-sm"
+                                   onclick="confirm_bill_edit()"
+                                   href="#"
+                                   data-toggle="modal"
                                    data-target="#confirm_bill_edit_modal">Submit</a>
                                 <div class="modal fade" id="confirm_bill_edit_modal">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
-
                                             <!-- Modal Header -->
                                             <div class="modal-header">
                                                 <h4 class="modal-title">Edit Bill</h4>
                                             </div>
-
                                             <!-- Modal body -->
                                             <div class="modal-body">
                                                 <b>Vendor:</b> <small id="vendor_area_edit"></small>
@@ -50,21 +48,18 @@
                                                 <br>
                                                 <b>Quantity:</b> <small id="quantity_area_edit"></small>
                                                 <br>
-                                                <b>Price per Quantity: </b><small
-                                                    id="price_per_quantity_area_edit"></small>
+                                                <b>Price per Quantity: </b><small id="price_per_quantity_area_edit"></small>
                                                 <br>
                                                 <b>Total: </b><small id="total_area_edit"></small>
-
                                             </div>
-
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
                                                 <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
-
-                                                <input type="submit" class="btn btn-success btn-sm" value="Submit"
+                                                <input type="submit"
+                                                       class="btn btn-success btn-sm"
+                                                       value="Submit"
                                                        data-bs-dismiss="modal">
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -74,12 +69,9 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-    </form>
-
-    <script>
+</form>
+<script>
         $(document).ready(function () {
             $("#quantity").keyup(function () {
                 var quantity = $("#quantity").val();
@@ -110,5 +102,5 @@
             document.getElementById("price_per_quantity_area_edit").innerHTML = price_per_quantity;
             document.getElementById("total_area_edit").innerHTML = total;
         }
-    </script>
+</script>
 {% endblock %}

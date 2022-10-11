@@ -11,10 +11,9 @@ next grade(is there still such a thing as repeating a class?)-PENDING
 -should not allow a child to be unregistered if they still have a balance,rather they should be deactivated
 and the invoicer will skip all the students who are inactive
 
-make the system refresh the token call upon login and keep refreshing every hour as long as the user is still active- PENDING
-
-
-we need retry workflows so that we make sure that the data is persisted to quickbooks
+make the system refresh the token call upon login and keep refreshing every hour as long as the user is still active- MADE SYSTEM REFRESH
+ TOKEN CALL ON LOGIN,i need a scheduler for thhat and that means celery (we need retry workflows so that we make sure that the data is persisted to quickbooks-POST PRESENTATION
+ )
 
 
 12/09/2022 System Notes
@@ -26,30 +25,30 @@ we need retry workflows so that we make sure that the data is persisted to quick
 
 2.Account
 >be sure to direct transactions to their respective accounts
->Add try except blocks to qb_api calls in the create_account method
+
 >Ensure the synced flag is raised after you successfully save a qb_item
->rename create_account to create_qb_account
->>decouple the sims and qb sims by removing the create_qb_account from the account's's save method, and instead call that method from the view togetheer with a try...except clause
+
+
 
 3. billItem
 >Future feature, be able to make multiple bill items in one bill
->Change status field in bill item to a boolean 'paid' attribute
->add try_except blocks on create_bill
->rename  create_bill to create_qb_bill
->decouple the sims and qb sims by removing the create_qb_bill from the bill item's save method, and instead call that method from the view togetheer with a try...except clause
+
+
+
+
 >add form validation
->Add bill number attribute to billItem to come from the saved create_qb_bill
->remove pay_bill from views, and add it as a method in bill_payment, the method should receive a bill object
+
+
 
 4. bill_payment
->rename create_qb_bill_payment_obj to create_qb_bill_payment
->add a method,'pay_bill' to the class
->>decouple the sims and qb sims by removing the create_qb_bill_payment from the bill payment item's save method, and instead call that method from the view togetheer with a try...except clause
+
+
+
 
 
 9.invoice
->Change the source of an invoice number so that the invoice number comes from a saved invoice
->>>decouple the sims and qb sims by removing the create_qb_invoice from the invoice's save method, and instead call that method from the view togetheer with a try...except clause
+
+
 
 9.student
 >validate form
@@ -59,7 +58,8 @@ policy: subscription to lunch and transport should be done at the earliest, pref
 any student taking lunch should make it known at the beginning of the term
 
 deployment checklist:
-    > Verify the academic calendar has the correct start and end dates of each term
+    > Verify the academic calendar has the correct start and end dates of each term ACTUALLY
+    >THE OPENING AND CLOSING DATES WILL BE INCLUDING THE HOLIDAYS FOR THAT TERM.SO FROM THE OPENING OF ONE TERM THE THE DAY PREVIOUS TO THE START OF THE NEXT TERM
 
  while doing form verification,ensure that the dates make sense, i,e cant put a date earlier/later
 
@@ -121,7 +121,10 @@ should make the submit button turn into a spinner to indicate loding
 -- give the urls a more appealing urul scheme
 - add accountant relevant charts and graphs to accountant dashboard
 - datatables needs more attention- ordering , outputting reports,
--FEATURE TO PRINT INVOICE DETAILS, WHICH INCLUDE PAYMENT HISTORY  
--DISABLE THE USER FROM GOING BACK TO A CONFIRMATION MODAL TO SUBMIT ONCE FORM ONCE AGAIN
--you can get insight into which info to represent as charts from  the tables in your pages e.g the bill category column can be represented 
+-- FEATURE TO PRINT INVOICE DETAILS, WHICH INCLUDE PAYMENT HISTORY  
+-- DISABLE THE USER FROM GOING BACK TO A CONFIRMATION MODAL TO SUBMIT ONCE FORM ONCE AGAIN
+-- you can get insight into which info to represent as charts from  the tables in your pages e.g the bill category column can be represented 
     graphically by the use of a piechart
+
+
+thoughts:

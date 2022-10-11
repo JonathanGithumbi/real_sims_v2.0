@@ -142,3 +142,7 @@ class Student(models.Model):
         # Assign Initial Grade
         self.current_grade = self.grade_admitted_to
         super().save(*args, **kwargs)  # Call the "real" save() method.
+
+    def subscribe_to_lunch(self):
+        pass
+        
