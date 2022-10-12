@@ -32,6 +32,7 @@ from datetime import date
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
+
 @login_required()
 def students(request):
     all_students = Student.objects.all().order_by('date_of_admission')
@@ -96,19 +97,19 @@ def register_student(request):
                     amount=fee_structure_obj.amount,
                     invoice=invoice
                 )
-                #adding the items to the ivoice, this should modify the amount and balance of the invoice by increasing their values
+                # adding the items to the ivoice, this should modify the amount and balance of the invoice by increasing their values
                 local_item_obj.save()
                 total_amount = total_amount + local_item_obj.amount
 
-
-            #alter invoice balance and invoice amount
+            # alter invoice balance and invoice amount
             invoice.balance = total_amount
             invoice.amount = total_amount
-            invoice.save(update_fields=['balance','amount'])
+            invoice.save(update_fields=['balance', 'amount'])
 
             # record that invoice to quickbooks quickbooks
             try:
-                qb_invoice = invoice.create_qb_invoice()
+
+                qb_invoice = invoice.create_qb_invoice(items=items)
 
                 # also keep system logs
             except:
@@ -117,16 +118,18 @@ def register_student(request):
                 pass
             else:
                 invoice.synced = True
-                invoice.qb_id = qb_invoice
+                invoice.qb_id = qb_invoice.Id
                 invoice.save(update_fields=['synced', 'qb_id'])
 
             # Create Balance record for student
             balance_obj = BalanceTable.objects.create(
                 student=student,
-                balance=-(invoice.get_amount())  # a negative number indicates that the student owes the school money
+                # a negative number indicates that the student owes the school money
+                balance=-(invoice.get_amount())
             )
             balance_obj.save()
-            messages.success(request,"{0} {1} {2} registered successfully.".format(student.first_name,student.middle_name,student.last_name),extra_tags="alert-success")
+            messages.success(request, "{0} {1} {2} registered successfully.".format(
+                student.first_name, student.middle_name, student.last_name), extra_tags="alert-success")
             return redirect(reverse('student_profile', args=[student.id]))
         else:
             return render(request, 'student/registration.html', {'form': form})
@@ -151,34 +154,37 @@ def student_profile(request, student_id):
     return render(request, 'student/student_profile.html',
                   {'student': student, 'invoices': invoices, 'payments': payments})
 
+
 @login_required()
 def edit_student_profile(request, student_id):
     student = Student.objects.get(pk=student_id)
     if request.method == 'POST':
         prev_data = {
-            'first_name':student.first_name,
-            'middle_name':student.middle_name,
-            'last_name':student.last_name,
-            'grade_admitted_to':student.grade_admitted_to,
-            'date_of_admission':student.date_of_admission,
-            'primary_contact_name':student.primary_contact_name,
-            'primary_contact_phone_number':student.primary_contact_phone_number,
-            'secondary_contact_name':student.secondary_contact_name,
-            'secondary_contact_phone_number':student.secondary_contact_phone_number,
-            'lunch':student.lunch,
-            'transport':student.transport
+            'first_name': student.first_name,
+            'middle_name': student.middle_name,
+            'last_name': student.last_name,
+            'grade_admitted_to': student.grade_admitted_to,
+            'date_of_admission': student.date_of_admission,
+            'primary_contact_name': student.primary_contact_name,
+            'primary_contact_phone_number': student.primary_contact_phone_number,
+            'secondary_contact_name': student.secondary_contact_name,
+            'secondary_contact_phone_number': student.secondary_contact_phone_number,
+            'lunch': student.lunch,
+            'transport': student.transport
         }
-        form = EditStudentProfileForm(request.POST, initial=prev_data)  # the initial data
+        form = EditStudentProfileForm(
+            request.POST, initial=prev_data)  # the initial data
         if form.is_valid():
             if form.has_changed():
                 if 'lunch' in form.changed_data:
                     #   a. get the lunch item
                     lunch_item = SalesItem.objects.get(name='Lunch')
                     if form.cleaned_data['lunch'] == True:
-                        # This is subscribing a student to lunch 
+                        # This is subscribing a student to lunch
                         # fetch the student's invoice for the current term
                         ac_cal = AcademicCalendar()
-                        current_invoice = Invoice.objects.get(year=ac_cal.get_year(),term=ac_cal.get_term(),student=student)
+                        current_invoice = Invoice.objects.get(
+                            year=ac_cal.get_year(), term=ac_cal.get_term(), student=student)
 
                         # 2 Add Lunch to that invoice
                         # get academic calendar obj
@@ -197,7 +203,8 @@ def edit_student_profile(request, student_id):
                         current_invoice.amount = current_invoice.amount + invoice_item.amount
                         # increae the balance on the invoice by the amount of this item
                         current_invoice.balance = current_invoice.balance + invoice_item.amount
-                        current_invoice.save(update_fields=['amount', 'balance'])
+                        current_invoice.save(
+                            update_fields=['amount', 'balance'])
 
                         # save the transaction to quickbooks
                         try:
@@ -211,16 +218,19 @@ def edit_student_profile(request, student_id):
                         bal_table.save()
 
                         # update the student subscripiton to lunnch
-                        Student.objects.filter(pk=student_id).update(lunch=True)
-                        messages.success(request,"{0} {1} {2} subscribed to lunch successfully.".format(student.first_name,student.middle_name,student.last_name),extra_tags="alert-success")
+                        Student.objects.filter(
+                            pk=student_id).update(lunch=True)
+                        messages.success(request, "{0} {1} {2} subscribed to lunch successfully.".format(
+                            student.first_name, student.middle_name, student.last_name), extra_tags="alert-success")
 
                 if 'transport' in form.changed_data:
                     transport_item = SalesItem.objects.get(name='Transport')
                     if form.cleaned_data['transport'] == True:
-                        # This is subscribing a student to transport 
+                        # This is subscribing a student to transport
                         # fetch the student's invoice for the current term
                         ac_cal = AcademicCalendar()
-                        current_invoice = Invoice.objects.get(year=ac_cal.get_year(), term=ac_cal.get_term(),student=student)
+                        current_invoice = Invoice.objects.get(
+                            year=ac_cal.get_year(), term=ac_cal.get_term(), student=student)
                         # 2 Add Lunch to that invoice
                         # get academic calendar obj
                         cal_obj = AcademicCalendar()
@@ -239,20 +249,24 @@ def edit_student_profile(request, student_id):
                         current_invoice.amount = current_invoice.amount + invoice_item.amount
                         # increae the balance on the invoice by the amount of this item
                         current_invoice.balance = current_invoice.balance + invoice_item.amount
-                        current_invoice.save(update_fields=['amount', 'balance'])
+                        current_invoice.save(
+                            update_fields=['amount', 'balance'])
 
                         try:
                             current_invoice.update_qb_invoice(transport_item)
-                        except :
+                        except:
                             pass
 
                         bal_table = BalanceTable.objects.get(student=student)
-                        bal_table.balance = bal_table.balance + -(invoice_item.amount)
+                        bal_table.balance = bal_table.balance + - \
+                            (invoice_item.amount)
                         bal_table.save()
 
                         # update model
-                        Student.objects.filter(pk=student_id).update(transport=True)
-                        messages.success(request,"{0} {1} {2} subscribed to transport successfully.".format(student.first_name,student.middle_name,student.last_name),extra_tags="alert-success")
+                        Student.objects.filter(
+                            pk=student_id).update(transport=True)
+                        messages.success(request, "{0} {1} {2} subscribed to transport successfully.".format(
+                            student.first_name, student.middle_name, student.last_name), extra_tags="alert-success")
 
                 # Name change triggers name change in quickbooks
                 if 'first_name' in form.changed_data or 'middle_name' in form.changed_data or 'last_name ' in form.changed_data:
@@ -260,37 +274,44 @@ def edit_student_profile(request, student_id):
                     student.first_name = form.cleaned_data['first_name']
                     student.middle_name = form.cleaned_data['middle_name']
                     student.last_name = form.cleaned_data['last_name']
-                    student.save(update_fields=['first_name','middle_name','last_name'])
+                    student.save(update_fields=[
+                                 'first_name', 'middle_name', 'last_name'])
 
-                    #reflect changes to quickbooks
+                    # reflect changes to quickbooks
                     try:
                         student.update_qb_customer(student)
                     except:
                         pass
-                    messages.success(request,"Name Changed to {0} {1} {2}.".format(student.first_name,student.middle_name,student.last_name),extra_tags="alert-success")
+                    messages.success(request, "Name Changed to {0} {1} {2}.".format(
+                        student.first_name, student.middle_name, student.last_name), extra_tags="alert-success")
 
                 if 'primary_contact_name' in form.changed_data:
                     Student.objects.filter(pk=student_id).update(
                         primary_contact_name=form.cleaned_data['primary_contact_name'])
-                    messages.success(request,"Primary Contact Changed to :  {0}".format(form.cleaned_data['primary_contact_name']),extra_tags="alert-success")
+                    messages.success(request, "Primary Contact Changed to :  {0}".format(
+                        form.cleaned_data['primary_contact_name']), extra_tags="alert-success")
                 if 'primary_contact_phone_number' in form.changed_data:
                     Student.objects.filter(pk=student_id).update(
                         primary_contact_phone_number=form.cleaned_data['primary_contact_phone_number'])
-                    messages.success(request,"Primary Contact Phone Number Changed to :  {0}".format(form.cleaned_data['primary_contact_phone_number']),extra_tags="alert-success")
+                    messages.success(request, "Primary Contact Phone Number Changed to :  {0}".format(
+                        form.cleaned_data['primary_contact_phone_number']), extra_tags="alert-success")
                 if 'secondary_contact_name' in form.changed_data:
                     Student.objects.filter(pk=student_id).update(
                         secondary_contact_name=form.cleaned_data['secondary_contact_name'])
-                    messages.success(request,"Secondary Contact Changed to :  {0}".format(form.cleaned_data['secondary_contact_name']),extra_tags="alert-success")
+                    messages.success(request, "Secondary Contact Changed to :  {0}".format(
+                        form.cleaned_data['secondary_contact_name']), extra_tags="alert-success")
                 if 'secondary_contact_phone_number' in form.changed_data:
                     Student.objects.filter(pk=student_id).update(
                         secondary_contact_phone_number=form.cleaned_data['secondary_contact_phone_number'])
-                    messages.success(request, "Secondary Contact Phone Number Changed to :  {0}".format(form.cleaned_data['secondary_contact_phone_number']),extra_tags="alert-success")
-                #after everything redirect back to the stuudent profile
-                return redirect(student_profile,student.id)
+                    messages.success(request, "Secondary Contact Phone Number Changed to :  {0}".format(
+                        form.cleaned_data['secondary_contact_phone_number']), extra_tags="alert-success")
+                # after everything redirect back to the stuudent profile
+                return redirect(student_profile, student.id)
             else:
-                #form has not changed
-                messages.info(request,"No changes made to the student's profile",extra_tags='alert-info')
-                return redirect(student_profile,student.id)
+                # form has not changed
+                messages.info(
+                    request, "No changes made to the student's profile", extra_tags='alert-info')
+                return redirect(student_profile, student.id)
         else:
             #form is not valid
             return render(request, 'student/edit_student_profile.html', {'form': form, 'student': student})
@@ -298,23 +319,27 @@ def edit_student_profile(request, student_id):
         form = EditStudentProfileForm(instance=student)
         return render(request, 'student/edit_student_profile.html', {'form': form, 'student': student})
 
+
 @login_required()
 def delete_student(request, id):
     student = Student.objects.get(pk=id)
     balance = BalanceTable.objects.get(student=student)
     if balance.balance < 0:
-        #student has balance sp dont delete
-        messages.info(request,"Cannot Unregister Student Until Fees Arrears Cleared.",extra_tags="alert-danger")
+        # student has balance sp dont delete
+        messages.info(
+            request, "Cannot Unregister Student Until Fees Arrears Cleared.", extra_tags="alert-danger")
         return redirect(reverse('students'))
     else:
         student.delete()
-        messages.add_message(request, messages.SUCCESS, "{0} {1} {2} Unregistered Successfully".format(student.first_name,student.middle_name,student.last_name))
+        messages.add_message(request, messages.SUCCESS, "{0} {1} {2} Unregistered Successfully".format(
+            student.first_name, student.middle_name, student.last_name))
         return redirect(reverse('students'))
 
+
 @login_required()
-def inactivate_student(request,id):
+def inactivate_student(request, id):
     student = Student.objects.get(pk=id)
     student.active = False
     student.save(update_fields=['active'])
-    messages.success(request,"Student Inactivated Successfully ")
+    messages.success(request, "Student Inactivated Successfully ")
     return redirect(reverse('students'))

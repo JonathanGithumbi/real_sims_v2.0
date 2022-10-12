@@ -61,7 +61,7 @@ class Invoice(models.Model):
         else:
             return 'not cleared'
 
-    def create_qb_invoice(self):
+    def create_qb_invoice(self, items):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')
@@ -90,7 +90,7 @@ class Invoice(models.Model):
 
         # Add lines to invoice obj
         # get the items sold
-        items = self.student.get_items()
+
         # iterate through each item to create a line
         for item in items:
             # create a line line detail to go into the line

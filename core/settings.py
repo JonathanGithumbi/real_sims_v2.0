@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'dal_select2',
     'rest_framework',
     'django.contrib.admin',
+    'django_select2'
 
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

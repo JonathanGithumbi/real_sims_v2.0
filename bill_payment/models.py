@@ -40,7 +40,7 @@ class BillPayment(models.Model):
     bill = models.ForeignKey(BillItem, on_delete=models.DO_NOTHING)
     synced = models.BooleanField(null=True, default=None)
 
-    def create_qb_bill_payment_obj(self, local_bill_obj):
+    def create_qb_bill_payment_obj(self):
         access_token_obj = Token.objects.get(name='access_token')
         refresh_token_obj = Token.objects.get(name='refresh_token')
         realm_id_obj = Token.objects.get(name='realm_id')
@@ -59,16 +59,8 @@ class BillPayment(models.Model):
             company_id=realm_id_obj.key
         )
 
-        # create bill payment object
-        local_bill_payment_obj = BillPayment.objects.create(
-            bill=local_bill_obj,
-            vendor=local_bill_obj.vendor
-        )  # qb_id,created, and synced to be updadted in .save() method
-
-        local_bill_payment_obj.save()
-
         # get the qb_bill_item
-        qb_bill_item = qb_bill.get(local_bill_obj.qb_id, qb=client)
+        qb_bill_item = qb_bill.get(self.bill.qb_id, qb=client)
 
         # Linked Txn
         lnk_txn = LinkedTxn()
@@ -77,14 +69,14 @@ class BillPayment(models.Model):
 
         # construct bill payment line
         bill_paym_line = BillPaymentLine()
-        bill_paym_line.Amount = local_bill_obj.total
+        bill_paym_line.Amount = self.amount
         bill_paym_line.LinkedTxn.append(lnk_txn)
         # get vendor bject
-        qb_vendor_obj = qb_vendor.get(local_bill_obj.vendor.qb_id, qb=client)
+        qb_vendor_obj = qb_vendor.get(self.vendor.qb_id, qb=client)
         # create qb bill payment object
         bill_paym_obj = QB_BillPayment()
         bill_paym_obj.VendorRef = qb_vendor_obj.to_ref()
-        bill_paym_obj.TotalAmt = local_bill_obj.total
+        bill_paym_obj.TotalAmt = self.amount
         bill_paym_obj.Line.append(bill_paym_line)
         bill_paym_obj.PayType = "Check"
         # get qb_account

@@ -27,6 +27,7 @@ urlpatterns = [
     path('user_account/', include('user_account.urls')),
     path('invoice/', include('invoice.urls')),
     path('payments/', include('payment.urls')),
+    path("select2/", include("django_select2.urls")),
 
 
 ]

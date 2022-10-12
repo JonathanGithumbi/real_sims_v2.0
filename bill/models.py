@@ -132,14 +132,8 @@ class BillItem(models.Model):
 
     def pay_bill(self, bill_payment_obj):
         bill_obj = self
-
-        try:
-            qb_bill_payment_obj = bill_payment_obj.create_qb_bill_payment_obj()
-        except:
-            pass
-        else:
-            bill_payment_obj.qb_id = qb_bill_payment_obj.Id
-            bill_payment_obj.synced = True
-            bill_payment_obj.save(update_fields=['qb_id', 'synced'])
+        qb_bill_payment_obj = bill_payment_obj.create_qb_bill_payment_obj(self)
+    
+        
 
         return bill_payment_obj

@@ -66,13 +66,14 @@ def pay_bill(request, id):
     bill_payment_obj.save()
     bill_obj.fully_paid = True
     bill_obj.save(update_fields=['fully_paid'])
-    paym_obj = bill_obj.pay_bill(bill_payment_obj)
-    if paym_obj is not None:
-        messages.success(request, "{0} Bill Payment recorded Successfully".format(
-            bill_obj.description), extra_tags='alert-success')
-    else:
-        messages.error(
-            request, "There was an error recording your bill", extra_tags='alert-danger')
+
+    qb_payment = bill_payment_obj.create_qb_bill_payment_obj()
+    bill_payment_obj.qb_id = qb_payment.Id
+    bill_payment_obj.synced = True
+    bill_payment_obj.save(update_fields=['qb_id', 'synced'])
+
+    messages.success(request, "{0} Bill Payment recorded Successfully".format(
+        bill_obj.description), extra_tags='alert-success')
     return redirect('bills')
 
 
