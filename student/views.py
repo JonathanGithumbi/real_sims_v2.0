@@ -107,19 +107,12 @@ def register_student(request):
             invoice.save(update_fields=['balance', 'amount'])
 
             # record that invoice to quickbooks quickbooks
-            try:
 
-                qb_invoice = invoice.create_qb_invoice(items=items)
+            qb_invoice = invoice.create_qb_invoice(items=items)
 
-                # also keep system logs
-            except:
-                # log and add retry workflow
-                # celery will probably work hhere for rescheduling these tasks
-                pass
-            else:
-                invoice.synced = True
-                invoice.qb_id = qb_invoice.Id
-                invoice.save(update_fields=['synced', 'qb_id'])
+            invoice.synced = True
+            invoice.qb_id = qb_invoice.Id
+            invoice.save(update_fields=['synced', 'qb_id'])
 
             # Create Balance record for student
             balance_obj = BalanceTable.objects.create(

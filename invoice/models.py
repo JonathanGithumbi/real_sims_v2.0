@@ -4,7 +4,7 @@ from fees_structure.models import TERM_CHOICES
 from grade.models import Grade
 import invoice
 from student.models import Student
-
+from quickbooks.objects import Account as QB_Account
 from quickbooks.objects import Invoice as QB_Invoice
 from quickbooks.objects.detailline import SalesItemLine, SalesItemLineDetail
 from quickbooks.objects import Item as QB_Item
@@ -81,12 +81,14 @@ class Invoice(models.Model):
         )
         # create the invoice obj
         qb_invoice_obj = QB_Invoice()
-
+        income_account = QB_Account.get(id=123, qb=client)
+        income_account_ref = income_account.to_ref()
         # Populate the CustomerRef
         # get qb customer
         customer = Customer.get(id=self.student.qb_id, qb=client)
         # populate CustomerRef
         qb_invoice_obj.CustomerRef = customer.to_ref()
+        qb_invoice_obj.class_dict['DepositToAccountRef'] = income_account_ref
 
         # Add lines to invoice obj
         # get the items sold

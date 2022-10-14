@@ -127,4 +127,4 @@ should make the submit button turn into a spinner to indicate loding
     graphically by the use of a piechart
 
 
-thoughts:
+--REQUESTS SHOULD ALWAYS CHECK WHETHER THE API TOKEN IS STILL VALID

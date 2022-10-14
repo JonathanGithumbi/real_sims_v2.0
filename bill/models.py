@@ -70,7 +70,7 @@ class BillItem(models.Model):
     price_per_quantity = models.IntegerField(default=0)
     total = models.IntegerField(default=0)
     synced = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateField(auto_now_add=True)
     qb_id = models.CharField(max_length=255, null=True, default=None)
     fully_paid = models.BooleanField(default=False)
 
@@ -133,7 +133,5 @@ class BillItem(models.Model):
     def pay_bill(self, bill_payment_obj):
         bill_obj = self
         qb_bill_payment_obj = bill_payment_obj.create_qb_bill_payment_obj(self)
-    
-        
 
         return bill_payment_obj

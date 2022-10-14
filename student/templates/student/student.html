@@ -1,7 +1,6 @@
 {% extends 'layout.html' %}
 {% load static %}
 {% block page %}
-
     <!-- Begin Page Content -->
     <div class="container-fluid">
         <br>
@@ -22,56 +21,117 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="dataTable" class="table text-gray-900 table-bordered table-sm" width="100%"
+                    <table id="StudentsdataTable"
+                           class="table text-gray-900 table-bordered table-sm"
+                           width="100%"
                            cellspacing="0">
                         <thead class="thead-light">
-                        <tr>
-                            <th>Date Registered</th>
-                            <th>Admission Number</th>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th>Current Grade</th>
-
-                            <th>Profile</th>
-                        </tr>
+                            <tr>
+                                <th></th>
+                                <th>Date Registered</th>
+                                <th>Admission Number</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Amount Due</th>
+                                <th>Current Grade</th>
+                                <th>Profile</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for student in students %}
-                            <tr>
-                                <td>{{ student.date_of_admission }}</td>
-                                <td>{{ student.admission_number_formatted }}</td>
-                                <td>{{ student }}</td>
-                                <td>
-                                    {% if student.active == True %}
-                                        <span class="badge badge-success">Active</span>
-                                    {% else %}
-                                        <span class="badge badge-danger">Inactive</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ student.current_grade }}</td>
-
-                                <td>
-                                    <a href="{% url 'student_profile' student.id %} "
-                                       class="btn btn-primary  btn-sm">
-                                        View
-
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-
+                            {% for student in students %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ student.date_of_admission }}</td>
+                                    <td>{{ student.admission_number_formatted }}</td>
+                                    <td>{{ student }}</td>
+                                    <td>
+                                        {% if student.active == True %}
+                                            <span class="badge badge-success">Active</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ student.balancetable_set.balance }}</td>
+                                    <td>{{ student.current_grade }}</td>
+                                    <td>
+                                        <a href="{% url 'student_profile' student.id %} "
+                                           class="btn btn-primary  btn-sm">View</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
     </div>
     <!-- /.container-fluid -->
-
-    <script>
+    {% block script %}
+        <script>
         $(document).ready(function () {
-            $('#all_students').DataTable();
-        });
-    </script>
+            $.fn.dataTable.moment( 'MMM. D, YYYY' );
+    //Initialise the table
+    var table = $('#StudentsdataTable').DataTable({
+        
+        fixedHeader: true,
+        order: [[0, 'desc']],
+        
+        dom: 'Bfrtip',
+        lengthMenu: [
+        10, 25, 50, -1
+        ],
+        buttons: [
+        'pageLength', 
+        {
+            extend: 'searchBuilder',
+            config: {
+                depthLimit: 2
+            }
+        },
+        {
+            extend: 'excel',
+            messageBottom: "Kings Educational Center Information Management System",
+            title: "Students Report",
+            messageTop:function(){
+                var curr_date = new Date();
+                txt_curr_date = curr_date.toString();
+            },
+            exportOptions: {
+                    columns: ':visible'
+                }
+        },
+        {
+            extend: 'pdf',
+            messageBottom: "Kings Educational Center Information Management System",
+            download:'open',
+            title: "Students Report",
+            messageTop: function(){
+                var curr_date = new Date();
+                txt_curr_date = curr_date.toString();
+                return txt_curr_date;
+            },
+            exportOptions: {
+                    columns: ':visible'
+                }
+        },
+        'colvis'
+        ],
+        columnDefs: [{
+        orderable: false,
+        className: 'select-checkbox',
+        targets: 0
+        }],
+        select: {
+        style: 'multi',
+        selector: 'td:first-child'
+        },
+        order: [[0, 'asc']]
+    });
+
+    //Add Styling to the buttons
+    table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
+
+});
+        </script>
+    {% endblock script %}
 {% endblock %}

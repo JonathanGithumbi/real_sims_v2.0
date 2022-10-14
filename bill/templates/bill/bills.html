@@ -22,12 +22,12 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-sm text-gray-900"
-                           id="dataTable"
-                           width="100%"
-                           cellspacing="0">
+                    <table class=" table table-bordered table-sm text-gray-900"
+                           id="BillsdataTable"
+                           style="width:100%">
                         <thead class="thead-light">
                             <tr>
+                                <th></th>
                                 <th>Date Created</th>
                                 <th>Decription</th>
                                 <th>Category</th>
@@ -41,6 +41,7 @@
                         <tbody>
                             {% for bill in bills %}
                                 <tr>
+                                    <td></td>
                                     <td>{{ bill.created }}</td>
                                     <td>{{ bill.description }}</td>
                                     <td>{{ bill.category }}</td>
@@ -116,7 +117,9 @@
                                         <div class="modal-content">
                                             <!-- Modal Header -->
                                             <div class="modal-header">
-                                                <h4 class="modal-title">Confirm Bill Payment</h4>
+                                                <h4 class="modal-title">
+                                                    Confirm Bill Payment
+                                                </h4>
                                             </div>
                                             <!-- Modal body -->
                                             <div class="modal-body">
@@ -126,7 +129,9 @@
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
-                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                                                    Cancel
+                                                </button>
                                                 <a class="btn btn-success btn-sm" href="{% url 'pay_bill' bill.id %}">
                                                     <span class="text">submit</span></a>
                                             </div>
@@ -161,4 +166,68 @@
         </div>
     </div>
     <!-- /.container-fluid -->
+    {% block script %}
+        <script>
+        $(document).ready(function () {
+            //Set the formats for DataTales
+            $.fn.dataTable.moment( 'MMM. D, YYYY' );
+    //Initialise the table
+    var table = $('#BillsdataTable').DataTable({
+        fixedHeader: true,
+        order: [[0, 'desc']],
+        dom: 'Bfrtip',
+        lengthMenu: [
+        10, 25, 50, -1
+        ],
+        buttons: [
+        'pageLength', 
+        {
+            extend: 'searchBuilder',
+            config: {
+                depthLimit: 2
+            }
+        },
+        {
+            extend: 'excel',
+            messageBottom: "Kings Educational Center Information Management System",
+            title: "Bills Report",
+           
+            exportOptions: {
+                    columns: ':visible'
+                }
+        },
+        {
+            extend: 'pdf',
+            messageBottom: "Kings Educational Center Information Management System",
+            download:'open',
+            title: "Bills Report",
+            messageTop: function(){
+                var curr_date = new Date();
+                txt_curr_date = curr_date.toString();
+                return txt_curr_date;
+            },
+            exportOptions: {
+                    columns: ':visible'
+                }
+        },
+        'colvis'
+        ],
+        columnDefs: [{
+        orderable: false,
+        className: 'select-checkbox',
+        targets: 0
+        }],
+        select: {
+        style: 'multi',
+        selector: 'td:first-child'
+        },
+        order: [[0, 'asc']]
+    });
+
+    //Add Styling to the buttons
+    table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
+
+});
+        </script>
+    {% endblock script %}
 {% endblock %}

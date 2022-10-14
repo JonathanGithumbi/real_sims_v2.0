@@ -65,7 +65,7 @@ class Payment(models.Model):
         qb_dep_acc_obj = QB_Account.get(dep_acc.qb_id, qb=client)
 
         # acc receivable
-        acc_rec = Account.objects.get(name='invoices_account')
+        acc_rec = Account.objects.get(name='Fr_Acc_Rec')
         qb_acc_rec_obj = QB_Account.get(acc_rec.qb_id, qb=client)
         # First create the qb_payment_obj
         qb_payment_obj = QB_Payment()
