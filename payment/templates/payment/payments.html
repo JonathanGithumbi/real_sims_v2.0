@@ -33,6 +33,7 @@
                                 <th>Payment type</th>
                                 <th>Student</th>
                                 <th>Amount</th>
+                                <th>Balance</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,8 +42,11 @@
                                     <td></td>
                                     <td>{{ payment.date_paid }}</td>
                                     <td>{{ payment.note }}</td>
-                                    <td>{{ payment.student }}</td>
+                                    <td>
+                                        <a href="{% url 'student_profile' payment.student.id %}">{{ payment.student }}</a>
+                                    </td>
                                     <td>{{ payment.amount }}</td>
+                                    <td>{{ payment.invoice.get_balance }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -65,7 +69,14 @@
         10, 25, 50, -1
         ],
         buttons: [
-        'pageLength',
+        {
+                text: 'New Payment',
+                action: function ( e, dt, node, config ) {
+                     window.location.href = "{% url 'create_payment' %}"
+
+                }
+            },
+        
         {
             extend: 'searchBuilder',
             config: {
@@ -95,6 +106,7 @@
                     columns: ':visible'
                 }
         },
+        'pageLength',
         'colvis'
         ],
         columnDefs: [{

@@ -91,3 +91,6 @@ class Payment(models.Model):
         qb_payment_obj.save(qb=client)
         # return the object
         return qb_payment_obj
+
+    def make_payment(self):
+        pass

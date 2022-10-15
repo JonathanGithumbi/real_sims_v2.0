@@ -2,7 +2,7 @@
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
-    <br>
+        <br>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -13,7 +13,6 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
         <!-- Invoice details table -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -21,31 +20,27 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-
                     <table class="table text-gray-900 table-bordered table-hover table-sm">
                         <tr>
                             <th>Student Name</th>
-                            <td>{{ invoice.student }} </td>
+                            <td>{{ invoice.student }}</td>
                         </tr>
                         <tr>
                             <th>Grade</th>
-                            <td>{{ invoice.student.current_grade }} </td>
+                            <td>{{ invoice.student.current_grade }}</td>
                         </tr>
                         <tr>
                             <th>Year</th>
-                            <td>{{ invoice.year }} </td>
+                            <td>{{ invoice.year }}</td>
                         </tr>
                         <tr>
                             <th>Term</th>
-                            <td>{{ invoice.term }} </td>
+                            <td>{{ invoice.term }}</td>
                         </tr>
-
                     </table>
-
                 </div>
             </div>
         </div>
-
         <!--Invoice items Table-->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -53,7 +48,6 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-
                     <table class="table table-bordered text-gray-900 table-hover table-sm">
                         {% for item in items %}
                             <tr>
@@ -63,14 +57,14 @@
                         {% endfor %}
                         <tr class="table-danger">
                             <th>TOTAL</th>
-                            <td><b>{{ invoice.get_amount }} Ksh</b></td>
+                            <td>
+                                <b>{{ invoice.get_amount }} Ksh</b>
+                            </td>
                         </tr>
-
                     </table>
                 </div>
             </div>
         </div>
-
         <!--invoice payments-->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -78,22 +72,25 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="dataTable" class="display table-sm text-gray-900 table table-bordered table-hover">
+                    <table id=""
+                           class="display table-sm text-gray-900 table table-bordered table-hover">
                         <thead class="thead-light">
-                        <tr>
-                            <th>Date Paid</th>
-                            <th>Note</th>
-                            <th>Amount</th>
-                        </tr>
+                            <tr>
+                                <th>Date Paid</th>
+                                <th>Note</th>
+                                <th>Amount</th>
+                                <th>Balance</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for payment in payments %}
-                            <tr>
-                                <td>{{ payment.date_paid }}</td>
-                                <td>{{ payment.note }}</td>
-                                <td>{{ payment.amount }} Ksh</td>
-                            </tr>
-                        {% endfor %}
+                            {% for payment in payments %}
+                                <tr>
+                                    <td>{{ payment.date_paid }}</td>
+                                    <td>{{ payment.note }}</td>
+                                    <td>{{ payment.amount }} Ksh</td>
+                                    <td>{{ payment.invoice.get_balance }}</td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -101,6 +98,4 @@
         </div>
     </div>
     <!-- /.container-fluid -->
-
-
 {% endblock %}

@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load static %}
+{% load custom_tags %}
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
@@ -32,9 +33,9 @@
                                 <th>Admission Number</th>
                                 <th>Name</th>
                                 <th>Status</th>
-                                <th>Amount Due</th>
+                                <th>Fees Balance</th>
                                 <th>Current Grade</th>
-                                <th>Profile</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,11 +52,11 @@
                                             <span class="badge badge-danger">Inactive</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ student.balancetable_set.balance }}</td>
+                                    <td>{{ student.balancetable.get_amount_dues }}</td>
                                     <td>{{ student.current_grade }}</td>
                                     <td>
                                         <a href="{% url 'student_profile' student.id %} "
-                                           class="btn btn-primary  btn-sm">View</a>
+                                           class="btn btn-primary  btn-sm">profile</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -81,7 +82,14 @@
         10, 25, 50, -1
         ],
         buttons: [
-        'pageLength', 
+        {
+                text: 'New Student',
+                action: function ( e, dt, node, config ) {
+                     window.location.href = "{% url 'register_student' %}"
+
+                }
+            },
+        
         {
             extend: 'searchBuilder',
             config: {
@@ -114,6 +122,7 @@
                     columns: ':visible'
                 }
         },
+        'pageLength', 
         'colvis'
         ],
         columnDefs: [{

@@ -242,3 +242,10 @@ class BalanceTable(models.Model):
     student = models.OneToOneField(Student, on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     modified = models.DateTimeField(auto_now=True)
+
+    def get_amount_dues(self):
+        """return the objects that have a balance of <0 """
+        if self.balance < 0 :
+            return abs(self.balance)
+        else:
+            return 0

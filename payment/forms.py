@@ -10,7 +10,7 @@ class PaymentCreationForm(forms.ModelForm):
         model = Payment
         exclude = ['qb_id', 'synced', 'invoice', 'note']
         widgets = {
-            'student': Select(attrs={'class': 'form-select form-control form-control-sm', 'id': 'student'}),
+            'student': Select(attrs={'class': 'form-select form-control form-control-sm payment-select', 'id': 'student'}),
             'date_paid': forms.DateInput(attrs={'class': 'form-control form-control-sm', 'id': 'floatingInput', 'type': 'date'}),
             'amount': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'id': 'quantity', 'min': 1}),
         }

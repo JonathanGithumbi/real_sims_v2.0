@@ -29,6 +29,7 @@
                                     <div class="col">
                                         {{ form.student.errors }}
                                         <label for="{{ form.student.id_for_label }}">Student:</label>
+                                        <br>
                                         {{ form.student }}
                                     </div>
                                 </div>
@@ -89,9 +90,7 @@
     {% block script_block %}
         <script>
             $(document).ready(function(){
-                $('.payment_student_select2').select2({
-                    'placeholder':'Select a Student'
-                });
+                $('.payment-select').select2();
             });
         function confirm_payment() {
             const student = document.getElementById("student");
