@@ -29,9 +29,9 @@
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="col">
-                                        {{ form.vendor.errors }}
-                                        <label for="{{ form.vendor.id_for_label }}">Vendor:</label>
-                                        {{ form.vendor }}
+                                        {{ form.recipient.errors }}
+                                        <label for="{{ form.recipient.id_for_label }}">Recipient:</label>
+                                        {{ form.recipient }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -87,7 +87,7 @@
                                             </div>
                                             <!-- Modal body -->
                                             <div class="modal-body">
-                                                <b>Vendor:</b> <small id="vendor_area"></small>
+                                                <b>Recipient:</b> <small id="recipient_area"></small>
                                                 <br>
                                                 <b>Description:</b> <small id="description_area"></small>
                                                 <br>
@@ -136,15 +136,13 @@
         });
 
         function confirm_bill_creation() {
-
-            const vendor = document.getElementById("vendor");
-            const vendor_name = vendor.options[vendor.selectedIndex].text;
+            const recipient = document.forms['bill_creation_form']['recipient'].value;
             const description = document.forms['bill_creation_form']['description'].value;
             const quantity = document.forms['bill_creation_form']['quantity'].value;
             const price_per_quantity = document.forms['bill_creation_form']['price_per_quantity'].value;
             const total = document.forms['bill_creation_form']['total'].value;
 
-            document.getElementById("vendor_area").innerHTML = vendor_name;
+            document.getElementById("recipient_area").innerHTML = recipient;
             document.getElementById("description_area").innerHTML = description;
             document.getElementById("quantity_area").innerHTML = quantity;
             document.getElementById("price_per_quantity_area").innerHTML = price_per_quantity;

@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible small fade show">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="card o-hidden border-0 shadow-sm my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="p-5">
+                            <div class="text-left">
+                                <h5>Top Up Petty Cash</h5>
+                            </div>
+                            <hr>
+                            <form action="{% url 'topup' %}" method="post" name="topup_form">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.amount.errors }}
+                                        <label for="{{ form.amount.id_for_label }}">Amount:</label>
+                                        {{ form.amount }}
+                                    </div>
+                                </div>
+                                <br>
+                                <a class="btn btn-primary btn-sm"
+                                   onclick="confirm_topup()"
+                                   href="#"
+                                   data-toggle="modal"
+                                   data-target="#confirm_topup_modal">Submit</a>
+                                <div class="modal fade" id="confirm_topup_modal">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Confirm Topup Amount</h4>
+                                            </div>
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                <b>Confirm topup of :</b> <span id="amount_area"></span><span>Ksh</span>
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                                <input type="submit"
+                                                       class="btn btn-success btn-sm"
+                                                       value="Submit"
+                                                       data-bs-dismiss="modal">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    <script>
+           function confirm_topup() {
+
+            
+            const amount = document.forms['topup_form']['amount'].value;
+
+            document.getElementById("amount_area").innerHTML = amount;
+
+        }
+    </script>
+{% endblock %}

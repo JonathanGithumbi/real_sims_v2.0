@@ -130,3 +130,5 @@ should make the submit button turn into a spinner to indicate loding
 --REQUESTS SHOULD ALWAYS CHECK WHETHER THE API TOKEN IS STILL VALID7
 
 --IMPLEMENT AN XML RESPONSE BUILDER THAT CAN BUILD AN XMLrEUEST AND FROM DATA IN THE DATABASE
+--LATER ON, REPLACE INTEGER FIELD WITH MONEY FIELD
+-- comment out the quickbookss online intergration code rather than removing it, you might need it later on.

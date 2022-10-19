@@ -7,11 +7,11 @@ from .models import BillItem
 class CreateBillItemForm(forms.ModelForm):
     class Meta:
         model = BillItem
-        fields = ('vendor', 'description', 'category',
+        fields = ('recipient', 'description', 'category',
                   'quantity', 'price_per_quantity', 'total')
         widgets = {
-            'vendor': Select(attrs={'class': 'form-select form-control form-control-sm', 'id': 'vendor'}),
-            'description': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'id': 'floatingInput'}),
+            'recipient': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'id': 'recipient'}),
+            'description': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'id': 'description'}),
             'category': Select(attrs={'class': 'form-select form-control form-control-sm', 'id': 'category'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'id': 'quantity'}),
             'price_per_quantity': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'id': 'price_per_quantity'}),
@@ -23,10 +23,10 @@ class CreateBillItemForm(forms.ModelForm):
 class EditBillItemForm(forms.ModelForm):
     class Meta:
         model = BillItem
-        fields = ('vendor', 'description', 'category', 'quantity',
+        fields = ('recipient', 'description', 'category', 'quantity',
                   'price_per_quantity', 'total')
         widgets = {
-            'vendor': Select(attrs={'class': 'form-select form-control form-control-sm', 'id': 'vendor'}),
+            'recipient': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'id': 'recipient'}),
             'description': forms.TextInput(
                 attrs={'class': 'form-control form-control-sm', 'id': 'floatingInput'}),
             'category': Select(attrs={'class': 'form-select form-control form-control-sm', 'id': 'category'}),
@@ -36,3 +36,9 @@ class EditBillItemForm(forms.ModelForm):
             'total': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'id': 'total'}),
 
         }
+
+
+class TopUpForm(forms.Form):
+    amount = forms.CharField(
+        max_length=6, widget=forms.TextInput
+        (attrs={'class': 'form-control form-control-sm', 'id': 'amount'}))

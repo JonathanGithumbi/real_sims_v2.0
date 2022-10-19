@@ -1,9 +1,11 @@
 from django.shortcuts import redirect, render
-from .models import Bill, BillItem
+
+from user_account.models import User
+from .models import Bill, BillItem, PettyCash
 from .forms import CreateBillItemForm
 from django.urls import reverse
 from bill_payment.models import BillPayment
-from .forms import EditBillItemForm
+from .forms import EditBillItemForm, TopUpForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from rest_framework.views import APIView
@@ -16,7 +18,9 @@ login_required()
 def bills(request):
     #!use some kind of limiter to reduce the load on the db server
     bills = BillItem.objects.all().order_by('-created')
-    return render(request, 'bill/bills.html', {'bills': bills})
+    petty_cash = PettyCash.objects.get(pk=1)
+    petty_cash_balance = petty_cash.balance
+    return render(request, 'bill/bills.html', {'bills': bills, 'petty_cash_balance': petty_cash_balance})
 
 
 login_required()
@@ -24,7 +28,7 @@ login_required()
 
 
 def create_bill(request):
-
+    # decreases the petty cash balance by the total,that is also the transaction's balance snapshot
     if request.method == 'GET':
         form = CreateBillItemForm()
         return render(request, 'bill/create_bill.html', {'form': form})
@@ -32,7 +36,16 @@ def create_bill(request):
         form = CreateBillItemForm(request.POST)
         if form.is_valid():
             bill_item_obj = form.save()
+            petty_cash_obj = PettyCash.objects.get(pk=1)
 
+            bill_item_obj.balance = petty_cash_obj.balance - bill_item_obj.total
+            user_id = request.user.id
+            user = User.objects.get(pk=user_id)
+            bill_item_obj.user = user
+            bill_item_obj.save(update_fields=['balance', 'user'])
+
+            petty_cash_obj.balance = petty_cash_obj.balance - bill_item_obj.total
+            petty_cash_obj.save(update_fields=['balance', 'modified'])
             # also save the  bill to quickbooks
             try:
                 qb_bill_item = bill_item_obj.create_qb_bill()
@@ -120,6 +133,7 @@ def edit_bill(request, id):
             return render(request, 'bill/edit_bill.html', {'form': bill_edit_form})
 
 
+@login_required()
 def delete_bill(request, id):
     bill_obj = BillItem.objects.get(pk=id)
     bill_obj.delete()
@@ -127,8 +141,51 @@ def delete_bill(request, id):
     return redirect(reverse('bills'))
 
 
+@login_required()
 def view_summaries(request):
     return render(request, 'bill/bill_summaries.html')
+
+
+@login_required()
+def topup(request):
+    if request.method == 'GET':
+        topupform = TopUpForm()
+        return render(request, 'bill/topup.html', {'form': topupform})
+
+    if request.method == "POST":
+        topup_form = TopUpForm(request.POST)
+        if topup_form.is_valid():
+            amount = topup_form.cleaned_data['amount']
+            petty_cash_object = PettyCash.objects.get(pk=1)
+            user_id = request.user.id
+            user = User.objects.get(pk=user_id)
+
+            # topup algorithm
+            # topup means increasing the petty cash balance and creating a billitem and also reflecting it to qb
+            depo_transaction = BillItem.objects.create(
+                category="Deposit",
+                description="Petty Cash Top Up",
+                total=int(amount),
+                quantity=1,
+                price_per_quantity=int(amount),
+                balance=petty_cash_object.balance + int(amount),
+                recipient=user.username,
+
+            )
+            petty_cash_object.balance = int(
+                petty_cash_object.balance) + int(amount)
+            petty_cash_object.save(update_fields=['balance', 'modified'])
+
+            #
+            # record to qb
+            #
+
+            messages.info(request, "Petty Cash Top Up Successfull",
+                          extra_tags='alert-success')
+            return redirect(reverse('bills'))
+        else:
+            return render(request, 'bill/topup.html', {'form': topup_form
+                                                       })
 
 
 # One class view per chart

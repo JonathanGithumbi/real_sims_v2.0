@@ -18,7 +18,7 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold ">Bills</h6>
+                <h5 class"m-0">Petty Cash Balance: {{ petty_cash_balance }}Ksh</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -28,14 +28,14 @@
                         <thead class="thead-light">
                             <tr>
                                 <th></th>
-                                <th>Date Created</th>
+                                <th>Date</th>
                                 <th>Decription</th>
                                 <th>Category</th>
-                                <th>Status</th>
+                                <th>Recipient</th>
                                 <th>Quantiy</th>
                                 <th>Price per Quantity</th>
                                 <th>Total Amount</th>
-                                {% if perms.bill.can_edit_bill %}<th>Actions</th>{% endif %}
+                                <th>Petty Cash Balance</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,124 +45,35 @@
                                     <td>{{ bill.created }}</td>
                                     <td>{{ bill.description }}</td>
                                     <td>{{ bill.category }}</td>
-                                    <td>
-                                        {% if bill.fully_paid == True %}<span class="badge badge-success">Paid</span>{% endif %}
-                                        {% if bill.fully_paid == False %}<span class="badge badge-danger">Unpaid</span>{% endif %}
-                                    </td>
+                                    <td>{{ bill.recipient }}</td>
                                     <td>{{ bill.quantity }}</td>
                                     <td>{{ bill.price_per_quantity }}</td>
                                     <td>{{ bill.total }}</td>
-                                    {% if perms.bill.can_edit_bill  %}
-                                        <td class="">
-                                            {% if bill.fully_paid == False %}
-                                                <a class="btn btn-success btn-icon-split btn-sm "
-                                                   href="#"
-                                                   data-toggle="modal"
-                                                   data-target="#bill_payment_modal{{ forloop.counter }}">
-                                                    <span class="icon text-white-50">
-                                                        <i class="fas fa-check"></i>
-                                                    </span>
-                                                    <span class="text">Mark as Paid</span></a>
-                                                <a class="btn btn-primary btn-icon-split btn-sm "
-                                                   href="{% url 'edit_bill' bill.id %}">
-                                                    <span class="icon text-white-50">
-                                                        <i class="fas fa-pen"></i>
-                                                    </span>
-                                                    <span class="text">Edit</span></a>
-                                                <br>
-                                                <a class="btn btn-danger btn-icon-split btn-sm "
-                                                   href="#"
-                                                   data-toggle="modal"
-                                                   data-target="#delete_payment_modal">
-                                                    <span class="icon text-white-50">
-                                                        <i class="fas fa-check"></i>
-                                                    </span>
-                                                    <span class="text">Delete</span></a>
-                                            {% else %}
-                                                <button disabled
-                                                        class="btn btn-secondary btn-icon-split btn-sm"
-                                                        href="#"
-                                                        data-toggle="modal"
-                                                        data-target="#bill_payment_modal">
-                                                </span>
-                                                <span class="text">Actions Disabled</span>
-                                            </button>
-                                        {% endif %}
-                                    </td>
-                                {% endif %}
-                            </tr>
-                            <!--Modal-->
-                            <div class="modal fade" id="bill_payment_modal{{ forloop.counter }}">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Confirm Bill Payment</h4>
-                                        </div>
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            Bill: {{ bill.description }}
-                                            <br>
-                                            Amount: {{ bill.total }}
-                                        </div>
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
-                                            <a class="btn btn-success btn-sm" href="{% url 'pay_bill' bill.id %}">
-                                                <span class="text">submit</span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal fade" id="delete_payment_modal">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">
-                                                Confirm Bill Deletion
-                                            </h4>
-                                        </div>
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
-                                                Cancel
-                                            </button>
-                                            <a class="btn btn-success btn-sm" href="{% url 'delete_bill' bill.id %}">
-                                                <span class="text">Submit</span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                    <td>{{ bill.balance }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- /.container-fluid -->
-{% block script %}
-    <script>
+    <!-- /.container-fluid -->
+    {% block script %}
+        <script>
         $(document).ready(function () {
             //Set the formats for DataTales
-            $.fn.dataTable.moment( 'MMM. D, YYYY' );
+            $.fn.dataTable.moment( 'MMM. D, YYYY, hh:mm' );
     //Initialise the table
     var table = $('#BillsdataTable').DataTable({
         fixedHeader: true,
-        order: [[0, 'desc']],
+        order: [[1, 'asc']],
         dom: 'Bfrtip',
         lengthMenu: [
         10, 25, 50, -1
         ],
         buttons: [
-         {
-                text: 'New Bill',
-                action: function ( e, dt, node, config ) {
-                     window.location.href = "{% url 'create_bill' %}"
-
-                }
-            },
+        
         {
             extend: 'searchBuilder',
             config: {
@@ -173,7 +84,7 @@
         {
             extend: 'excel',
             messageBottom: "Kings Educational Center Information Management System",
-            title: "Bills Report",
+            title: "Petty Cash Usage Report",
            
             exportOptions: {
                     columns: ':visible'
@@ -183,7 +94,7 @@
             extend: 'pdf',
             messageBottom: "Kings Educational Center Information Management System",
             download:'open',
-            title: "Bills Report",
+            title: "Petty Cash Usage Report",
             messageTop: function(){
                 var curr_date = new Date();
                 txt_curr_date = curr_date.toString();
@@ -213,6 +124,6 @@
     table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
 
 });
-    </script>
-{% endblock script %}
+        </script>
+    {% endblock script %}
 {% endblock %}
