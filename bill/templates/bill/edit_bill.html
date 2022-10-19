@@ -42,9 +42,11 @@
                                             </div>
                                             <!-- Modal body -->
                                             <div class="modal-body">
-                                                <b>Vendor:</b> <small id="vendor_area_edit"></small>
+                                                <b>Recipient:</b> <small id="recipient_area_edit"></small>
                                                 <br>
                                                 <b>Description:</b> <small id="description_area_edit"></small>
+                                                <br>
+                                                <b>Category:</b> <small id="category_area_edit"></small>
                                                 <br>
                                                 <b>Quantity:</b> <small id="quantity_area_edit"></small>
                                                 <br>
@@ -89,14 +91,16 @@
 
         function confirm_bill_edit() {
 
-            const vendor = document.getElementById("vendor");
-            const vendor_name = vendor.options[vendor.selectedIndex].text;
+            const category = document.getElementById("category");
+            const category_name = category.options[category.selectedIndex].text;
+            const recipient = document.forms['bill_edit_form']['recipient'].value;
             const description = document.forms['bill_edit_form']['description'].value;
             const quantity = document.forms['bill_edit_form']['quantity'].value;
             const price_per_quantity = document.forms['bill_edit_form']['price_per_quantity'].value;
             const total = document.forms['bill_edit_form']['total'].value;
 
-            document.getElementById("vendor_area_edit").innerHTML = vendor_name;
+            document.getElementById("category_area_edit").innerHTML = category_name;
+            document.getElementById("recipient_area_edit").innerHTML = recipient;
             document.getElementById("description_area_edit").innerHTML = description;
             document.getElementById("quantity_area_edit").innerHTML = quantity;
             document.getElementById("price_per_quantity_area_edit").innerHTML = price_per_quantity;

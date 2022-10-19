@@ -32,10 +32,11 @@
                                 <th>Decription</th>
                                 <th>Category</th>
                                 <th>Recipient</th>
-                                <th>Quantiy</th>
-                                <th>Price per Quantity</th>
+                                <th>no. of units</th>
+                                <th>Price per unit</th>
                                 <th>Total Amount</th>
                                 <th>Petty Cash Balance</th>
+                                {% if perms.bill.can_edit_bill %}<th>Actions</th>{% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -50,22 +51,94 @@
                                     <td>{{ bill.price_per_quantity }}</td>
                                     <td>{{ bill.total }}</td>
                                     <td>{{ bill.balance }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                                    {% if perms.bill.can_edit_bill  %}
+                                        <td class="">
+                                            {% if bill.fully_paid == False %}
+                                                <a class="btn btn-success  btn-sm "
+                                                   href="#"
+                                                   data-toggle="modal"
+                                                   data-target="#bill_payment_modal{{ forloop.counter }}">
+                                                Confirm</a>
+                                                <a class="btn btn-primary  btn-sm " href="{% url 'edit_bill' bill.id %}">Edit</a>
+                                                <br>
+                                                <a class="btn btn-danger  btn-sm "
+                                                   href="#"
+                                                   data-toggle="modal"
+                                                   data-target="#delete_payment_modal">Discard</a>
+                                            {% else %}
+                                                <button disabled
+                                                        class="btn btn-secondary  btn-sm"
+                                                        href="#"
+                                                        data-toggle="modal"
+                                                        data-target="#bill_payment_modal">
+                                                </span>
+                                                <span class="text">Actions Disabled</span>
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            <!--Modal-->
+                            <div class="modal fade" id="bill_payment_modal{{ forloop.counter }}">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Confirm Bill Payment</h4>
+                                        </div>
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            Bill: {{ bill.description }}
+                                            <br>
+                                            Amount: {{ bill.total }}
+                                        </div>
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                            <a class="btn btn-success btn-sm" href="{% url 'pay_bill' bill.id %}">
+                                                <span class="text">submit</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="delete_payment_modal">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">
+                                                Confirm Discard
+                                            </h4>
+                                        </div>
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                            <a class="btn btn-success btn-sm" href="{% url 'delete_bill' bill.id %}">
+                                                <span class="text">Submit</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <!-- /.container-fluid -->
-    {% block script %}
-        <script>
+</div>
+<!-- /.container-fluid -->
+{% block script %}
+    <script>
         $(document).ready(function () {
             //Set the formats for DataTales
             $.fn.dataTable.moment( 'MMM. D, YYYY, hh:mm' );
     //Initialise the table
     var table = $('#BillsdataTable').DataTable({
+        
         fixedHeader: true,
         order: [[1, 'asc']],
         dom: 'Bfrtip',
@@ -117,13 +190,13 @@
         style: 'multi',
         selector: 'td:first-child'
         },
-        order: [[0, 'asc']]
+        order: [[1, 'asc']]
     });
 
     //Add Styling to the buttons
     table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
 
 });
-        </script>
-    {% endblock script %}
+    </script>
+{% endblock script %}
 {% endblock %}

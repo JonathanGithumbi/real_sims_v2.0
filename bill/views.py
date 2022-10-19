@@ -72,7 +72,7 @@ def pay_bill(request, id):
     # create a bill payment object.
     # bill pay
     bill_payment_obj = BillPayment.objects.create(
-        vendor=bill_obj.vendor,
+
         amount=bill_obj.total,
         bill=bill_obj,
     )
@@ -80,10 +80,10 @@ def pay_bill(request, id):
     bill_obj.fully_paid = True
     bill_obj.save(update_fields=['fully_paid'])
 
-    qb_payment = bill_payment_obj.create_qb_bill_payment_obj()
-    bill_payment_obj.qb_id = qb_payment.Id
-    bill_payment_obj.synced = True
-    bill_payment_obj.save(update_fields=['qb_id', 'synced'])
+    #qb_payment = bill_payment_obj.create_qb_bill_payment_obj()
+    #bill_payment_obj.qb_id = qb_payment.Id
+    #bill_payment_obj.synced = True
+    #bill_payment_obj.save(update_fields=['qb_id', 'synced'])
 
     messages.success(request, "{0} Bill Payment recorded Successfully".format(
         bill_obj.description), extra_tags='alert-success')
@@ -102,20 +102,31 @@ def edit_bill(request, id):
         return render(request, 'bill/edit_bill.html', {'form': bill_edit_form, 'bill': bill_obj})
     if request.method == 'POST':
         initial_data = {
-            'vendor': bill_obj.vendor,
+            'recipient': bill_obj.recipient,
             'description': bill_obj.description,
+            'category': bill_obj.category,
             'quantity': bill_obj.quantity,
             'price_per_quantity': bill_obj.price_per_quantity,
-            'total': bill_obj.total
+            'total': bill_obj.total,
+            'balance': bill_obj.balance
         }
         bill_edit_form = EditBillItemForm(request.POST, initial=initial_data)
         if bill_edit_form.is_valid():
             if bill_edit_form.has_changed():
-                bill_obj.vendor = bill_edit_form.cleaned_data['vendor']
+                bill_obj.recipient = bill_edit_form.cleaned_data['recipient']
                 bill_obj.description = bill_edit_form.cleaned_data['description']
-                bill_obj.quantity = bill_edit_form.cleaned_data['quantity']
-                bill_obj.price_per_quantity = bill_edit_form.cleaned_data['price_per_quantity']
-                bill_obj.total = bill_edit_form.cleaned_data['total']
+                bill_obj.category = bill_edit_form.cleaned_data['category']
+                if 'amount' in bill_edit_form.changed_data or 'price_per_quantity' in bill_edit_form.changed_data or 'total' in bill_edit_form.changed_data:
+                    petty_cash = PettyCash.objects.get(pk=1)
+                    petty_cash.balance = (petty_cash.balance +
+                                          initial_data['total']) - bill_edit_form.cleaned_data['total']
+                    petty_cash.save(update_fields=['balance', 'modified'])
+                    bill_obj.balance = (initial_data['balance'] +
+                                        initial_data['total']) - bill_edit_form.cleaned_data['total']
+                    bill_obj.quantity = bill_edit_form.cleaned_data['quantity']
+                    bill_obj.price_per_quantity = bill_edit_form.cleaned_data['price_per_quantity']
+                    bill_obj.total = bill_edit_form.cleaned_data['total']
+
                 bill_obj.save(update_fields=None)
                 try:
                     qb_bill = bill_obj.edit_qb_bill()
@@ -136,8 +147,12 @@ def edit_bill(request, id):
 @login_required()
 def delete_bill(request, id):
     bill_obj = BillItem.objects.get(pk=id)
+    # return the total amount back to the petty_cash
+    petty_cash = PettyCash.objects.get(pk=1)
+    petty_cash.balance = petty_cash.balance + bill_obj.total
+    petty_cash.save(update_fields=['balance', 'modified'])
     bill_obj.delete()
-    messages.success(request, "Bill Deleted Successfully")
+    messages.success(request, "Bill Discarded Successfully")
     return redirect(reverse('bills'))
 
 

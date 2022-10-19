@@ -33,7 +33,7 @@ class BillPayment(models.Model):
     payments for one bill are to be expected."""  # Only if the software has a bill management feature.
     """But out of the box, this bill payment will only function to record full ayment of bills"""
     qb_id = models.CharField(max_length=255, null=True, default=None)
-    vendor = models.ForeignKey(Vendor, on_delete=models.DO_NOTHING)
+
     created = models.DateField(auto_now_add=True)
     # This is the amount paid for a particular period
     amount = models.IntegerField(null=True, default=0)
