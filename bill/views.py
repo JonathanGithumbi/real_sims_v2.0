@@ -147,8 +147,15 @@ def edit_bill(request, id):
 @login_required()
 def delete_bill(request, id):
     bill_obj = BillItem.objects.get(pk=id)
-    # return the total amount back to the petty_cash
     petty_cash = PettyCash.objects.get(pk=1)
+    if bill_obj.category == "Deposit":
+        petty_cash.balance = petty_cash.balance - bill_obj.total
+        petty_cash.save(update_fields=['balance', 'modified'])
+        bill_obj.delete()
+        messages.success(request, "Top Up Discarded Successfully")
+        return redirect(reverse('bills'))
+        # return the total amount back to the petty_cash
+
     petty_cash.balance = petty_cash.balance + bill_obj.total
     petty_cash.save(update_fields=['balance', 'modified'])
     bill_obj.delete()

@@ -132,3 +132,4 @@ should make the submit button turn into a spinner to indicate loding
 --IMPLEMENT AN XML RESPONSE BUILDER THAT CAN BUILD AN XMLrEUEST AND FROM DATA IN THE DATABASE
 --LATER ON, REPLACE INTEGER FIELD WITH MONEY FIELD
 -- comment out the quickbookss online intergration code rather than removing it, you might need it later on.
+-- modifications to the fees structure should be done after during the holiday not a the beginning, middle or end of the term
