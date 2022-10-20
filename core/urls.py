@@ -15,6 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.urls import re_path as url
+
+from spyne.protocol.soap import Soap11
+from spyne.server.django import DjangoView
+
+from QBWEBSERVICE.views import qb_web_service, app, QBWEBSERVICE
 
 
 urlpatterns = [
@@ -27,7 +33,25 @@ urlpatterns = [
     path('user_account/', include('user_account.urls')),
     path('invoice/', include('invoice.urls')),
     path('payments/', include('payment.urls')),
-    path("select2/", include("django_select2.urls")),
-
-
+    url(r'^authenticate/', DjangoView.as_view(
+        services=[QBWEBSERVICE.authenticate], tns="http://developer.intuit.com/",
+        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
+    url(r'^clientVersion/', DjangoView.as_view(
+        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
+        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
+    url(r'^closeConnection/', DjangoView.as_view(
+        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
+        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
+    url(r'^connectionError/', DjangoView.as_view(
+        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
+        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
+    url(r'^getLastError/', DjangoView.as_view(
+        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
+        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
+    url(r'^receiveResponseXML/', DjangoView.as_view(
+        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
+        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
+    url(r'^sendRequestXML/', DjangoView.as_view(
+        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
+        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
 ]
