@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django.contrib.admin',
     'django_select2',
-    'rpctest.core'
+    
 
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

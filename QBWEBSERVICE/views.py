@@ -142,7 +142,7 @@ class QBWEBSERVICE(Service):
         """
         pass
 
-    @rpc(Unicode, Unicode, returns=Unicode)
+    @rpc(Unicode, Unicode, _returns=Unicode)
     def getInteractiveURL(ctx, wcTicket, sessionID):
         # Lets your web service tell WBQC where to get the web page to display in the browser at start of interactive mode
         # return a message string containing the URL of the web page you want opened in the browser
@@ -223,7 +223,7 @@ class QBWEBSERVICE(Service):
         # return a negative integer to indicate an error
         pass
 
-    @rpc(Unicode, Unicode, Unicode, Unicode, Integer, Integer)
+    @rpc(Unicode, Unicode, Unicode, Integer, Integer, _returns=Unicode)
     def sendRequestXML(ctx, ticket, HCPResponse, CompanyFileName, qbXMLMajorVers, qbXMLMinorVers):
         # this is the web connector's invitation to the web service to send a request
         # this will check if the request queue is populated and start dending them
