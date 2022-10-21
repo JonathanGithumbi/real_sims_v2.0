@@ -2,7 +2,7 @@ from django import forms
 from django.forms import modelformset_factory, Select
 from django import forms
 from .models import Payment
-from dal import autocomplete
+
 
 
 class PaymentCreationForm(forms.ModelForm):

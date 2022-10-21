@@ -57,12 +57,11 @@ INSTALLED_APPS = [
     'account',
     'item',
     'bill_payment',
-    'dal',
-    'dal_select2',
     'rest_framework',
     'django.contrib.admin',
-    'django_select2',
-    
+    'django_celery_results',
+    'django_celery_beat',
+
 
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -183,3 +182,10 @@ EMAIL_HOST_PASSWORD = "1t$nAB01033!@#"
 EMAIL_HOST_USER = "jonathan.m.githumbi@gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+# Celery Config Options
+CELERY_TIMEZONE = "Africa/Nairobi"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30*60
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'

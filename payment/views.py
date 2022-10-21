@@ -1,4 +1,4 @@
-from dal import autocomplete
+
 from email.policy import default
 from django.shortcuts import render, redirect
 
@@ -570,18 +570,6 @@ def make_payment(request):
 def payment_summaries(request):
     return render(request, 'payment/payment_summaries.html')
 
-
-class StudentAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Student.objects.none()
-
-        qs = Student.objects.all()
-
-        if self.q:
-            qs = qs.filter(first_name__istartswith=self.q)
-
-        return qs
 
 
 class PaymentTrendChart(APIView):
