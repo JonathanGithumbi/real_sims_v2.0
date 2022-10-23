@@ -9,6 +9,12 @@ TERM_CHOICES = (
         )
 
 class FeesStructure(models.Model):
+    class Meta:
+        permissions = [
+            ("can_edit_the_fees_structure", "can edit the fees structure"),
+            ("can_view_the_fees_structure", "can view the fees structure")
+            
+        ]
     """this model composes the entire school fees structure,"""
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
     term = models.IntegerField(choices=TERM_CHOICES)

@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django_celery_results',
     'django_celery_beat',
+    'core',
 
 
 ]
@@ -178,7 +179,7 @@ AUTHENTICATION_BACKENDS = ['user_account.backends.AuthBackend']
 DEFAULT_FROM_EMAIL = "jonathan.m.githumbi@gmail.com"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
-EMAIL_HOST_PASSWORD = "1t$nAB01033!@#"
+EMAIL_HOST_PASSWORD = ""
 EMAIL_HOST_USER = "jonathan.m.githumbi@gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

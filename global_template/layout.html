@@ -112,6 +112,35 @@
                     </div>
                 </div>
             </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <!-- Heading -->
+            <div class="sidebar-heading">Fees Structure</div>
+            <li class="nav-item">
+                <a class="nav-link collapsed"
+                   href="#"
+                   data-toggle="collapse"
+                   data-target="#collapseFeesStructure"
+                   aria-expanded="true"
+                   aria-controls="collapseFeesStructure">
+                    <i class="fas fa-fw fa-receipt"></i>
+                    <span>Fees Structure</span>
+                </a>
+                <div id="collapseFeesStructure"
+                     class="collapse"
+                     aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        {% if perms.fees_structure.can_view_the_fees_structure %}
+                            <a class="collapse-item" href="{% url 'fees_structure' %}">View Fees Structure</a>
+                        {% endif %}
+                        
+                        {% if perms.fees_Structure.can_edit_the_fees_structure %}
+                            <a class="collapse-item" href="{% url 'edit_fees_structure' %}">Edit Fees Structure</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
             <!--{% if perms.report.view_report %}
                 
                 <hr class="sidebar-divider">
