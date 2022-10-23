@@ -34,6 +34,7 @@ urlpatterns = [
     path('invoice/', include('invoice.urls')),
     path('payments/', include('payment.urls')),
     path('fees-structure/', include('fees_structure.urls')),
+    path('expenses/', include('expenses.urls')),
     url(r'^authenticate/', DjangoView.as_view(
         services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
         in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),

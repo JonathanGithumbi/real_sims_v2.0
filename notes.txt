@@ -133,3 +133,12 @@ should make the submit button turn into a spinner to indicate loding
 --LATER ON, REPLACE INTEGER FIELD WITH MONEY FIELD
 -- comment out the quickbookss online intergration code rather than removing it, you might need it later on.
 -- modifications to the fees structure should be done after during the holiday not a the beginning, middle or end of the term
+
+
+- the expenses app is justified because they have one installation of quickbooks desktop and one company file. therefore the application
+should be able to serve as the central point of adding transactions to an expense account. the feature will be available to only the management
+
+-sims will have a backup of all transactions recorded through it. all will be able to reproduce in entirety all the transactions that were recorded to it, or transactions that are being backed up to it
+
+-theres a bug in expenses table when you try to discard a transaction, it discards a confirmed transaction instead of discarding itself
+

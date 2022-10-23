@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-login_required()
+@login_required()
 # @permission_required("can_view_bill")
 
 

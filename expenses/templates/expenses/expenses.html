@@ -1,0 +1,202 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible small fade show">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <br>
+        <!-- DataTables Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class"m-0">Kings Educational Centre Expenses</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class=" table table-bordered table-sm text-gray-900"
+                           id="ExpensesdataTable"
+                           style="width:100%">
+                        <thead class="thead-light">
+                            <tr>
+                                <th></th>
+                                <th>Date</th>
+                                <th>Decription</th>
+                                <th>Category</th>
+                                <th>Recipient</th>
+                                <th>no. of units</th>
+                                <th>Price per unit</th>
+                                <th>Total Amount</th>
+                                
+                                {% if perms.expense.can_edit_an_expense %}<th>Actions</th>{% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in expenses %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ expense.created }}</td>
+                                    <td>{{ expense.description }}</td>
+                                    <td>{{ expense.category }}</td>
+                                    <td>{{ expense.recipient }}</td>
+                                    <td>{{ expense.quantity }}</td>
+                                    <td>{{ expense.price_per_quantity }}</td>
+                                    <td>{{ expense.total }}</td>
+                                    {% if perms.expense.can_edit_an_expense  %}
+                                        <td class="">
+                                            {% if expense.fully_paid == False %}
+                                                <a class="btn btn-success  btn-sm "
+                                                   href="#"
+                                                   data-toggle="modal"
+                                                   data-target="#expense_payment_modal{{ forloop.counter }}">
+                                                Confirm</a>
+                                                <a class="btn btn-primary  btn-sm "
+                                                   href="{% url 'edit_expense' expense.id %}">Edit</a>
+                                                <br>
+                                                <a class="btn btn-danger  btn-sm "
+                                                   href="#"
+                                                   data-toggle="modal"
+                                                   data-target="#delete_expense_modal">Cancel</a>
+                                            {% else %}
+                                                <button disabled
+                                                        class="btn btn-secondary  btn-sm"
+                                                        href="#"
+                                                        data-toggle="modal"
+                                                        data-target="#expense_payment_modal">
+                                                </span>
+                                                <span class="text">Actions Disabled</span>
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            <!--Modal-->
+                            <div class="modal fade" id="expense_payment_modal{{ forloop.counter }}">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Confirm Record Expense</h4>
+                                        </div>
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            Expense: {{ expense.description }}
+                                            <br>
+                                            Amount: {{ expense.total }}
+                                        </div>
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                            <a class="btn btn-success btn-sm"
+                                               href="{% url 'confirm_add_expense' expense.id %}">
+                                                <span class="text">submit</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="delete_expense_modal">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">
+                                                Confirm Cancellation
+                                            </h4>
+                                        </div>
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                            <a class="btn btn-success btn-sm"
+                                               href="{% url 'discard_expense' expense.id %}">
+                                                <span class="text">Submit</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container-fluid -->
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            //Set the formats for DataTales
+            $.fn.dataTable.moment( 'MMM. D, YYYY, hh:mm' );
+    //Initialise the table
+    var table = $('#ExpensesdataTable').DataTable({
+        
+        fixedHeader: true,
+        order: [[1, 'asc']],
+        dom: 'Bfrtip',
+        lengthMenu: [
+        10, 25, 50, -1
+        ],
+        buttons: [
+        
+        {
+            extend: 'searchBuilder',
+            config: {
+                depthLimit: 2
+            }
+        },
+        
+        {
+            extend: 'excel',
+            messageBottom: "Kings Educational Center Information Management System",
+            title: "Expenses Report",
+           
+            exportOptions: {
+                    columns: ':visible'
+                }
+        },
+        {
+            extend: 'pdf',
+            messageBottom: "Kings Educational Center Information Management System",
+            download:'open',
+            title: "Expenses Report",
+            messageTop: function(){
+                var curr_date = new Date();
+                txt_curr_date = curr_date.toString();
+                return txt_curr_date;
+            },
+            exportOptions: {
+                    columns: ':visible'
+                }
+        },
+        
+        'pageLength',
+        'colvis'
+        ],
+        columnDefs: [{
+        orderable: false,
+        className: 'select-checkbox',
+        targets: 0
+        }],
+        select: {
+        style: 'multi',
+        selector: 'td:first-child'
+        },
+        order: [[1, 'asc']]
+    });
+
+    //Add Styling to the buttons
+    table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
+
+});
+    </script>
+{% endblock script %}
+{% endblock %}

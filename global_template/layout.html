@@ -115,6 +115,37 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
             <!-- Heading -->
+            <div class="sidebar-heading">School Expenses</div>
+            <li class="nav-item">
+                <a class="nav-link collapsed"
+                   href="#"
+                   data-toggle="collapse"
+                   data-target="#collapseExpenses"
+                   aria-expanded="true"
+                   aria-controls="collapseExpenses">
+                    <i class="fas fa-fw fa-receipt"></i>
+                    <span>School Expenses</span>
+                </a>
+                <div id="collapseExpenses"
+                     class="collapse"
+                     aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        {% if perms.expenses.can_create_an_expense %}
+                            <a class="collapse-item" href="{% url 'add_expense' %}">Record Expense</a>
+                        {% endif %}
+                        {% if perms.expenses.can_view_expenses%}
+                        <a class="collapse-item" href="{% url 'expenses' %}">View Expenses</a>
+                        {%endif%}
+                        {% if perms.expenses.can_view_summaries %}
+                            <a class="collapse-item" href="{% url 'expense_summaries' %}">View Summaries</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <!-- Heading -->
             <div class="sidebar-heading">Fees Structure</div>
             <li class="nav-item">
                 <a class="nav-link collapsed"
