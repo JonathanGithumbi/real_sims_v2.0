@@ -1,4 +1,4 @@
-from tkinter.tix import Select
+
 from django.forms import CheckboxInput, DateInput, ModelForm, NumberInput, TextInput, Select,Form
 from .models import Student
 from . import utils
