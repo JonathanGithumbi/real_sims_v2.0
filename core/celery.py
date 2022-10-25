@@ -5,7 +5,13 @@ from celery import Celery
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
 #To use celery in your app, you simply import this instance
-app = Celery('core')
+"""Note that the format of broker URL should be:
+transport://userid:password@hostname:port/virtual_host"""
+app = Celery('core',
+            broker='amqp://admin:Admin123@localhost/admin_vhost',
+            backend='rpc://',
+        
+            )
 
 """
 using a string here means the worker doesnt have to serialize the configuation object to child processes

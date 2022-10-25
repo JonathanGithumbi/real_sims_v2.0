@@ -1,13 +1,18 @@
+from core.celery import app
+
 # crud operation tasks on expense object
-
-def read_expense():
+@app.task
+def readExpense():
     pass
 
-def create_expense():
+@app.task
+def createExpense():
     pass
 
-def edit_response():
+@app.task
+def updateExpense():
     pass
 
-def delete_response():
+@app.task
+def deleteExpense():
     pass
