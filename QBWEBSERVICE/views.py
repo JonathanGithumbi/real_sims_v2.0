@@ -5,22 +5,42 @@ from django.views.decorators.csrf import csrf_exempt
 from spyne.error import ResourceNotFoundError, ResourceAlreadyExistsError
 from spyne.server.django import DjangoApplication
 from spyne.model.primitive import Unicode, Integer
-from spyne.model.complex import Iterable
-from spyne.service import Service
+from spyne.model.complex import Array
+from spyne.service import ServiceBase
 from spyne.protocol.soap import Soap11
 from spyne.application import Application
 from spyne.decorator import rpc
 from spyne.util.django import DjangoComplexModel, DjangoService
 from spyne.protocol.http import HttpRpc
-#from rpctest.core.models import FieldContainer
+from user_account.backends import ServiceAuthBackend
 
 
-class QBWEBSERVICE(Service):
-
+class QBWEBSERVICE(ServiceBase):
     # @rpc decorator passes a spyne.MethodContext instanc as first argumnt to the usr code
     # the Method Context holds all information about the current state of execution of a remote procedure call
-    @rpc(Unicode, Unicode, _returns=Iterable(Unicode))
+    @rpc(Unicode, Unicode, _returns=Array(Unicode))
     def authenticate(ctx, username, password):
+        """
+        Authenticate the web connector to access this service.
+
+        @param strUserName user name to use for authentication
+        @param strPassword password to use for authentication
+
+        @return the completed array
+        """
+
+        # Log Here
+
+        return_array = []
+        # Authenticating using the user's password and username
+        
+        auth_backend = ServiceAuthBackend()
+        user = auth_backend.authenticate(username=username, password=password)
+        if user is not None:
+            
+
+        
+
         # GOAL:authenticate the specified user,and specify the company to be used in the session
         # return session token(ticket)
         """
@@ -46,7 +66,8 @@ class QBWEBSERVICE(Service):
 
         # optionally and time to wait before next poll
         #optionally and minimumruneverynseconds
-        pass
+        return_array = ["jvhvbobobfou2356", "Kings Educational Center"]
+        return return_array
 
     @rpc(Unicode, _returns=Unicode)
     def clientVersion(ctx, version):
@@ -71,7 +92,7 @@ class QBWEBSERVICE(Service):
         # or return W:<warning sttring>
         # or return E:<error string>
         # or return O:<required QBWC version string>
-        pass
+        return ''
 
     @rpc(Unicode, _returns=Unicode)
     def closeConnection(ctx, ticket):
@@ -221,10 +242,11 @@ class QBWEBSERVICE(Service):
         # process data and return a positive integer
         # indicates percentage of work completed, with 100="done"
         # return a negative integer to indicate an error
-        pass
+        return 100
 
     @rpc(Unicode, Unicode, Unicode, Integer, Integer, _returns=Unicode)
     def sendRequestXML(ctx, ticket, HCPResponse, CompanyFileName, qbXMLMajorVers, qbXMLMinorVers):
+        # programmatically start a worker to dequeue items from the queue
         # this is the web connector's invitation to the web service to send a request
         # this will check if the request queue is populated and start dending them
         """

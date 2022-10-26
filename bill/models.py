@@ -96,48 +96,48 @@ class BillItem(models.Model):
     def __str__(self):
         return self.description
 
-    def create_qb_bill(self):
-        access_token_obj = Token.objects.get(name='access_token')
-        refresh_token_obj = Token.objects.get(name='refresh_token')
-        realm_id_obj = Token.objects.get(name='realm_id')
-        # create an auth_client
-        auth_client = AuthClient(
-            client_id=settings.CLIENT_ID,
-            client_secret=settings.CLIENT_SECRET,
-            access_token=access_token_obj.key,
-            environment=settings.ENVIRONMENT,
-            redirect_uri=settings.REDIRECT_URI
-        )
-        # create a quickboooks client
-        client = QuickBooks(
-            auth_client=auth_client,
-            refresh_token=refresh_token_obj.key,
-            company_id=realm_id_obj.key
-        )
-        # Bill Object
-        bill = qb_bill()
-
-        # get vendor
-        qb_vendor_obj = qb_vendor.get(self.vendor.qb_id, qb=client)
-        # create Vendor Ref
-        vendor_ref = qb_vendor_obj.to_ref()
-        bill.VendorRef = vendor_ref
-
-        # get Account
-        sims_acc_obj = Account.objects.get(name="KINGS EDU CENTRE EXPENSES")
-
-        qb_account_object = qb_account.get(sims_acc_obj.qb_id, qb=client)
-        qb_account_object_ref = qb_account_object.to_ref()
-        # Line
-        acc_based_expense_line = AccountBasedExpenseLine()
-        acc_based_expense_line.Amount = self.total
-        acc_based_expense_line.Description = self.description
-        acc_based_expense_line_detail = AccountBasedExpenseLineDetail()
-        acc_based_expense_line_detail.AccountRef = qb_account_object_ref
-        acc_based_expense_line.AccountBasedExpenseLineDetail = acc_based_expense_line_detail
-        bill.Line.append(acc_based_expense_line)
-        saved_bill = bill.save(qb=client)
-        return saved_bill
+    # def create_qb_bill(self):
+    #    access_token_obj = Token.objects.get(name='access_token')
+    #    refresh_token_obj = Token.objects.get(name='refresh_token')
+    #    realm_id_obj = Token.objects.get(name='realm_id')
+    #    # create an auth_client
+    #    auth_client = AuthClient(
+    #        client_id=settings.CLIENT_ID,
+    #        client_secret=settings.CLIENT_SECRET,
+    #        access_token=access_token_obj.key,
+    #        environment=settings.ENVIRONMENT,
+    #        redirect_uri=settings.REDIRECT_URI
+    #    )
+    #    # create a quickboooks client
+    #    client = QuickBooks(
+    #        auth_client=auth_client,
+    #        refresh_token=refresh_token_obj.key,
+    #        company_id=realm_id_obj.key
+    #    )
+    #    # Bill Object
+    #    bill = qb_bill()
+#
+    #    # get vendor
+    #    qb_vendor_obj = qb_vendor.get(self.vendor.qb_id, qb=client)
+    #    # create Vendor Ref
+    #    vendor_ref = qb_vendor_obj.to_ref()
+    #    bill.VendorRef = vendor_ref
+#
+    #    # get Account
+    #    sims_acc_obj = Account.objects.get(name="KINGS EDU CENTRE EXPENSES")
+#
+    #    qb_account_object = qb_account.get(sims_acc_obj.qb_id, qb=client)
+    #    qb_account_object_ref = qb_account_object.to_ref()
+    #    # Line
+    #    acc_based_expense_line = AccountBasedExpenseLine()
+    #    acc_based_expense_line.Amount = self.total
+    #    acc_based_expense_line.Description = self.description
+    #    acc_based_expense_line_detail = AccountBasedExpenseLineDetail()
+    #    acc_based_expense_line_detail.AccountRef = qb_account_object_ref
+    #    acc_based_expense_line.AccountBasedExpenseLineDetail = acc_based_expense_line_detail
+    #    bill.Line.append(acc_based_expense_line)
+    #    saved_bill = bill.save(qb=client)
+    #    return saved_bill
 
     def retrieve_qb_bill(self):
         pass
