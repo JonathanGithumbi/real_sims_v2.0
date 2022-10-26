@@ -35,25 +35,5 @@ urlpatterns = [
     path('payments/', include('payment.urls')),
     path('fees-structure/', include('fees_structure.urls')),
     path('expenses/', include('expenses.urls')),
-    url(r'^authenticate/', DjangoView.as_view(
-        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
-        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
-    url(r'^clientVersion/', DjangoView.as_view(
-        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
-        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
-    url(r'^closeConnection/', DjangoView.as_view(
-        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
-        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
-    url(r'^connectionError/', DjangoView.as_view(
-        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
-        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
-    url(r'^getLastError/', DjangoView.as_view(
-        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
-        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
-    url(r'^receiveResponseXML/', DjangoView.as_view(
-        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
-        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
-    url(r'^sendRequestXML/', DjangoView.as_view(
-        services=[QBWEBSERVICE], tns="http://developer.intuit.com/",
-        in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())),
+    path('qbws/',include('QBWEBSERVICE.urls'))
 ]

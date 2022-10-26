@@ -1,0 +1,5 @@
+Collecting pika
+  Downloading pika-1.3.1-py3-none-any.whl (155 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 155.3/155.3 KB 268.5 kB/s eta 0:00:00
+Installing collected packages: pika
+Successfully installed pika-1.3.1

@@ -1,5 +1,8 @@
-#the tasks  will be functions that sendRequestXML() will call to generate requests for quickbooks,
-#the task will therefore return the qbXML strings needed for any given operation to be performed in quickbooks,
-#e.g if createNewCustomer() task is queued in the views,when sendRequestXML is called, createNewCustomer() task is dequeued and sent to 
-#quickbooks
+from celery.task import task
 
+from QBWEBSERVICE.request_builder import RequestBuilder
+
+
+@task
+def build_request(request_body, realm_id):
+    RequestBuilder().process(realm_id, request_body)
