@@ -16,6 +16,6 @@ invoice_updated = Signal(providing_args=["qbd_model_mixin_obj", "realm_id"])
 realm_authenticated = Signal(providing_args=["realm"])
 qbd_first_time_connected = Signal(providing_args=["realm_id"])
 
-from django_quickbooks.signals.customer import *
-from django_quickbooks.signals.invoice import *
-from django_quickbooks.signals.qbd_task import *
+from QBWEBSERVICE.signals.customer import *
+from QBWEBSERVICE.signals.invoice import *
+from QBWEBSERVICE.signals.qbd_task import *

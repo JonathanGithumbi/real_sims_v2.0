@@ -3,9 +3,9 @@ from spyne.model.complex import Array, Unicode
 from spyne.model.primitive import Integer, String
 from spyne.service import ServiceBase
 
-from django_quickbooks import QBWC_CODES, HIGHEST_SUPPORTING_QBWC_VERSION, \
+from QBWEBSERVICE import QBWC_CODES, HIGHEST_SUPPORTING_QBWC_VERSION, \
     get_session_manager
-from django_quickbooks.signals import realm_authenticated
+from QBWEBSERVICE.signals import realm_authenticated
 
 
 class QuickBooksService(ServiceBase):

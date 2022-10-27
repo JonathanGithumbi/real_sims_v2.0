@@ -1,5 +1,5 @@
-from django_quickbooks.objects.base import BaseObject
-from django_quickbooks.validators import SchemeValidator
+from QBWEBSERVICE.objects.base import BaseObject
+from QBWEBSERVICE.validators import SchemeValidator
 
 
 class Address(BaseObject):

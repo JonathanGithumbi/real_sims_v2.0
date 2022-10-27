@@ -1,9 +1,9 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
-from django_quickbooks import QUICKBOOKS_ENUMS, qbwc_settings
-from django_quickbooks.objects.invoice import Invoice
-from django_quickbooks.processors.base import ResponseProcessor, ResponseProcessorMixin
+from QBWEBSERVICE import QUICKBOOKS_ENUMS, qbwc_settings
+from QBWEBSERVICE.objects.invoice import Invoice
+from QBWEBSERVICE.processors.base import ResponseProcessor, ResponseProcessorMixin
 
 LocalInvoice = qbwc_settings.LOCAL_MODEL_CLASSES['Invoice']
 

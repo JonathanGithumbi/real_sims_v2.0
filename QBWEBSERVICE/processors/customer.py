@@ -1,6 +1,6 @@
-from django_quickbooks import QUICKBOOKS_ENUMS, qbwc_settings
-from django_quickbooks.objects.customer import Customer
-from django_quickbooks.processors.base import ResponseProcessor, ResponseProcessorMixin
+from QBWEBSERVICE import QUICKBOOKS_ENUMS, qbwc_settings
+from QBWEBSERVICE.objects.customer import Customer
+from QBWEBSERVICE.processors.base import ResponseProcessor, ResponseProcessorMixin
 
 LocalCustomer = qbwc_settings.LOCAL_MODEL_CLASSES['Customer']
 

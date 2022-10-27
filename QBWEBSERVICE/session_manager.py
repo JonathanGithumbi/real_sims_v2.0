@@ -1,16 +1,15 @@
+from QBWEBSERVICE.queue_manager import RabbitMQManager
+from QBWEBSERVICE.exceptions import QBXMLParseError, QBXMLStatusError, QbException
+from QBWEBSERVICE.decorators import realm_connection
+from QBWEBSERVICE.core.session_manager import BaseSessionManager
+from QBWEBSERVICE import get_realm_session_model, get_realm_model, get_qbd_task_model
+from lxml import etree
+from django.utils.decorators import method_decorator
+from django.core.exceptions import ObjectDoesNotExist
 import logging
 
 logger = logging.getLogger('django')
 
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.decorators import method_decorator
-from lxml import etree
-
-from django_quickbooks import get_realm_session_model, get_realm_model, get_qbd_task_model
-from django_quickbooks.core.session_manager import BaseSessionManager
-from django_quickbooks.decorators import realm_connection
-from django_quickbooks.exceptions import QBXMLParseError, QBXMLStatusError, QbException
-from django_quickbooks.queue_manager import RabbitMQManager
 
 Realm = get_realm_model()
 RealmSession = get_realm_session_model()
@@ -49,12 +48,13 @@ class SessionManager(BaseSessionManager, RabbitMQManager):
         return self.get_queue_message_count(str(realm.id))
 
     def process_response(self, ticket, response, hresult, message):
-        from django_quickbooks import get_processors
+        from QBWEBSERVICE import get_processors
         realm = _get_realm(ticket)
         processors = get_processors()
         for processor in processors:
             try:
-                processed = processor(response, hresult, message).process(realm)
+                processed = processor(
+                    response, hresult, message).process(realm)
                 if processed:
                     break
 
@@ -103,7 +103,8 @@ class SessionManager(BaseSessionManager, RabbitMQManager):
         if isIterator:
             reqXML = self._get_iterative_request(ticket)
             reqroot = etree.fromstring(bytes(str(reqXML), encoding='utf-8'))
-            iteratorRemainingCount = int(root.xpath('string(//@iteratorRemainingCount)'))
+            iteratorRemainingCount = int(root.xpath(
+                'string(//@iteratorRemainingCount)'))
             iteratorID = root.xpath('string(//@iteratorID)')
             if iteratorRemainingCount:
                 iteratornode = reqroot.xpath('//*[@iterator]')
@@ -114,5 +115,6 @@ class SessionManager(BaseSessionManager, RabbitMQManager):
                     iteratornode[0].set('requestID', str(requestID + 1))
                 iteratornode[0].set('iteratorID', iteratorID)
                 ntree = etree.ElementTree(reqroot)
-                nextreqXML = etree.tostring(ntree, xml_declaration=True, encoding='UTF-8')
+                nextreqXML = etree.tostring(
+                    ntree, xml_declaration=True, encoding='UTF-8')
                 self.publish_message(nextreqXML, _get_realm(ticket).id)

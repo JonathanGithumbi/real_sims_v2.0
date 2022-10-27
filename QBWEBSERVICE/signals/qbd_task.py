@@ -1,8 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.dispatch import receiver
 
-from django_quickbooks import get_qbd_task_model, QUICKBOOKS_ENUMS, get_realm_model
-from django_quickbooks.signals import qbd_task_create
+from QBWEBSERVICE import get_qbd_task_model, QUICKBOOKS_ENUMS, get_realm_model
+from QBWEBSERVICE.signals import qbd_task_create
 
 QBDTaskModel = get_qbd_task_model()
 RealmModel = get_realm_model()

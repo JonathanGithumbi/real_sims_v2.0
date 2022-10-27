@@ -1,15 +1,15 @@
-from django_quickbooks import QUICKBOOKS_ENUMS
-from django_quickbooks.exceptions import VALIDATION_MESSAGES, ValidationCode
-from django_quickbooks.exceptions import ValidationOptionNotFound, ValidationError
+from QBWEBSERVICE import QUICKBOOKS_ENUMS
+from QBWEBSERVICE.exceptions import VALIDATION_MESSAGES, ValidationCode
+from QBWEBSERVICE.exceptions import ValidationOptionNotFound, ValidationError
 
 
 def obj_type_validator(value):
-    from django_quickbooks.objects.base import BaseObject
+    from QBWEBSERVICE.objects.base import BaseObject
     return isinstance(value, BaseObject)
 
 
 def is_primitive(value):
-    from django_quickbooks.objects.base import BaseObject
+    from QBWEBSERVICE.objects.base import BaseObject
     return isinstance(type(value), type) and not isinstance(value, (BaseObject, list))
 
 

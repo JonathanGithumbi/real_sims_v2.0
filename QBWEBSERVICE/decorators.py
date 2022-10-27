@@ -1,6 +1,6 @@
 from django.db import connection
 
-from django_quickbooks.settings import qbwc_settings
+from core.settings import qbwc_settings
 
 
 def realm_connection():
@@ -19,7 +19,8 @@ def base_realm_tenant_connection(func):
         if hasattr(realm, 'schema_name') and hasattr(connection, 'set_schema'):
             try:
                 from django_tenants.utils import get_tenant_model
-                connection.set_tenant(get_tenant_model().objects.get(schema_name=realm.schema_name))
+                connection.set_tenant(get_tenant_model().objects.get(
+                    schema_name=realm.schema_name))
             except ImportError:
                 raise ModuleNotFoundError(
                     'django-tenants package is not installed: pip install django-quickbooks[tenant]'

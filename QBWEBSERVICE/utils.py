@@ -48,7 +48,7 @@ def random_string(length=10):
 
 
 def convert_qbd_model_to_qbdtask(obj, qb_resource, qb_operation=None, **kwargs):
-    from django_quickbooks import QUICKBOOKS_ENUMS
+    from QBWEBSERVICE import QUICKBOOKS_ENUMS
     from django.contrib.contenttypes.models import ContentType
 
     if not qb_operation:

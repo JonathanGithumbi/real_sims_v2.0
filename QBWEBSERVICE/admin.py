@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from django_quickbooks import get_realm_model, get_realm_session_model
+from QBWEBSERVICE import get_realm_model, get_realm_session_model
 
 Realm = get_realm_model()
 RealmSession = get_realm_session_model()

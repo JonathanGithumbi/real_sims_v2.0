@@ -1,6 +1,6 @@
 from django.utils.module_loading import import_string
 
-from django_quickbooks.exceptions import QBObjectNotImplemented
+from QBWEBSERVICE.exceptions import QBObjectNotImplemented
 
 ALTERNATIVES = {
     'ItemService': ('Item',),
@@ -18,14 +18,14 @@ def import_object_cls(resource_name):
         raise QBObjectNotImplemented
 
 
-from django_quickbooks.objects.customer import \
+from QBWEBSERVICE.objects.customer import \
     Customer
 
-from django_quickbooks.objects.address import \
+from QBWEBSERVICE.objects.address import \
     BillAddress, \
     ShipAddress
 
-from django_quickbooks.objects.invoice import \
+from QBWEBSERVICE.objects.invoice import \
     ItemService, \
     InvoiceLine, \
     Invoice

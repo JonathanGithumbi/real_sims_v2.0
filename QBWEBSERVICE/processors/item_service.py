@@ -1,6 +1,6 @@
-from django_quickbooks import QUICKBOOKS_ENUMS
-from django_quickbooks.objects.invoice import ItemService
-from django_quickbooks.processors import ResponseProcessor
+from QBWEBSERVICE import QUICKBOOKS_ENUMS
+from QBWEBSERVICE.objects.invoice import ItemService
+from QBWEBSERVICE.processors import ResponseProcessor
 
 
 class ItemServiceQueryResponseProcessor(ResponseProcessor):

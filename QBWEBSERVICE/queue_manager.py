@@ -4,8 +4,8 @@ import pika
 from pika import BlockingConnection, ConnectionParameters, PlainCredentials
 from pika.adapters.blocking_connection import BlockingChannel
 
-from django_quickbooks.core.queue_manager import QueueManager
-from django_quickbooks.settings import qbwc_settings
+from QBWEBSERVICE.core.queue_manager import QueueManager
+from core.settings import qbwc_settings
 
 
 class RabbitMQManager(QueueManager):

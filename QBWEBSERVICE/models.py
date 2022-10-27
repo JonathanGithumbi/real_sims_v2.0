@@ -8,10 +8,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from lxml import etree
 
-from django_quickbooks import qbwc_settings, QUICKBOOKS_ENUMS
-from django_quickbooks.exceptions import QBOperationNotFound
-from django_quickbooks.managers import RealmQuerySet, RealmSessionQuerySet, QBDTaskQuerySet
-from django_quickbooks.objects import import_object_cls
+from QBWEBSERVICE import qbwc_settings, QUICKBOOKS_ENUMS
+from QBWEBSERVICE.exceptions import QBOperationNotFound
+from QBWEBSERVICE.managers import RealmQuerySet, RealmSessionQuerySet, QBDTaskQuerySet
+from QBWEBSERVICE.objects import import_object_cls
 
 
 class RealmMixin(models.Model):

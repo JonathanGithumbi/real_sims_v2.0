@@ -1,6 +1,6 @@
-from django_quickbooks import QUICKBOOKS_ENUMS
-from django_quickbooks.objects.invoice import Txn
-from django_quickbooks.services.base import Service
+from QBWEBSERVICE import QUICKBOOKS_ENUMS
+from QBWEBSERVICE.objects.invoice import Txn
+from QBWEBSERVICE.services.base import Service
 
 
 class InvoiceService(Service):

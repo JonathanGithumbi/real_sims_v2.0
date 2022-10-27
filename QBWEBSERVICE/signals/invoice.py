@@ -1,8 +1,8 @@
 from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
 
-from django_quickbooks import get_realm_model, QUICKBOOKS_ENUMS
-from django_quickbooks.signals import invoice_created, invoice_updated, qbd_task_create
+from QBWEBSERVICE import get_realm_model, QUICKBOOKS_ENUMS
+from QBWEBSERVICE.signals import invoice_created, invoice_updated, qbd_task_create
 
 RealmModel = get_realm_model()
 

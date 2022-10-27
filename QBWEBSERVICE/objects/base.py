@@ -1,12 +1,12 @@
 import logging
 from abc import ABC
 
-from django_quickbooks import QUICKBOOKS_ENUMS
-from django_quickbooks.exceptions import QBObjectServiceNotImplemented
-from django_quickbooks.exceptions import ValidationError
-from django_quickbooks.objects import import_object_cls
-from django_quickbooks.utils import xml_setter
-from django_quickbooks.validators import SchemeValidator, is_primitive, is_list
+from QBWEBSERVICE import QUICKBOOKS_ENUMS
+from QBWEBSERVICE.exceptions import QBObjectServiceNotImplemented
+from QBWEBSERVICE.exceptions import ValidationError
+from QBWEBSERVICE.objects import import_object_cls
+from QBWEBSERVICE.utils import xml_setter
+from QBWEBSERVICE.validators import SchemeValidator, is_primitive, is_list
 
 
 def _default_value_setter(key, type):

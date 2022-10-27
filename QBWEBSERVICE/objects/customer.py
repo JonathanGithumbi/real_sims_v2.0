@@ -1,5 +1,5 @@
-from django_quickbooks.objects.base import BaseObject
-from django_quickbooks.validators import SchemeValidator
+from QBWEBSERVICE.objects.base import BaseObject
+from QBWEBSERVICE.validators import SchemeValidator
 
 
 class Customer(BaseObject):
@@ -33,5 +33,5 @@ class Customer(BaseObject):
 
     @staticmethod
     def get_service():
-        from django_quickbooks.services.customer import CustomerService
+        from QBWEBSERVICE.services.customer import CustomerService
         return CustomerService

@@ -1,6 +1,6 @@
-from django_quickbooks import QUICKBOOKS_ENUMS
-from django_quickbooks.objects.base import BaseObject
-from django_quickbooks.validators import SchemeValidator
+from QBWEBSERVICE import QUICKBOOKS_ENUMS
+from QBWEBSERVICE.objects.base import BaseObject
+from QBWEBSERVICE.validators import SchemeValidator
 
 
 class ItemService(BaseObject):
@@ -13,7 +13,7 @@ class ItemService(BaseObject):
 
     @staticmethod
     def get_service():
-        from django_quickbooks.services.item_service import ServiceOfItemService
+        from QBWEBSERVICE.services.item_service import ServiceOfItemService
         return ServiceOfItemService
 
 
@@ -45,7 +45,7 @@ class Invoice(BaseObject):
 
     @staticmethod
     def get_service():
-        from django_quickbooks.services.invoice import InvoiceService
+        from QBWEBSERVICE.services.invoice import InvoiceService
         return InvoiceService
 
 

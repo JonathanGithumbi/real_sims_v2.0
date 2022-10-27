@@ -3,9 +3,9 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from lxml import etree
 
-from django_quickbooks import QBXML_RESPONSE_STATUS_CODES
-from django_quickbooks.decorators import realm_connection
-from django_quickbooks.exceptions import QBXMLParseError, QBXMLStatusError
+from QBWEBSERVICE import QBXML_RESPONSE_STATUS_CODES
+from QBWEBSERVICE.decorators import realm_connection
+from QBWEBSERVICE.exceptions import QBXMLParseError, QBXMLStatusError
 
 
 class ResponseProcessor:

@@ -1,5 +1,5 @@
-from django_quickbooks import QUICKBOOKS_ENUMS
-from django_quickbooks.utils import get_xml_meta_info, xml_setter
+from QBWEBSERVICE import QUICKBOOKS_ENUMS
+from QBWEBSERVICE.utils import get_xml_meta_info, xml_setter
 
 
 class Service:
