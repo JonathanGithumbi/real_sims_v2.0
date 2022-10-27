@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'bill_payment',
     
     'django.contrib.admin',
-    
+    'QBWEBSERVICE',
     'core',
     'expenses'
 

@@ -104,7 +104,7 @@ class Realm(RealmMixin):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        app_label='Realm'
+        db_table = "Realm_realm"
         abstract = False
 
 
@@ -113,7 +113,7 @@ class RealmSession(RealmSessionMixin):
         Realm, on_delete=models.CASCADE, related_name='sessions')
 
     class Meta:
-        app_label='RealmSession'
+        app_label = 'RealmSession'
         abstract = False
 
 

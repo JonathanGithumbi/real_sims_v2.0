@@ -35,5 +35,5 @@ urlpatterns = [
     path('payments/', include('payment.urls')),
     path('fees-structure/', include('fees_structure.urls')),
     path('expenses/', include('expenses.urls')),
-    path('qbws/',include('QBWEBSERVICE.urls'))
+    path(r'^qwc/',include('QBWEBSERVICE.urls'))
 ]

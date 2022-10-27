@@ -143,3 +143,6 @@ should be able to serve as the central point of adding transactions to an expens
 -theres a bug in expenses table when you try to discard a transaction, it discards a confirmed transaction instead of discarding itself
 
 -I HAVE DECIDED NOT TO INCLUDE A FORGORT PASSWORD FEATURE, TO REDUCE THE RISK OF A SECURITY BREACH.
+
+
+- you should automate the process of creating a new realm for eACH OF YOUR USERS 

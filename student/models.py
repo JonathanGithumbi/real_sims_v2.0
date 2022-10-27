@@ -14,6 +14,8 @@ from django.conf import ENVIRONMENT_VARIABLE, settings
 
 from quickbooks.exceptions import QuickbooksException
 
+from QBWEBSERVICE.models import QBDModelMixin
+
 
 class AdmissionNumber(models.Model):
     """Generates the unformatted admission number"""
@@ -22,8 +24,10 @@ class AdmissionNumber(models.Model):
     def __str__(self):
         return self.id
 
+# inherit the QBDModelMixin to the model that you want to sync with QB
 
-class Student(models.Model):
+
+class Student(QBDModelMixin):
     """this model represents a student enrolled in school"""
 
     class Meta:
@@ -79,57 +83,6 @@ class Student(models.Model):
         else:
             return True
 
-    def create_qb_customer(self):
-        # create customer
-        access_token_obj = Token.objects.get(name='access_token')
-        refresh_token_obj = Token.objects.get(name='refresh_token')
-        realm_id_obj = Token.objects.get(name='realm_id')
-        # create an auth_client
-        auth_client = AuthClient(
-            client_id=settings.CLIENT_ID,
-            client_secret=settings.CLIENT_SECRET,
-            access_token=access_token_obj.key,
-            environment=settings.ENVIRONMENT,
-            redirect_uri=settings.REDIRECT_URI
-        )
-        # create a quickboooks client
-        client = QuickBooks(
-            auth_client=auth_client,
-            refresh_token=refresh_token_obj.key,
-            company_id=realm_id_obj.key
-        )
-
-        customer = Customer()
-        customer.DisplayName = self.first_name + ' ' + \
-            self.middle_name + ' ' + self.last_name
-        saved_customer = customer.save(qb=client)
-        return saved_customer
-
-    def update_qb_customer(self, student):
-        access_token_obj = Token.objects.get(name='access_token')
-        refresh_token_obj = Token.objects.get(name='refresh_token')
-        realm_id_obj = Token.objects.get(name='realm_id')
-        # create an auth_client
-        auth_client = AuthClient(
-            client_id=settings.CLIENT_ID,
-            client_secret=settings.CLIENT_SECRET,
-            access_token=access_token_obj.key,
-            environment=settings.ENVIRONMENT,
-            redirect_uri=settings.REDIRECT_URI
-        )
-        # create a quickboooks client
-        client = QuickBooks(
-            auth_client=auth_client,
-            refresh_token=refresh_token_obj.key,
-            company_id=realm_id_obj.key
-        )
-        customer = Customer.get(student.qb_id, qb=client)
-        customer.DisplayName = student.first_name + ' ' + \
-            student.middle_name + ' ' + student.last_name
-
-        customer.save(qb=client)
-        return customer
-
     def save(self, *args, **kwargs):
         # saves the model to the Db
         # Generate admission number
@@ -142,13 +95,75 @@ class Student(models.Model):
         # Assign Initial Grade
         self.current_grade = self.grade_admitted_to
 
-        # Add create customer task to queue
-        result = createCustomer.delay(self)
-        # if result == unsuccessfull:
-        #    Retry
-        # else:
-        #    apply sync and id variables to objecct
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
-    def subscribe_to_lunch(self):
-        pass
+       # implement thee 2 methods: to_qbd_obj() and from_qbd_obj
+
+    def to_qbd_obj(self, **fields):
+        from QBWEBSERVICE.objects import Customer as QBCustomer
+        # map your fields to the qbd_obj fields
+        return QBCustomer(Name=self.__str__(),
+                          IsActive=True,
+                          Phone=self.phone,
+                          )
+
+    @classmethod
+    def from_qbd_obj(cls, qbd_obj):
+        # map qbd_obj fields to your model fields
+        return cls(
+            first_name=qbd_obj.Name,
+            phone=qbd_obj.Phone,
+            qbd_object_id=qbd_obj.ListID,
+            qbd_object_version=qbd_obj.EditSequence
+        )
+
+    # def update_qb_customer(self, student):
+    #    access_token_obj = Token.objects.get(name='access_token')
+    #    refresh_token_obj = Token.objects.get(name='refresh_token')
+    #    realm_id_obj = Token.objects.get(name='realm_id')
+    #    # create an auth_client
+    #    auth_client = AuthClient(
+    #        client_id=settings.CLIENT_ID,
+    #        client_secret=settings.CLIENT_SECRET,
+    #        access_token=access_token_obj.key,
+    #        environment=settings.ENVIRONMENT,
+    #        redirect_uri=settings.REDIRECT_URI
+    #    )
+    #    # create a quickboooks client
+    #    client = QuickBooks(
+    #        auth_client=auth_client,
+    #        refresh_token=refresh_token_obj.key,
+    #        company_id=realm_id_obj.key
+    #    )
+    #    customer = Customer.get(student.qb_id, qb=client)
+    #    customer.DisplayName = student.first_name + ' ' + \
+    #        student.middle_name + ' ' + student.last_name
+#
+    #    customer.save(qb=client)
+    #    return customer
+
+# def create_qb_customer(self):
+    #    # create customer
+    #    access_token_obj = Token.objects.get(name='access_token')
+    #    refresh_token_obj = Token.objects.get(name='refresh_token')
+    #    realm_id_obj = Token.objects.get(name='realm_id')
+    #    # create an auth_client
+    #    auth_client = AuthClient(
+    #        client_id=settings.CLIENT_ID,
+    #        client_secret=settings.CLIENT_SECRET,
+    #        access_token=access_token_obj.key,
+    #        environment=settings.ENVIRONMENT,
+    #        redirect_uri=settings.REDIRECT_URI
+    #    )
+    #    # create a quickboooks client
+    #    client = QuickBooks(
+    #        auth_client=auth_client,
+    #        refresh_token=refresh_token_obj.key,
+    #        company_id=realm_id_obj.key
+    #    )
+#
+    #    customer = Customer()
+    #    customer.DisplayName = self.first_name + ' ' + \
+    #        self.middle_name + ' ' + self.last_name
+    #    saved_customer = customer.save(qb=client)
+    #    return saved_customer
