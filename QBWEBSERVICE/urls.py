@@ -2,10 +2,10 @@ from django.urls import path
 from spyne.protocol.soap import Soap11
 from spyne.server.django import DjangoView
 
-from QBWEBSERVICE.views import QuickBooksService, support
+from QBWEBSERVICE.views import QuickBooksService, Support
 
 urlpatterns = [
-    path('quickbooks-desktop/support/', support, name="support"),
+    path('quickbooks-desktop/support/',  Support.as_view()),
     path('quickbooks-desktop/', DjangoView.as_view(
         services=[QuickBooksService],
         tns='http://developer.intuit.com/',

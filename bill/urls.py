@@ -10,6 +10,6 @@ urlpatterns = [
     path('summaries/', views.view_summaries, name="bill_summaries"),
     path('topup/', views.topup, name="topup"),
     path('summaries/bill-distribution-api',
-         views.BillDistributionChart.as_view())
+         views.chart_data, name="chart_data")
 
 ]

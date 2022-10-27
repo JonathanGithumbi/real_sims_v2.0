@@ -5,9 +5,6 @@ from .forms import CreateExpenseForm, EditExpenseForm
 from django.urls import reverse
 from django.contrib import messages
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
 
 @login_required()
 def expenses(request):
@@ -100,19 +97,5 @@ def summaries(request):
     return render(request, 'expenses/expense_summary.html')
 
 
-class ExpenseDistributionChart(APIView):
-    """This class view builds the bill distribution pie chart"""
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request, format=None):
-        labels = [
-            'January', 'February', 'March', 'April', 'May', 'June', 'July'
-        ]
-        chartLabel = "my data"
-        chartdata = [0, 10, 5, 2, 20, 30, 45]
-        data = {
-            "labels": labels,
-            'chartLabel': chartLabel,
-            "chartdata": chartdata, }
-        return Response(data)
+def chart_data(request):
+    pass

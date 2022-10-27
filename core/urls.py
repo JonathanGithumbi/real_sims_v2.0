@@ -20,7 +20,7 @@ from django.urls import re_path as url
 from spyne.protocol.soap import Soap11
 from spyne.server.django import DjangoView
 
-from QBWEBSERVICE.views import qb_web_service, app, QBWEBSERVICE
+#from QBWEBSERVICE.views import qb_web_service, app, QBWEBSERVICE
 
 
 urlpatterns = [

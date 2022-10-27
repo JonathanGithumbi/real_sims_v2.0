@@ -9,5 +9,5 @@ urlpatterns = [
     path('discard-expense/<int:id>', views.discard_expense, name='discard_expense'),
     path('summaries/', views.summaries, name='expense_summaries'),
     path('summaries/expense-distribution-api',
-         views.ExpenseDistributionChart.as_view())
+         views.chart_data, name='chart_data')
 ]

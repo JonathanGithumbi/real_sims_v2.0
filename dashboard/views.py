@@ -12,8 +12,7 @@ from invoice.models import Invoice
 from academic_calendar.models import AcademicCalendar
 from payment.models import Payment
 from django.contrib.auth.decorators import login_required
-from rest_framework.views import APIView
-from rest_framework.response import Response
+
 
 
 @login_required()
@@ -103,18 +102,6 @@ def get_no_students_per_grade(request):
 
 
 
-class ChartData(APIView):
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request, format=None):
-        labels = [
-            'January', 'February', 'March', 'April', 'May', 'June', 'July'
-        ]
-        chartLabel = "my data"
-        chartdata = [0, 10, 5, 2, 20, 30, 45]
-        data = {
-            "labels": labels,
-            'chartLabel': chartLabel,
-            "chartdata": chartdata, }
-        return Response(data)
+@login_required()
+def chart_data(request):
+    pass

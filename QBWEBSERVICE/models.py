@@ -104,6 +104,7 @@ class Realm(RealmMixin):
     is_active = models.BooleanField(default=True)
 
     class Meta:
+        app_label='Realm'
         abstract = False
 
 
@@ -112,6 +113,7 @@ class RealmSession(RealmSessionMixin):
         Realm, on_delete=models.CASCADE, related_name='sessions')
 
     class Meta:
+        app_label='RealmSession'
         abstract = False
 
 
@@ -120,6 +122,7 @@ class QBDTask(QBDTaskMixin):
         Realm, on_delete=models.CASCADE, related_name='qb_tasks')
 
     class Meta:
+        app_label = 'QBDTask'
         abstract = False
 
 
@@ -131,6 +134,7 @@ class QBDModelMixin(models.Model):
         max_length=127, null=True, editable=False)
 
     class Meta:
+        app_label = 'QBDModelMixin'
         abstract = True
 
     @property

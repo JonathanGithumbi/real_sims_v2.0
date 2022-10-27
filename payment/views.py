@@ -22,8 +22,6 @@ from django.contrib import messages
 from invoice.models import Item as Invoice_Item
 from grade.models import Grade
 from django.contrib.auth.decorators import login_required
-from rest_framework.views import APIView
-from rest_framework.response import Response
 
 
 @login_required()
@@ -571,19 +569,5 @@ def payment_summaries(request):
     return render(request, 'payment/payment_summaries.html')
 
 
-
-class PaymentTrendChart(APIView):
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request, format=None):
-        labels = [
-            'January', 'February', 'March', 'April', 'May', 'June', 'July'
-        ]
-        chartLabel = "my data"
-        chartdata = [0, 10, 5, 2, 20, 30, 45]
-        data = {
-            "labels": labels,
-            'chartLabel': chartLabel,
-            "chartdata": chartdata, }
-        return Response(data)
+def chart_data(request):
+    pass

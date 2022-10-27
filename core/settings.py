@@ -59,10 +59,9 @@ INSTALLED_APPS = [
     'account',
     'item',
     'bill_payment',
-    'rest_framework',
+    
     'django.contrib.admin',
-    'django_celery_results',
-    'django_celery_beat',
+    
     'core',
     'expenses'
 

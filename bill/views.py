@@ -8,13 +8,10 @@ from bill_payment.models import BillPayment
 from .forms import EditBillItemForm, TopUpForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from rest_framework.views import APIView
-from rest_framework.response import Response
+
 
 @login_required()
 # @permission_required("can_view_bill")
-
-
 def bills(request):
     #!use some kind of limiter to reduce the load on the db server
     bills = BillItem.objects.all().order_by('-created')
@@ -211,19 +208,5 @@ def topup(request):
 
 
 # One class view per chart
-class BillDistributionChart(APIView):
-    """This class view builds the bill distribution pie chart"""
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request, format=None):
-        labels = [
-            'January', 'February', 'March', 'April', 'May', 'June', 'July'
-        ]
-        chartLabel = "my data"
-        chartdata = [0, 10, 5, 2, 20, 30, 45]
-        data = {
-            "labels": labels,
-            'chartLabel': chartLabel,
-            "chartdata": chartdata, }
-        return Response(data)
+def chart_data(request):
+    pass
