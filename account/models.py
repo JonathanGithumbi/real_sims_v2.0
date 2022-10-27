@@ -5,7 +5,7 @@ from django.conf import ENVIRONMENT_VARIABLE, settings
 from quickbooks import QuickBooks
 from quickbooks.objects import Account as qb_acc
 from quickbooks.objects.base import Ref
-from .tasks import createAccount
+
 
 class Currency(models.Model):
     name = models.CharField(max_length=30, null=True, default=None)

@@ -6,12 +6,11 @@ from regex import E
 from urllib3 import Retry
 from grade.models import Grade
 
-from quickbooks.objects import Customer
+#from quickbooks.objects import Customer
 from quickbooks import QuickBooks
 from user_account.models import Token
 from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings
-from .tasks import createCustomer
 
 from quickbooks.exceptions import QuickbooksException
 
@@ -143,14 +142,13 @@ class Student(models.Model):
         # Assign Initial Grade
         self.current_grade = self.grade_admitted_to
 
-        #Add create customer task to queue
+        # Add create customer task to queue
         result = createCustomer.delay(self)
-        #if result == unsuccessfull:
+        # if result == unsuccessfull:
         #    Retry
-        #else:
+        # else:
         #    apply sync and id variables to objecct
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
     def subscribe_to_lunch(self):
         pass
-        
