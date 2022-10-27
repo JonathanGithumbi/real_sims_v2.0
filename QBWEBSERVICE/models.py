@@ -41,6 +41,7 @@ class RealmMixin(models.Model):
 
     class Meta:
         abstract = True
+        db_table = "RealmMixin_realmmixin"
 
 
 class RealmSessionMixin(models.Model):
@@ -52,6 +53,7 @@ class RealmSessionMixin(models.Model):
     objects = RealmSessionQuerySet.as_manager()
 
     class Meta:
+        db_table = "RealmSessionMixin_realmsessionmixin"
         abstract = True
 
 
@@ -66,6 +68,7 @@ class QBDTaskMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        db_table = "QBDTaskMixin_qbdtaskmixin"
         abstract = True
 
     objects = QBDTaskQuerySet.as_manager()
@@ -113,7 +116,7 @@ class RealmSession(RealmSessionMixin):
         Realm, on_delete=models.CASCADE, related_name='sessions')
 
     class Meta:
-        app_label = 'RealmSession'
+        db_table = "RealmSession_realmsession"
         abstract = False
 
 
@@ -122,7 +125,7 @@ class QBDTask(QBDTaskMixin):
         Realm, on_delete=models.CASCADE, related_name='qb_tasks')
 
     class Meta:
-        app_label = 'QBDTask'
+        db_table = "QBDTask_qbdtask"
         abstract = False
 
 
@@ -134,7 +137,7 @@ class QBDModelMixin(models.Model):
         max_length=127, null=True, editable=False)
 
     class Meta:
-        app_label = 'QBDModelMixin'
+        db_table = "QBDModelMixin_qbdmodelmixin"
         abstract = True
 
     @property

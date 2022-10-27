@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'account',
     'item',
     'bill_payment',
-    
+
     'django.contrib.admin',
     'QBWEBSERVICE',
     'core',
@@ -216,9 +216,11 @@ DEFAULTS = {
     ),
 
     'RABBITMQ_DEFAULT_HOST': 'localhost',
-    'RABBITMQ_DEFAULT_USER': 'quickbooks',
-    'RABBITMQ_DEFAULT_PASS': 'quickbooks',
-    'RABBITMQ_DEFAULT_VHOST': 'quickbooks',
+    'RABBITMQ_DEFAULT_USER': 'guest',
+    'RABBITMQ_DEFAULT_PASS': 'guest',
+    'RABBITMQ_DEFAULT_VHOST': '/',
+    'RABBITMQ_DEFAULT_PORT': 5672,
+
 
     'APP_URL': 'http://localhost:8000/qwc/quickbooks-desktop/',
     'APP_SUPPORT': 'http://localhost:8000/qwc/quickbooks-desktop/support/',
@@ -231,7 +233,7 @@ DEFAULTS = {
     'LOCAL_MODEL_CLASSES': {
         'Invoice': '',
         'Customer': '',
-        #after understanding the default implementation, Round 2 of intergration is adding more classes, a
+        # after understanding the default implementation, Round 2 of intergration is adding more classes, a
     }
 }
 

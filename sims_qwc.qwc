@@ -1,2 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<QBWCXML><AppName>Kings Educational Centre SIMS</AppName><AppID></AppID><AppURL>http://localhost:8000/qwc/quickbooks-desktop/</AppURL><AppDescription>synchronises financial data from sims to quickbooks</AppDescription><AppSupport>http://localhost:8000/qwc/quickbooks-desktop/support/</AppSupport><UserName>491418c1-0344-4615-ac8c-6d17f3573d39</UserName><OwnerID>{1ee58da6-3051-11ea-b499-9cda3ea7afc1}</OwnerID><FileID>{ae8175e6-55d9-11ed-9dba-00155dbf4d34}</FileID><QBType>QBFS</QBType><Scheduler><RunEveryNMinutes>15</RunEveryNMinutes></Scheduler></QBWCXML>
+<QBWCXML>
+    <AppName>Kings Educational Centre SIMS</AppName>
+    <AppID></AppID>
+    <AppURL>http://localhost:8000/qwc/quickbooks-desktop/</AppURL>
+    <AppDescription>synchronises financial data from sims to quickbooks</AppDescription>
+    <AppSupport>http://localhost:8000/qwc/quickbooks-desktop/support/</AppSupport>
+    <UserName>491418c1-0344-4615-ac8c-6d17f3573d39</UserName>
+    <OwnerID>{1ee58da6-3051-11ea-b499-9cda3ea7afc1}</OwnerID>
+    <FileID>{ae8175e6-55d9-11ed-9dba-00155dbf4d34}</FileID>
+    <QBType>QBFS</QBType>
+    <Scheduler>
+        <RunEveryNMinutes>15</RunEveryNMinutes>
+    </Scheduler>
+</QBWCXML>

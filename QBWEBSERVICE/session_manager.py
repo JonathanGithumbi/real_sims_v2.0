@@ -45,7 +45,10 @@ class SessionManager(BaseSessionManager, RabbitMQManager):
         queryset.delete()
 
     def new_jobs(self, realm):
-        return self.get_queue_message_count(str(realm.id))
+        
+        queue_message_count = self.get_queue_message_count(str(realm.id))
+        
+        return queue_message_count 
 
     def process_response(self, ticket, response, hresult, message):
         from QBWEBSERVICE import get_processors

@@ -24,26 +24,40 @@ class QuickBooksService(ServiceBase):
         return_array = []
         realm = session_manager.authenticate(
             username=strUserName, password=strPassword)
+
         if realm and realm.is_active:
+
             realm_authenticated.send(sender=realm.__class__, realm=realm)
+
             if not session_manager.in_session(realm):
-                session_manager.add_new_jobs(realm)
+
+                session_manager.add_new_jobs(realm)  # Freezes Here
+
                 if session_manager.new_jobs(realm):
+
                     ticket = session_manager.set_ticket(realm)
+
                     return_array.append(ticket)
+
                     return_array.append(QBWC_CODES.CC)
+
                     # TODO: need to think about appropriate management of delays
                     # returnArray.append(str(settings.QBWC_UPDATE_PAUSE_SECONDS))
                     # returnArray.append(str(settings.QBWC_MINIMUM_UPDATE_SECONDS))
                     # returnArray.append(str(settings.QBWC_MINIMUM_RUN_EVERY_NSECONDS))
                 else:
+
                     return_array.append(QBWC_CODES.NONE)
+
                     return_array.append(QBWC_CODES.NONE)
+
             else:
                 return_array.append(QBWC_CODES.BUSY)
+
                 return_array.append(QBWC_CODES.BUSY)
         else:
             return_array.append(QBWC_CODES.NVU)
+
             return_array.append(QBWC_CODES.NVU)
 
         print('authenticate(): authenticated_array=%s' % return_array)
