@@ -1,3 +1,4 @@
+from QBWEBSERVICE.models import QBDModelMixin
 from calendar import calendar
 from django.db import models
 from fees_structure.models import TERM_CHOICES
@@ -36,7 +37,7 @@ class InvoiceNumber(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
-class Invoice(models.Model):
+class Invoice(models.Model, QBModelMixin):
     """This is the invoice that has invoice items within it"""
     student = models.ForeignKey(
         Student, on_delete=models.DO_NOTHING)  # added in views
@@ -245,7 +246,7 @@ class BalanceTable(models.Model):
 
     def get_amount_dues(self):
         """return the objects that have a balance of <0 """
-        if self.balance < 0 :
+        if self.balance < 0:
             return abs(self.balance)
         else:
             return 0

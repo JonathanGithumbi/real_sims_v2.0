@@ -15,19 +15,19 @@ from invoice import utils as invoice_utils
 from django.contrib import messages
 from item.models import Item as SalesItem
 
-from quickbooks import QuickBooks
-from quickbooks.objects import Customer
+#from quickbooks import QuickBooks
+#from quickbooks.objects import Customer
 
-from user_account.models import Token
-from intuitlib.client import AuthClient
+#from user_account.models import Token
+#from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings
 
-from quickbooks.exceptions import QuickbooksException
-from quickbooks.objects import Invoice as QB_Invoice
-from quickbooks.objects.detailline import SalesItemLine, SalesItemLineDetail
-from quickbooks.objects import Customer
-from quickbooks.objects import Item as QB_Item
-from quickbooks.exceptions import QuickbooksException
+#from quickbooks.exceptions import QuickbooksException
+#from quickbooks.objects import Invoice as QB_Invoice
+#from quickbooks.objects.detailline import SalesItemLine, SalesItemLineDetail
+#from quickbooks.objects import Customer
+#from quickbooks.objects import Item as QB_Item
+#from quickbooks.exceptions import QuickbooksException
 from datetime import date
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -47,22 +47,9 @@ def register_student(request):
             # save the student to the database
             student = form.save()
 
-            # save teh student as a customer in qb
-            # Even if an exception occurs, i dont want sims to crash, sims should work at db level and save the task to retry later
-            try:
-                qb_customer = student.create_qb_customer()
-            except:
-                # find out why the exception occurred
-                # handle the exception with the ultimate aim of getting the customer to quickbooks
-                # log
-                pass
-            else:
-                # also log
-                student.synced = True
-                student.qb_id = qb_customer.Id
-                student.save(update_fields=['synced', 'qb_id'])
 
             # charge the student the term's fees
+            
             # create invoice for student
             invoice = Invoice.objects.create(
                 student=student,
@@ -106,14 +93,7 @@ def register_student(request):
             invoice.amount = total_amount
             invoice.save(update_fields=['balance', 'amount'])
 
-            # record that invoice to quickbooks quickbooks
-
-            qb_invoice = invoice.create_qb_invoice(items=items)
-
-            invoice.synced = True
-            invoice.qb_id = qb_invoice.Id
-            invoice.save(update_fields=['synced', 'qb_id'])
-
+            
             # Create Balance record for student
             balance_obj = BalanceTable.objects.create(
                 student=student,

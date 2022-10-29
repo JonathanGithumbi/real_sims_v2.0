@@ -60,7 +60,7 @@ class Student(QBDModelMixin):
     qb_id = models.CharField(max_length=20, null=True, default=None)
 
     def __str__(self):
-        return self.first_name + ' ' + self.middle_name + ' ' + self.last_name
+        return f"{self.first_name} {self.middle_name} {self.last_name}"
 
     def get_absolute_url(self):
         from django.urls import reverse
@@ -103,8 +103,6 @@ class Student(QBDModelMixin):
         from QBWEBSERVICE.objects import Customer as QBCustomer
         # map your fields to the qbd_obj fields
         return QBCustomer(Name=self.__str__(),
-                          IsActive=True,
-                          Phone=self.phone,
                           )
 
     @classmethod
@@ -112,9 +110,7 @@ class Student(QBDModelMixin):
         # map qbd_obj fields to your model fields
         return cls(
             first_name=qbd_obj.Name,
-            phone=qbd_obj.Phone,
-            qbd_object_id=qbd_obj.ListID,
-            qbd_object_version=qbd_obj.EditSequence
+
         )
 
     # def update_qb_customer(self, student):
