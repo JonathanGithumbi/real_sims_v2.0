@@ -1,0 +1,189 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <br/>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible small fade show">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="card o-hidden border-0 shadow-sm my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="p-5">
+                            <div class="text-left">
+                                <h5>Add Fees Item</h5>
+                            </div>
+                            <hr>
+                            <form action="{% url 'create_fees_structure' %}"
+                                  method="post"
+                                  name="add_fees_item_form">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.description.errors }}
+                                        <label for="{{ form.description.id_for_label }}">Description:</label>
+                                        {{ form.description }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.grades.errors }}
+                                        <label for="{{ form.grades.id_for_label }}">Apply to Grades:</label>
+                                        {{ form.grades }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.amount.errors }}
+                                        <label for="{{ form.amount.id_for_label }}">Amount:</label>
+                                        {{ form.amount }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.occurence.errors }}
+                                        <label for="{{ form.occurence.id_for_label }}">Occurence:</label>
+                                        {{ form.occurence }}
+                                    </div>
+                                </div>
+                                <div class="row" id='period-row'>
+                                    <div class="col">
+                                        {{ form.period.errors }}
+                                        <label for="{{ form.period.id_for_label }}">Period:</label>
+                                        {{ form.period }}
+                                    </div>
+                                </div>
+                                <div class="row" id='specific-terms-row'>
+                                    <div class="col">
+                                        {{ form.specific_terms.errors }}
+                                        <label for="{{ form.specific_terms.id_for_label }}">Specific Terms:</label>
+                                        {{ form.specific_terms }}
+                                    </div>
+                                </div>
+                                <div class="row" id='one-time-row'>
+                                    <div class="col">
+                                        {{ form.year.errors }}
+                                        <label for="{{ form.year.id_for_label }}">Year:</label>
+                                        {{ form.year }}
+                                    </div>
+                                    <div class="col">
+                                        {{ form.term.errors }}
+                                        <label for="{{ form.term.id_for_label }}">Term:</label>
+                                        {{ form.term }}
+                                    </div>
+                                </div>
+                                <br>
+                                <a class="btn btn-primary btn-sm"
+                                   onclick="confirm_add_fees_item()"
+                                   href="#"
+                                   data-toggle="modal"
+                                   data-target="#confirm_add_fees_item_modal">Submit</a>
+                                <div class="modal fade" id="confirm_add_fees_item_modal">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Confirm Fees Item Details</h4>
+                                            </div>
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                <div id="description_div">
+                                                    <b>Description: </b> <span id="description_area"></span>
+                                                </div>
+                                                <br/>
+                                                <div id="grades_div">
+                                                    <b>Applied to Grades: </b> <span id="grades_area"></span>
+                                                </div>
+                                                <br/>
+                                                <div id="amount_div">
+                                                    <b>Amount: </b> <span id="amount_area"></span>
+                                                </div>
+                                                <br/>
+                                                <div id="occurence_div">
+                                                    <b>Occurence: </b> <span id="occurence_area"></span>
+                                                </div>
+                                                <br/>
+                                                <div id="period_div">
+                                                    <b>Period: </b> <span id="period_area"></span>
+                                                </div>
+                                                <br/>
+                                                <div id="specific_terms_div">
+                                                    <b>Specific Terms: </b> <span id="specific_terms_area"></span>
+                                                </div>
+                                                <br/>
+                                                <div id="year_div">
+                                                    <b>Year: </b> <span id="year_area"></span>
+                                                </div>
+                                                <br/>
+                                                <div id="term_div">
+                                                    <b>Term: </b> <span id="term_area"></span>
+                                                </div>
+                                                <br/>
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                                <input type="submit"
+                                                       class="btn btn-success btn-sm"
+                                                       value="Submit"
+                                                       data-bs-dismiss="modal"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block script_block %}
+            <script>
+            $(function(){
+                $("#id_occurence_0").prop("checked",false);
+                $("#id_occurence_1").prop("checked",false);
+                $("#period-row").hide();
+                $("#specific-terms-row").hide();
+                $("#one-time-row").hide();
+                $("#id_occurence_0").click(function(){
+                    $("#year").val("");
+                    $("#term").val("");
+                    $("#period-row").show();
+                    $("#one-time-row").hide();
+                    $("#specific-terms-row").hide();
+                });
+                $("#id_occurence_1").click(function(){
+                    $("#period_1").prop("checked",false);
+                    $("#period_0").prop("checked",false);
+                    $("#specific_terms_0").prop("checked",false);
+                    $("#specific_terms_1").prop("checked",false);
+                    $("#specific_terms_2").prop("checked",false);
+                    $("#period-row").hide();
+                    $("#specific-terms-row").hide();
+                    $("#one-time-row").show();
+                });
+                $("#period_1").click(function(){
+                    
+                    $("#specific-terms-row").show();
+                    $("#one-time-row").hide();
+                });
+                $("#period_0").click(function(){
+                    $("#specific_terms_0").prop("checked",false);
+                    $("#specific_terms_1").prop("checked",false);
+                    $("#specific_terms_2").prop("checked",false);
+                    $("#specific-terms-row").hide();
+                });
+                });
+            </script>
+        {% endblock %}
+    {% endblock %}

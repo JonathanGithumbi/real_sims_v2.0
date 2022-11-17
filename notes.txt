@@ -146,3 +146,17 @@ should be able to serve as the central point of adding transactions to an expens
 
 
 - you should automate the process of creating a new realm for eACH OF YOUR USERS 
+
+
+--im going to allow the school management to add or remove items the school charges for.
+-- items can be applied to a given grade so that they're the only ones who'll  be charged for that item, or the item can be applied to all students
+-- all items must be applied after a term ends so that they take effect when the next term begins
+
+
+---IT IS REALLY IMPORTANT THAT THERE BE A POLICY ENCOURAGING PARENTS TO INFORM US WHETHER THE CHILD WILL BE TRANSFERRING AFTER A CERTAIN TERM.  SO THAT OVER THE HOLIDAYS, 
+
+--you need to find a way to backup the kings educational centre qbfile,
+
+
+---Since they have been saving their transactions to qb, i can support migration of data into sims.
+--- DOnt be a dummy , charge them separately for migrating records, 

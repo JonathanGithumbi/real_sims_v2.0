@@ -37,10 +37,13 @@ class InvoiceNumber(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
-class Invoice(models.Model, QBModelMixin):
+class Invoice(QBDModelMixin):
+    class Meta:
+        db_table = "Invoice_invoice"
     """This is the invoice that has invoice items within it"""
     student = models.ForeignKey(
         Student, on_delete=models.DO_NOTHING)  # added in views
+    modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)  # created on save()
     year = models.IntegerField(null=True, default=None)  # added in views
     term = models.IntegerField(null=True, default=None)  # added in views
@@ -48,138 +51,32 @@ class Invoice(models.Model, QBModelMixin):
                                  default=0)  # to be added in registration views
     grade = models.ForeignKey(
         Grade, on_delete=models.DO_NOTHING, null=True, default=None)
-
-    synced = models.BooleanField(default=False)  # added in save
     # updated when creating payments
     paid = models.BooleanField(default=False, null=True)
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0,
                                   null=True)  # hOW MUCH IS LEFT ON THE PAYMENT
-    qb_id = models.CharField(max_length=255, null=True, default=None)
+
+    @classmethod
+    def to_qbd_obj(self, **fields):
+        from QBWEBSERVICE.objects import Invoice as QBInvoice
+        return QBInvoice(
+            Customer=self.student,
+            TimeCreated=self.created,
+            TxnDate=self.created,
+        )
+
+    @classmethod
+    def from_qbd_obj(cls, qbd_obj):
+        return cls(
+            qbd_object_id=qbd_obj
+
+        )
 
     def status(self):
         if self.balance == 0:
             return 'cleared'
         else:
             return 'not cleared'
-
-    def create_qb_invoice(self, items):
-        access_token_obj = Token.objects.get(name='access_token')
-        refresh_token_obj = Token.objects.get(name='refresh_token')
-        realm_id_obj = Token.objects.get(name='realm_id')
-        # create an auth_client
-        auth_client = AuthClient(
-            client_id=settings.CLIENT_ID,
-            client_secret=settings.CLIENT_SECRET,
-            access_token=access_token_obj.key,
-            environment=settings.ENVIRONMENT,
-            redirect_uri=settings.REDIRECT_URI
-        )
-        # create a quickboooks client
-        client = QuickBooks(
-            auth_client=auth_client,
-            refresh_token=refresh_token_obj.key,
-            company_id=realm_id_obj.key
-        )
-        # create the invoice obj
-        qb_invoice_obj = QB_Invoice()
-        income_account = QB_Account.get(id=123, qb=client)
-        income_account_ref = income_account.to_ref()
-        # Populate the CustomerRef
-        # get qb customer
-        customer = Customer.get(id=self.student.qb_id, qb=client)
-        # populate CustomerRef
-        qb_invoice_obj.CustomerRef = customer.to_ref()
-        qb_invoice_obj.class_dict['DepositToAccountRef'] = income_account_ref
-
-        # Add lines to invoice obj
-        # get the items sold
-
-        # iterate through each item to create a line
-        for item in items:
-            # create a line line detail to go into the line
-            sales_item_line_detail = SalesItemLineDetail()
-
-            # Populate line detail's ItemRef
-            # get local item obj
-            item_obj = sales_item.objects.get(name=item)
-            # get qb item obj
-            qb_item_obj = QB_Item.get(id=item_obj.qb_id, qb=client)
-            # assign ItemRef
-            sales_item_line_detail.ItemRef = qb_item_obj.to_ref()
-            # populate line detail quantity
-            sales_item_line_detail.Qty = 1
-            # populate the line detail's unit price - to be determined from the fees structure
-            calendar_obj = AcademicCalendar()
-            current_grade = self.student.current_grade
-            term = calendar_obj.get_term()
-            fee_structure_obj = FeesStructure.objects.get(
-                item=item_obj, grade=current_grade, term=term)
-            sales_item_line_detail.UnitPrice = fee_structure_obj.amount
-
-            # create line
-            sales_item_line = SalesItemLine()
-            sales_item_line.SalesItemLineDetail = sales_item_line_detail
-            sales_item_line.Amount = fee_structure_obj.amount
-            sales_item_line.Description = item
-
-            qb_invoice_obj.Line.append(sales_item_line)
-
-        saved_qb_invoice = qb_invoice_obj.save(qb=client)
-        return saved_qb_invoice
-
-    def update_qb_invoice(self, item):
-        # Reflect changes in the quickbooks by sparse updating the invoice
-        access_token_obj = Token.objects.get(name='access_token')
-        refresh_token_obj = Token.objects.get(name='refresh_token')
-        realm_id_obj = Token.objects.get(name='realm_id')
-
-        # create an auth_client
-        auth_client = AuthClient(
-            client_id=settings.CLIENT_ID,
-            client_secret=settings.CLIENT_SECRET,
-            access_token=access_token_obj.key,
-            environment=settings.ENVIRONMENT,
-            redirect_uri=settings.REDIRECT_URI
-        )
-        # create a quickboooks client
-        client = QuickBooks(
-            auth_client=auth_client,
-            refresh_token=refresh_token_obj.key,
-            company_id=realm_id_obj.key
-        )
-        # Get qb_invoice
-        qb_invoice_obj = QB_Invoice.get(self.qb_id, qb=client)
-        # Add a sales itemline for lunch
-        # create a line line detail to go into the line
-        sales_item_line_detail = SalesItemLineDetail()
-
-        # Populate line detail's ItemRef
-
-        # get qb item obj
-        qb_item_obj = QB_Item.get(id=item.qb_id, qb=client)
-        # assign ItemRef
-        sales_item_line_detail.ItemRef = qb_item_obj.to_ref()
-        # populate line detail quantity
-        sales_item_line_detail.Qty = 1
-        # populate the line detail's unit price - to be determined from the fees structure
-        calendar_obj = AcademicCalendar()
-        current_grade = self.student.current_grade
-        term = calendar_obj.get_term()
-        fee_structure_obj = FeesStructure.objects.get(
-            item=item, grade=current_grade, term=term)
-        sales_item_line_detail.UnitPrice = fee_structure_obj.amount
-
-        # create line
-        sales_item_line = SalesItemLine()
-        sales_item_line.SalesItemLineDetail = sales_item_line_detail
-        sales_item_line.Amount = fee_structure_obj.amount
-        sales_item_line.Description = item.name
-
-        qb_invoice_obj.Line.append(sales_item_line)
-
-        # save the invoice
-        qb_invoice_obj.save(qb=client)
-        return qb_invoice_obj
 
     def get_term(self):
         academic_calendar_obj = AcademicCalendar()
@@ -250,3 +147,124 @@ class BalanceTable(models.Model):
             return abs(self.balance)
         else:
             return 0
+
+
+#
+    # def create_qb_invoice(self, items):
+    #    access_token_obj = Token.objects.get(name='access_token')
+    #    refresh_token_obj = Token.objects.get(name='refresh_token')
+    #    realm_id_obj = Token.objects.get(name='realm_id')
+    #    # create an auth_client
+    #    auth_client = AuthClient(
+    #        client_id=settings.CLIENT_ID,
+    #        client_secret=settings.CLIENT_SECRET,
+    #        access_token=access_token_obj.key,
+    #        environment=settings.ENVIRONMENT,
+    #        redirect_uri=settings.REDIRECT_URI
+    #    )
+    #    # create a quickboooks client
+    #    client = QuickBooks(
+    #        auth_client=auth_client,
+    #        refresh_token=refresh_token_obj.key,
+    #        company_id=realm_id_obj.key
+    #    )
+    #    # create the invoice obj
+    #    qb_invoice_obj = QB_Invoice()
+    #    income_account = QB_Account.get(id=123, qb=client)
+    #    income_account_ref = income_account.to_ref()
+    #    # Populate the CustomerRef
+    #    # get qb customer
+    #    customer = Customer.get(id=self.student.qb_id, qb=client)
+    #    # populate CustomerRef
+    #    qb_invoice_obj.CustomerRef = customer.to_ref()
+    #    qb_invoice_obj.class_dict['DepositToAccountRef'] = income_account_ref
+#
+    #    # Add lines to invoice obj
+    #    # get the items sold
+#
+    #    # iterate through each item to create a line
+    #    for item in items:
+    #        # create a line line detail to go into the line
+    #        sales_item_line_detail = SalesItemLineDetail()
+#
+    #        # Populate line detail's ItemRef
+    #        # get local item obj
+    #        item_obj = sales_item.objects.get(name=item)
+    #        # get qb item obj
+    #        qb_item_obj = QB_Item.get(id=item_obj.qb_id, qb=client)
+    #        # assign ItemRef
+    #        sales_item_line_detail.ItemRef = qb_item_obj.to_ref()
+    #        # populate line detail quantity
+    #        sales_item_line_detail.Qty = 1
+    #        # populate the line detail's unit price - to be determined from the fees structure
+    #        calendar_obj = AcademicCalendar()
+    #        current_grade = self.student.current_grade
+    #        term = calendar_obj.get_term()
+    #        fee_structure_obj = FeesStructure.objects.get(
+    #            item=item_obj, grade=current_grade, term=term)
+    #        sales_item_line_detail.UnitPrice = fee_structure_obj.amount
+#
+    #        # create line
+    #        sales_item_line = SalesItemLine()
+    #        sales_item_line.SalesItemLineDetail = sales_item_line_detail
+    #        sales_item_line.Amount = fee_structure_obj.amount
+    #        sales_item_line.Description = item
+#
+    #        qb_invoice_obj.Line.append(sales_item_line)
+#
+    #    saved_qb_invoice = qb_invoice_obj.save(qb=client)
+    #    return saved_qb_invoice
+
+    # def update_qb_invoice(self, item):
+    #    # Reflect changes in the quickbooks by sparse updating the invoice
+    #    access_token_obj = Token.objects.get(name='access_token')
+    #    refresh_token_obj = Token.objects.get(name='refresh_token')
+    #    realm_id_obj = Token.objects.get(name='realm_id')
+#
+    #    # create an auth_client
+    #    auth_client = AuthClient(
+    #        client_id=settings.CLIENT_ID,
+    #        client_secret=settings.CLIENT_SECRET,
+    #        access_token=access_token_obj.key,
+    #        environment=settings.ENVIRONMENT,
+    #        redirect_uri=settings.REDIRECT_URI
+    #    )
+    #    # create a quickboooks client
+    #    client = QuickBooks(
+    #        auth_client=auth_client,
+    #        refresh_token=refresh_token_obj.key,
+    #        company_id=realm_id_obj.key
+    #    )
+    #    # Get qb_invoice
+    #    qb_invoice_obj = QB_Invoice.get(self.qb_id, qb=client)
+    #    # Add a sales itemline for lunch
+    #    # create a line line detail to go into the line
+    #    sales_item_line_detail = SalesItemLineDetail()
+#
+    #    # Populate line detail's ItemRef
+#
+    #    # get qb item obj
+    #    qb_item_obj = QB_Item.get(id=item.qb_id, qb=client)
+    #    # assign ItemRef
+    #    sales_item_line_detail.ItemRef = qb_item_obj.to_ref()
+    #    # populate line detail quantity
+    #    sales_item_line_detail.Qty = 1
+    #    # populate the line detail's unit price - to be determined from the fees structure
+    #    calendar_obj = AcademicCalendar()
+    #    current_grade = self.student.current_grade
+    #    term = calendar_obj.get_term()
+    #    fee_structure_obj = FeesStructure.objects.get(
+    #        item=item, grade=current_grade, term=term)
+    #    sales_item_line_detail.UnitPrice = fee_structure_obj.amount
+#
+    #    # create line
+    #    sales_item_line = SalesItemLine()
+    #    sales_item_line.SalesItemLineDetail = sales_item_line_detail
+    #    sales_item_line.Amount = fee_structure_obj.amount
+    #    sales_item_line.Description = item.name
+#
+    #    qb_invoice_obj.Line.append(sales_item_line)
+#
+    #    # save the invoice
+    #    qb_invoice_obj.save(qb=client)
+    #    return qb_invoice_obj

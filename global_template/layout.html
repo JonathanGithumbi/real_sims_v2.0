@@ -123,7 +123,7 @@
                    data-target="#collapseExpenses"
                    aria-expanded="true"
                    aria-controls="collapseExpenses">
-                    <i class="fas fa-fw fa-receipt"></i>
+                    <i class="fas fa-fw fa-money-bill"></i>
                     <span>School Expenses</span>
                 </a>
                 <div id="collapseExpenses"
@@ -143,9 +143,8 @@
                     </div>
                 </div>
             </li>
-            <!-- Divider -->
+        <!-- Divider -->
             <hr class="sidebar-divider">
-            <!-- Heading -->
             <div class="sidebar-heading">Fees Structure</div>
             <li class="nav-item">
                 <a class="nav-link collapsed"
@@ -154,7 +153,7 @@
                    data-target="#collapseFeesStructure"
                    aria-expanded="true"
                    aria-controls="collapseFeesStructure">
-                    <i class="fas fa-fw fa-receipt"></i>
+                    <i class="fas fa-money-bill"></i>
                     <span>Fees Structure</span>
                 </a>
                 <div id="collapseFeesStructure"
@@ -162,13 +161,11 @@
                      aria-labelledby="headingUtilities"
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        {% if perms.fees_structure.can_view_the_fees_structure %}
-                            <a class="collapse-item" href="{% url 'fees_structure' %}">View Fees Structure</a>
+                        {% if perms.fees_structure.can_create_the_fees_structure %}
+                            <a class="collapse-item" href="{% url 'create_fees_structure' %}">Add Fees Item</a>
                         {% endif %}
                         
-                        {% if perms.fees_Structure.can_edit_the_fees_structure %}
-                            <a class="collapse-item" href="{% url 'edit_fees_structure' %}">Edit Fees Structure</a>
-                        {% endif %}
+                        
                     </div>
                 </div>
             </li>
@@ -203,6 +200,7 @@
             {% endif %}
         -->
             <!-- Divider -->
+          <!-- Divider -->
             <hr class="sidebar-divider">
             <!-- Heading -->
             <div class="sidebar-heading">Account</div>

@@ -11,16 +11,21 @@ TERM_CHOICES = (
 class FeesStructure(models.Model):
     class Meta:
         permissions = [
-            ("can_edit_the_fees_structure", "can edit the fees structure"),
+            ("can_create_a_fees_structure", "can edit the fees structure"),
             ("can_view_the_fees_structure", "can view the fees structure")
             
         ]
     """this model composes the entire school fees structure,"""
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
+    grades = models.CharField(max_length = 255, default=None)
     term = models.IntegerField(choices=TERM_CHOICES)
     item = models.ForeignKey(Item, on_delete= models.CASCADE,null=True, default=None)#One of the sales items the school is selling
     amount = models.DecimalField(max_digits=8,decimal_places=2,null=True, default=None)
-
+    ocurrence = models.CharField(max_length=30, default=None)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+    year_round = models.BooleanField(default=False)
+    specific_terms = models.CharField(max_length=20, default=None)
     def __str__(self):
         return "Fees Structure for Grade: "+ str(self.grade) + ' Term: '+str(self.term)+' for  Item:'+str(self.item)
 

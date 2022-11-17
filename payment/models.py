@@ -36,6 +36,7 @@ class Payment(models.Model):
     note = models.CharField(max_length=255, null=True,
                             default="Single Payment")
     created = models.DateTimeField(auto_now_add=True, null=True)
+    bal_on_inv = models.IntegerField(null=True)
 
     def create_qb_payment(self):
         access_token_obj = Token.objects.get(name='access_token')

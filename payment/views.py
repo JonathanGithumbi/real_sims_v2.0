@@ -77,7 +77,8 @@ def make_payment(request):
                             amount=payment_amount - excess_amount,
                             student=student_obj,  # payment was applied for this student
                             invoice=invoice,  # payment was applied to this invoice
-                            note="Payment Split. Overflow to next invoice"
+                            note="Payment Split. Overflow to next invoice",
+                            bal_on_inv = 0
                         )
                         payment_obj.save()  # save the payment both to db and to QB
 
@@ -108,7 +109,8 @@ def make_payment(request):
                             date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount,
                             student=student_obj,
-                            invoice=invoice
+                            invoice=invoice,
+                            bal_on_inv = invoice.balance - payment_amount
                         )
                         payment_obj.save()
 
@@ -116,12 +118,7 @@ def make_payment(request):
                         invoice.balance = invoice.balance - payment_amount
                         invoice.save(update_fields=['balance'])
 
-                        # record transaction to quickbooks
-                        try:
-                            payment_obj.create_qb_payment()
-                        except:
-                            pass
-
+                        
                         # update the Balance table
                         bal_table = BalanceTable.objects.get(
                             student=student_obj)
@@ -140,7 +137,8 @@ def make_payment(request):
                             date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount,
                             student=student_obj,
-                            invoice=invoice
+                            invoice=invoice,
+                            bal_on_inv = 0
                         )
                         payment_obj.save(update_fields=['student', 'invoice'])
 
@@ -462,7 +460,8 @@ def make_payment(request):
                             amount=payment_amount - excess_amount,
                             student=student_obj,  # payment was applied for this student
                             invoice=invoice,  # payment was applied to this invoice
-                            note="Payment Split. Overflow to next invoice"
+                            note="Payment Split. Overflow to next invoice",
+                            bal_on_inv = 0
                         )
                         payment_obj.save()  # save the payment both to db and to QB
 
@@ -493,7 +492,8 @@ def make_payment(request):
                             date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount,
                             student=student_obj,
-                            invoice=invoice
+                            invoice=invoice,
+                            bal_on_inv = invoice.balance - payment_amount
                         )
                         payment_obj.save()
 
@@ -525,7 +525,8 @@ def make_payment(request):
                             date_paid=form_obj.cleaned_data['date_paid'],
                             amount=payment_amount,
                             student=student_obj,
-                            invoice=invoice
+                            invoice=invoice,
+                            bal_on_inv = 0
                         )
                         payment_obj.save(update_fields=['student', 'invoice'])
 
@@ -556,7 +557,7 @@ def make_payment(request):
             # now you start the process of applying payments
         else:
             # form != valid
-            return render(request, 'payments/create_payment.html', {'form': form_obj})
+            return render(request, 'payment/create_payment.html', {'form': form_obj})
     if request.method == 'GET':
         # request method
         # make a new payment creation form

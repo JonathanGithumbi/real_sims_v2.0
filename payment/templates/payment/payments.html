@@ -46,7 +46,7 @@
                                         <a href="{% url 'student_profile' payment.student.id %}">{{ payment.student }}</a>
                                     </td>
                                     <td>{{ payment.amount }}</td>
-                                    <td>{{ payment.invoice.get_balance }}</td>
+                                    <td>{{ payment.bal_on_inv }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

@@ -5,11 +5,13 @@ from django.conf import ENVIRONMENT_VARIABLE, settings
 from quickbooks import QuickBooks
 from quickbooks.objects import Account as qb_acc
 from quickbooks.objects.base import Ref
+from QBWEBSERVICE.models import QBDModelMixin
 
 
-class Currency(models.Model):
+class Currency(QBDModelMixin):
     name = models.CharField(max_length=30, null=True, default=None)
     value = models.CharField(max_length=20, null=True, default=None)
+    currency_code = models.CharField(max_length=100, null=True, default=None)
 
     def __str__(self):
 
@@ -21,6 +23,32 @@ class Currency(models.Model):
         #ref.type = self.qbo_object_name
         ref.value = self.value
         return ref
+
+    @classmethod
+    def to_qbd_obj(self, **fields):
+        from QBWEBSERVICE.objects import Currency as QBCurrency
+        # map your fields to the qbd_obj fields
+        return QBCustomer(
+            Name=self.__str__(),
+            Phone=self.primary_contact_phone_number,
+            AltPhone=self.secondary_contact_phone_number,
+            Contact=self.primary_contact_name,
+            AltContact=self.secondary_contact_name,
+
+        )
+
+    @classmethod
+    def from_qbd_obj(cls, qbd_obj):
+        # map qbd_obj fields to your model fields
+        return cls(
+            name=qbd_obj.Name,
+            primary_contact_phone=qbd_obj.Phone,
+            secondary_contact_phone=qbd_obj.AltPhone,
+            primary_contact_name=qbd_obj.Contact,
+            secondar_contact_name=qbd_obj.AltContact,
+            qbd_object_id=qbd_obj.ListID,
+            qbd_object_version=qbd_obj.EditSequence
+        )
 
 
 class Account(models.Model):
@@ -46,9 +74,9 @@ class Account(models.Model):
         (INCOME, "Income"),
         (ACCOUNTS_PAYABLE_TYPE, "Accounts Payable"),
         (EXPENSE_TYPE, "Expense"),
-        (BANK_TYPE,'Bank'),
-        (ACCOUNTS_RECEIVABLE_TYPE,'Accounts Receivable')
-        
+        (BANK_TYPE, 'Bank'),
+        (ACCOUNTS_RECEIVABLE_TYPE, 'Accounts Receivable')
+
 
 
 
@@ -58,9 +86,9 @@ class Account(models.Model):
         (COST_OF_LABOR_COST, "Cost of Labor Cost"),
         (ACCOUNTS_PAYABLE_SUB_TYPE, "Accounts Payable"),
         (EXPENSE_SUB_TYPE, "Cost of Labor(Expense)"),
-        (CHECKING_SUB_TYPE,'Checking'),
-        (ACCOUNTS_RECEIVABLE_SUB_TYPE,'Accounts Receivable'),
-        (EMPTY_SUB_TYPE,'eMPTY')
+        (CHECKING_SUB_TYPE, 'Checking'),
+        (ACCOUNTS_RECEIVABLE_SUB_TYPE, 'Accounts Receivable'),
+        (EMPTY_SUB_TYPE, 'eMPTY')
 
     ]
 
@@ -76,8 +104,8 @@ class Account(models.Model):
         return self.name
 
 
-#Quickbooks online code
-    #def create_account(self):
+# Quickbooks online code
+    # def create_account(self):
     #    """This method actually creates the a quickboooks account and saves it to both the database and to the quickbooks account"""
     #    access_token_obj = Token.objects.get(name='access_token')
     #    refresh_token_obj = Token.objects.get(name='refresh_token')
@@ -106,10 +134,10 @@ class Account(models.Model):
     #    return saved_qb_acc_obj
 
     def save(self, *args, **kwargs):
-        
-        #Queue Task 
+
+        # Queue Task
         result = createAccount.delay(self)
-        #check if request was successful
+        # check if request was successful
         #self.qb_id = saved_qb_acc_obj.Id
         #self.synced = True
 

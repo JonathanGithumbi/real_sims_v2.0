@@ -42,14 +42,13 @@ def students(request):
 @login_required()
 def register_student(request):
     if request.method == 'POST':
+
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
             # save the student to the database
             student = form.save()
 
-
             # charge the student the term's fees
-            
             # create invoice for student
             invoice = Invoice.objects.create(
                 student=student,
@@ -93,7 +92,6 @@ def register_student(request):
             invoice.amount = total_amount
             invoice.save(update_fields=['balance', 'amount'])
 
-            
             # Create Balance record for student
             balance_obj = BalanceTable.objects.create(
                 student=student,
@@ -105,6 +103,8 @@ def register_student(request):
                 student.first_name, student.middle_name, student.last_name), extra_tags="alert-success")
             return redirect(reverse('student_profile', args=[student.id]))
         else:
+            messages.error(
+                request, "There was an error in the information provided. Student not registered.", extra_tags='alert-error')
             return render(request, 'student/registration.html', {'form': form})
     elif request.method == 'GET':
         # i want to register student only when the term has begun

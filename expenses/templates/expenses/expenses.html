@@ -146,6 +146,13 @@
         10, 25, 50, -1
         ],
         buttons: [
+        {
+                text: 'New Expense',
+                action: function ( e, dt, node, config ) {
+                     window.location.href = "{% url 'add_expense' %}"
+
+                }
+            },
         
         {
             extend: 'searchBuilder',

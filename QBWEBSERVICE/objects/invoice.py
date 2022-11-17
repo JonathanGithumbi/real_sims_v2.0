@@ -35,6 +35,8 @@ class Invoice(BaseObject):
         EditSequence=dict(validator=dict(type=SchemeValidator.STRTYPE)),
         TxnDate=dict(validator=dict(type=SchemeValidator.STRTYPE)),
         Customer=dict(validator=dict(type=SchemeValidator.OBJTYPE)),
+        #ARAccount
+        #DUE DATE
         BillAddress=dict(validator=dict(type=SchemeValidator.OBJTYPE)),
         ShipAddress=dict(validator=dict(type=SchemeValidator.OBJTYPE)),
         IsPending=dict(validator=dict(type=SchemeValidator.BOOLTYPE)),

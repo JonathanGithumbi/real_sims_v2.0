@@ -146,7 +146,20 @@
         10, 25, 50, -1
         ],
         buttons: [
-        
+        {
+                text: 'Top Up',
+                action: function ( e, dt, node, config ) {
+                     window.location.href = "{% url 'topup' %}"
+
+                }
+            },
+            {
+                text: 'New Bill',
+                action: function ( e, dt, node, config ) {
+                     window.location.href = "{% url 'create_bill' %}"
+
+                }
+            },
         {
             extend: 'searchBuilder',
             config: {

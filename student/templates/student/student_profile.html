@@ -17,7 +17,7 @@
         <!-- profile table -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold ">Student Profile</h6>
+                <h6 class="m-0 font-weight-bold ">Profile</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -132,7 +132,7 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold ">
-                    Fees Invoices
+                    Invoices
                 </h6>
             </div>
             <div class="card-body">
@@ -192,8 +192,7 @@
                                     <td>
                                         <a class="btn btn-primary btn-sm"
                                            href="{% url 'invoice_detail' invoice.id %}">View Report</a>
-                                           <a class="btn btn-primary btn-sm"
-                                           href="{% url 'print_invoice_details' invoice.id %}">Print Report</a>
+                                          
                                     </td>
                                 </tr>
                             {% endfor %}

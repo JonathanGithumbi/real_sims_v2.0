@@ -36,6 +36,7 @@ class Student(QBDModelMixin):
     admission_number = models.IntegerField(null=True, default=None)
     admission_number_formatted = models.CharField(
         max_length=255, default=None, null=True)
+    name = models.CharField(max_length=255, null=True)
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
@@ -53,11 +54,11 @@ class Student(QBDModelMixin):
 
     # This active flag defines whether or not the student gets  invoiced
     active = models.BooleanField(null=True, default=True)
-    synced = models.BooleanField(default=False)
+
     # optionals
     lunch = models.BooleanField(default=False)
     transport = models.BooleanField(default=False)
-    qb_id = models.CharField(max_length=20, null=True, default=None)
+    synced = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.first_name} {self.middle_name} {self.last_name}"
@@ -98,19 +99,30 @@ class Student(QBDModelMixin):
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
        # implement thee 2 methods: to_qbd_obj() and from_qbd_obj
-
+    @classmethod
     def to_qbd_obj(self, **fields):
         from QBWEBSERVICE.objects import Customer as QBCustomer
         # map your fields to the qbd_obj fields
-        return QBCustomer(Name=self.__str__(),
-                          )
+        return QBCustomer(
+            Name=self.__str__(),
+            Phone=self.primary_contact_phone_number,
+            AltPhone=self.secondary_contact_phone_number,
+            Contact=self.primary_contact_name,
+            AltContact=self.secondary_contact_name,
+
+        )
 
     @classmethod
     def from_qbd_obj(cls, qbd_obj):
         # map qbd_obj fields to your model fields
         return cls(
-            first_name=qbd_obj.Name,
-
+            name=qbd_obj.Name,
+            primary_contact_phone=qbd_obj.Phone,
+            secondary_contact_phone=qbd_obj.AltPhone,
+            primary_contact_name=qbd_obj.Contact,
+            secondar_contact_name=qbd_obj.AltContact,
+            qbd_object_id=qbd_obj.ListID,
+            qbd_object_version=qbd_obj.EditSequence
         )
 
     # def update_qb_customer(self, student):

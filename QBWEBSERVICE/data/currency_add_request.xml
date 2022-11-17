@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?qbxml version="15.0"?>
+<QBXML>
+    <QBXMLMsgsRq onError="stopOnError">
+        <CurrencyAddRq>
+            <CurrencyAdd>                <!-- required -->
+                <Name >STRTYPE</Name>                <!-- required -->
+                <IsActive >BOOLTYPE</IsActive>                <!-- optional -->
+                <CurrencyCode >STRTYPE</CurrencyCode>                <!-- required -->
+                <CurrencyFormat>                    <!-- optional -->
+                    <!-- ThousandSeparator may have one of the following values: Comma [DEFAULT], Period, Space, Apostrophe -->
+                    <ThousandSeparator >ENUMTYPE</ThousandSeparator>                    <!-- optional -->
+                    <!-- ThousandSeparatorGrouping may have one of the following values: XX_XXX_XXX [DEFAULT], X_XX_XX_XXX -->
+                    <ThousandSeparatorGrouping >ENUMTYPE</ThousandSeparatorGrouping>                    <!-- optional -->
+                    <!-- DecimalPlaces may have one of the following values: 0, 2 [DEFAULT] -->
+                    <DecimalPlaces >ENUMTYPE</DecimalPlaces>                    <!-- optional -->
+                    <!-- DecimalSeparator may have one of the following values: Period [DEFAULT], Comma -->
+                    <DecimalSeparator >ENUMTYPE</DecimalSeparator>                    <!-- optional -->
+                </CurrencyFormat>
+            </CurrencyAdd>
+            <IncludeRetElement >STRTYPE</IncludeRetElement>            <!-- optional, may repeat -->
+        </CurrencyAddRq>
+
+        
+    </QBXMLMsgsRq>
+</QBXML>
+
