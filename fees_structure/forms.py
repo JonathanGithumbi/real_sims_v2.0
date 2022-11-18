@@ -63,7 +63,7 @@ class CreateFeesStructureForm(forms.Form):
     ]
     period_choices = [
         ('year-round', 'year-round'),
-        ('speecific-term', 'specific-term')
+        ('specific-term', 'specific-term')
     ]
     term_choices = [
         (1, 'Term 1'),
@@ -87,4 +87,4 @@ class CreateFeesStructureForm(forms.Form):
     term = forms.ChoiceField(initial="", required=False, choices=get_terms, widget=forms.Select(
         attrs={'class': 'form-control form-control-sm', 'id': 'term'}))
     grades = forms.MultipleChoiceField(label='Apply Fee To Grades', choices=get_grades, widget=forms.CheckboxSelectMultiple(
-        attrs={'class': '', 'id': 'grades'}))
+        attrs={'name': 'grades', 'id': 'grades'}))

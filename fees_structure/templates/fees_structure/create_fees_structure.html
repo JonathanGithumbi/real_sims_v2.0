@@ -26,6 +26,7 @@
                             <hr>
                             <form action="{% url 'create_fees_structure' %}"
                                   method="post"
+                                  id="add_fees_item_form"
                                   name="add_fees_item_form">
                                 {% csrf_token %}
                                 <div class="row">
@@ -100,35 +101,27 @@
                                                 <div id="description_div">
                                                     <b>Description: </b> <span id="description_area"></span>
                                                 </div>
-                                                <br/>
                                                 <div id="grades_div">
                                                     <b>Applied to Grades: </b> <span id="grades_area"></span>
                                                 </div>
-                                                <br/>
                                                 <div id="amount_div">
-                                                    <b>Amount: </b> <span id="amount_area"></span>
+                                                    <b>Amount: </b> <span id="amount_area"></span><span><b>Ksh.</b></span>
                                                 </div>
-                                                <br/>
                                                 <div id="occurence_div">
                                                     <b>Occurence: </b> <span id="occurence_area"></span>
                                                 </div>
-                                                <br/>
                                                 <div id="period_div">
                                                     <b>Period: </b> <span id="period_area"></span>
                                                 </div>
-                                                <br/>
                                                 <div id="specific_terms_div">
                                                     <b>Specific Terms: </b> <span id="specific_terms_area"></span>
                                                 </div>
-                                                <br/>
                                                 <div id="year_div">
                                                     <b>Year: </b> <span id="year_area"></span>
                                                 </div>
-                                                <br/>
                                                 <div id="term_div">
                                                     <b>Term: </b> <span id="term_area"></span>
                                                 </div>
-                                                <br/>
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
@@ -149,7 +142,59 @@
         </div>
         {% block script_block %}
             <script>
+                function confirm_add_fees_item(){
+                    const description = document.forms['add_fees_item_form']['description'].value;
+                    document.getElementById("description_area").innerHTML = description;
+                    var arr = [];
+                    $('input[name="grades"]:checked').each(function(){
+                        arr.push($(this).val());
+                    });
+                    document.getElementById("grades_area").innerHTML = arr;
+                    const amount = document.forms['add_fees_item_form']['amount'].value;
+                    document.getElementById("amount_area").innerHTML = amount;
+                    const occurence = $('input[name=occurence]:checked', '#add_fees_item_form').val();
+                    if(occurence == 'recurring'){
+                        $("#term_div").hide();
+                        $("#year_div").hide();
+                        $("#period_div").show();
+                        $("#specific_terms_div").show();
+                        document.getElementById("occurence_area").innerHTML = occurence;
+                        const period = $('input[name=period]:checked', '#add_fees_item_form').val();
+                        if(period == "year-round"){
+                            $("#specific_terms_div").hide();
+                            document.getElementById("period_area").innerHTML = period;
+                        }
+                        if(period=="specific-term"){
+                            $("#specific_terms_div").show();
+                            document.getElementById("period_area").innerHTML = period;
+                            var arr2 = [];
+                            $('input[name="specific_terms"]:checked').each(function(){
+                                arr2.push($(this).val());
+                            });
+                            document.getElementById("specific_terms_area").innerHTML = arr2;
+                        }
+                    }
+                    if(occurence == 'one-time'){
+                        $("#term_div").show();
+                        $("#year_div").show();
+                        $("#period_div").hide();
+                        $("#specific_terms_div").hide();
+                        document.getElementById("occurence_area").innerHTML = occurence;
+                        const year = document.forms['add_fees_item_form']['year'].value;
+                        const term = document.forms['add_fees_item_form']['term'].value;
+                        document.getElementById("year_area").innerHTML = year;
+                        document.getElementById("term_area").innerHTML = term;
+                    }
+                     
+                }
             $(function(){
+                $("#year").val("");
+                $("#term").val("");
+                $("#specific_terms_0").prop("checked",false);
+                $("#specific_terms_1").prop("checked",false);
+                $("#specific_terms_2").prop("checked",false);
+                $("#period_1").prop("checked",false);
+                $("#period_0").prop("checked",false);
                 $("#id_occurence_0").prop("checked",false);
                 $("#id_occurence_1").prop("checked",false);
                 $("#period-row").hide();
