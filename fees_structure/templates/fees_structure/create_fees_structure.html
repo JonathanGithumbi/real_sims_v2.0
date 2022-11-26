@@ -23,7 +23,7 @@
                             <div class="text-left">
                                 <h5>Add Fees Item</h5>
                             </div>
-                            <hr>
+                            <hr/>
                             <form action="{% url 'create_fees_structure' %}"
                                   method="post"
                                   id="add_fees_item_form"
@@ -32,8 +32,8 @@
                                 <div class="row">
                                     <div class="col">
                                         {{ form.description.errors }}
-                                        <label for="{{ form.description.id_for_label }}">Description:</label>
-                                        {{ form.description }}
+                                        <label for="{{ form.description.id_for_label }}">Item:</label>
+                                        {{ form.item }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -52,9 +52,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        {{ form.occurence.errors }}
-                                        <label for="{{ form.occurence.id_for_label }}">Occurence:</label>
-                                        {{ form.occurence }}
+                                        {{ form.ocurrence.errors }}
+                                        <label for="{{ form.ocurrence.id_for_label }}">ocurrence:</label>
+                                        {{ form.ocurrence }}
                                     </div>
                                 </div>
                                 <div class="row" id='period-row'>
@@ -67,9 +67,14 @@
                                 <div class="row" id='specific-terms-row'>
                                     <div class="col">
                                         {{ form.specific_terms.errors }}
-                                        <label for="{{ form.specific_terms.id_for_label }}">Specific Terms:</label>
-                                        {{ form.specific_terms }}
+                                        <label for="{{ form.specific_terms.id_for_label }}">Terms:</label>
+                                        {{ form.terms }}
                                     </div>
+                                </div>
+                                <div class="row" id='cor-row'>
+                                    {{ form.cor.errors }}
+                                    <label for="{{ form.cor.id_for_label }}">Charge only during registration:</label>
+                                    {{ form.charge_on_registration }}
                                 </div>
                                 <div class="row" id='one-time-row'>
                                     <div class="col">
@@ -107,14 +112,17 @@
                                                 <div id="amount_div">
                                                     <b>Amount: </b> <span id="amount_area"></span><span><b>Ksh.</b></span>
                                                 </div>
-                                                <div id="occurence_div">
-                                                    <b>Occurence: </b> <span id="occurence_area"></span>
+                                                <div id="ocurrence_div">
+                                                    <b>ocurrence: </b> <span id="ocurrence_area"></span>
                                                 </div>
                                                 <div id="period_div">
                                                     <b>Period: </b> <span id="period_area"></span>
                                                 </div>
                                                 <div id="specific_terms_div">
                                                     <b>Specific Terms: </b> <span id="specific_terms_area"></span>
+                                                </div>
+                                                <div id="cor_div">
+                                                    <b>Charge at Registration Only: </b> <span id="cor_area"></span>
                                                 </div>
                                                 <div id="year_div">
                                                     <b>Year: </b> <span id="year_area"></span>
@@ -143,8 +151,10 @@
         {% block script_block %}
             <script>
                 function confirm_add_fees_item(){
-                    const description = document.forms['add_fees_item_form']['description'].value;
-                    document.getElementById("description_area").innerHTML = description;
+
+                    const description = document.getElementById("description");
+                    const description_name = description.options[description.selectedIndex].text;
+                    document.getElementById("description_area").innerHTML = description_name;
                     var arr = [];
                     $('input[name="grades"]:checked').each(function(){
                         arr.push($(this).val());
@@ -152,13 +162,14 @@
                     document.getElementById("grades_area").innerHTML = arr;
                     const amount = document.forms['add_fees_item_form']['amount'].value;
                     document.getElementById("amount_area").innerHTML = amount;
-                    const occurence = $('input[name=occurence]:checked', '#add_fees_item_form').val();
-                    if(occurence == 'recurring'){
+                    const ocurrence = $('input[name=ocurrence]:checked', '#add_fees_item_form').val();
+                    if(ocurrence == 'recurring'){
                         $("#term_div").hide();
                         $("#year_div").hide();
+                        $("#cor_div").hide();
                         $("#period_div").show();
                         $("#specific_terms_div").show();
-                        document.getElementById("occurence_area").innerHTML = occurence;
+                        document.getElementById("ocurrence_area").innerHTML = ocurrence;
                         const period = $('input[name=period]:checked', '#add_fees_item_form').val();
                         if(period == "year-round"){
                             $("#specific_terms_div").hide();
@@ -174,59 +185,82 @@
                             document.getElementById("specific_terms_area").innerHTML = arr2;
                         }
                     }
-                    if(occurence == 'one-time'){
+                    if(ocurrence == 'one-time'){
                         $("#term_div").show();
                         $("#year_div").show();
+                        $("#cor_div").show();
                         $("#period_div").hide();
                         $("#specific_terms_div").hide();
-                        document.getElementById("occurence_area").innerHTML = occurence;
+                        document.getElementById("ocurrence_area").innerHTML = ocurrence;
                         const year = document.forms['add_fees_item_form']['year'].value;
                         const term = document.forms['add_fees_item_form']['term'].value;
+                        const cor = document.forms['add_fees_item_form']['cor'].value;
+                        document.getElementById("cor_area").innerHTML = cor;
                         document.getElementById("year_area").innerHTML = year;
                         document.getElementById("term_area").innerHTML = term;
                     }
                      
                 }
             $(function(){
+                $('#cor').change(function(){        
+                    if(this.checked){
+                        $('#year').prop("disabled",true);   
+                        $('#term').prop("disabled",true);   
+                        } else {
+                        $('#year').prop("disabled",false);
+                        $('#term').prop("disabled",false);
+                    }
+                });
                 $("#year").val("");
                 $("#term").val("");
                 $("#specific_terms_0").prop("checked",false);
                 $("#specific_terms_1").prop("checked",false);
                 $("#specific_terms_2").prop("checked",false);
+                $("#cor").prop("checked",false);
+                $("#period_2").prop("checked",false);
                 $("#period_1").prop("checked",false);
-                $("#period_0").prop("checked",false);
-                $("#id_occurence_0").prop("checked",false);
-                $("#id_occurence_1").prop("checked",false);
+                $("#id_ocurrence_0").prop("checked",false);
+                $("#id_ocurrence_1").prop("checked",false);
                 $("#period-row").hide();
                 $("#specific-terms-row").hide();
                 $("#one-time-row").hide();
-                $("#id_occurence_0").click(function(){
+                $("#cor-row").hide();
+                $("#id_ocurrence_0").click(function(){
                     $("#year").val("");
                     $("#term").val("");
                     $("#period-row").show();
+                    $("#period_0").hide();
                     $("#one-time-row").hide();
+                    $("#cor-row").hide();
+                    $("#cor").prop("checked",false);
                     $("#specific-terms-row").hide();
                 });
-                $("#id_occurence_1").click(function(){
+                $("#id_ocurrence_1").click(function(){
+                    $("#period_2").prop("checked",false);
                     $("#period_1").prop("checked",false);
-                    $("#period_0").prop("checked",false);
                     $("#specific_terms_0").prop("checked",false);
                     $("#specific_terms_1").prop("checked",false);
                     $("#specific_terms_2").prop("checked",false);
+                    $("#cor").prop("checked",false);
                     $("#period-row").hide();
                     $("#specific-terms-row").hide();
                     $("#one-time-row").show();
+                    $("#cor-row").show();
                 });
-                $("#period_1").click(function(){
-                    
-                    $("#specific-terms-row").show();
-                    $("#one-time-row").hide();
-                });
-                $("#period_0").click(function(){
+                $("#period_2").click(function(){
                     $("#specific_terms_0").prop("checked",false);
                     $("#specific_terms_1").prop("checked",false);
                     $("#specific_terms_2").prop("checked",false);
-                    $("#specific-terms-row").hide();
+                    $("#specific-terms-row").show();
+                    $("#one-time-row").hide();
+                    $("#cor-row").hide();
+                });
+                $("#period_1").click(function(){
+                    $("#specific_terms_0").prop("checked",true);
+                    $("#specific_terms_1").prop("checked",true);
+                    $("#specific_terms_2").prop("checked",true);
+                    $("#cor").prop("checked",false);
+                    $("#specific-terms-row").show();
                 });
                 });
             </script>

@@ -1,35 +1,70 @@
 from django.db import models
 from grade.models import Grade
 from item.models import Item
-
+from user_account.models import User
+from academic_calendar.models import Term, Year
 TERM_CHOICES = (
     (1, "1st Term"),
     (2, "2nd Term"),
     (3, "3rd Term"),
 )
 
+ocurrence_choices = [
+    ('recurring', 'recurring'),
+    ('one-time', 'one-time')
+]
+period_choices = [
+    ('year-round', 'year-round'),
+    ('specific-terms', 'specific-terms')
+]
+
+
+class FeesStructureBatch(models.Model):
+    """A FeeStructureBatch cannot be associated with grades before it is saved"""
+
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
+    # is being charged to these gra9des
+    grades = models.ManyToManyField(Grade)
+    # at this amount
+    amount = models.IntegerField(null=True, default=None)
+    # at this frequency
+    ocurrence = models.CharField(
+        max_length=30, default=None, null=True, choices=ocurrence_choices)
+    # incase the occurence is recurring
+    period = models.CharField(
+        max_length=50, default=None, null=True, choices=period_choices, blank=True  )
+    # incase the it recurrs on specific terms
+    terms = models.ManyToManyField(Term, blank=True)
+
+    # incase the occurence is one time
+    year = models.ForeignKey(
+        Year, on_delete=models.CASCADE, null=True, blank=True)
+    term = models.ForeignKey(
+        Term, on_delete=models.CASCADE, related_name='terms', null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    last_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='batch_created_by', default=None, null=True, blank=True)
+    last_modified_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, default=None, null=True, blank=True)
+    # one-time charged during registration
+    charge_on_registration = models.BooleanField(default=False,
+                                                 blank=True)
+
+    def grades_list(self):
+        grades_list = []
+        for grade in self.grades.all():
+            grades_list.append(grade.title)
+
+        return ','.join(grades_list)
+
+    def terms_list(self):
+        terms_list = []
+        for term in self.terms.all():
+            terms_list.append(term.name)
+
+        return ','.join(terms_list)
+
 
 class FeesStructure(models.Model):
-    class Meta:
-        permissions = [
-            ("can_create_a_fees_structure", "can edit the fees structure"),
-            ("can_view_the_fees_structure", "can view the fees structure")
-
-        ]
-    #grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
-    grades = models.CharField(max_length=255, default=None)
-    year = models.IntegerField(null=True)
-    term = models.IntegerField(choices=TERM_CHOICES)
-    # One of the sales items the school is selling
-    item = models.ForeignKey(
-        Item, on_delete=models.CASCADE, null=True, default=None)
-    amount = models.DecimalField(
-        max_digits=8, decimal_places=2, null=True, default=None)
-    ocurrence = models.CharField(max_length=30, default=None)
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True)
-    year_round = models.BooleanField(default=False)
-    specific_terms = models.CharField(max_length=20, default=None)
-
-    def __str__(self):
-        return "Fees Structure for Grade: " + str(self.grade) + ' Term: '+str(self.term)+' for  Item:'+str(self.item)
+    pass

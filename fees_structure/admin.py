@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from fees_structure.models import FeesStructure
+from fees_structure.models import FeesStructureBatch
 
-admin.site.register(FeesStructure)
+admin.site.register(FeesStructureBatch)

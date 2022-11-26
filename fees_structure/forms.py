@@ -1,6 +1,6 @@
 from datetime import date
 from django.forms import modelformset_factory
-from .models import FeesStructure
+from .models import FeesStructureBatch
 from grade.models import Grade
 from django import forms
 from grade.models import Grade
@@ -55,36 +55,30 @@ def get_years():
     return years_iterable
 
 
-class CreateFeesStructureForm(forms.Form):
+class CreateFeesStructureForm(forms.ModelForm):
 
-    recurring_choices = [
-        ('recurring', 'recurring'),
-        ('one-time', 'one-time')
-    ]
-    period_choices = [
-        ('year-round', 'year-round'),
-        ('specific-term', 'specific-term')
-    ]
-    term_choices = [
-        (1, 'Term 1'),
-        (2, 'Term 2'),
-        (3, 'Term 3')
-    ]
+    class Meta:
+        model = FeesStructureBatch
+        fields = ('item', 'grades', 'amount', 'ocurrence', 'period',
+                'terms', 'year', 'term', 'charge_on_registration')
 
-    description = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control form-control-sm', 'id': 'description'}))
+        widgets = {
+            'item': forms.Select(
+                attrs={'class': 'form-control form-control-sm', 'id': 'description'}),
+            'grades': forms.CheckboxSelectMultiple(
+                attrs={'name': 'grades', 'id': 'grades'}),
+            'amount': forms.NumberInput(
+                attrs={'class': 'form-control form-control-sm', 'id': 'amount'}),
+            'ocurrence': forms.RadioSelect(
+                attrs={'name': 'ocurrence'}),
+            'period': forms.RadioSelect(attrs={'name': 'period', 'id': 'period'}),
+            'terms': forms.CheckboxSelectMultiple(
+                attrs={'class': '', 'id': 'specific_terms'}),
+            'year': forms.Select(
+                attrs={'class': 'form-control form-control-sm', 'id': 'year'}),
+            'term': forms.Select(
+                attrs={'class': 'form-control form-control-sm', 'id': 'term'}),
+            'charge_on_registration': forms.CheckboxInput(
+                attrs={'name': 'cor', 'id': 'cor'})
 
-    amount = forms.IntegerField(widget=forms.NumberInput(
-        attrs={'class': 'form-control form-control-sm', 'id': 'amount'}))
-    occurence = forms.ChoiceField(required=False, label='Fee Occurence', choices=recurring_choices, widget=forms.RadioSelect(
-        attrs={'name': 'occurence'}))
-    period = forms.ChoiceField(required=False, label="Period", choices=period_choices,
-                               widget=forms.RadioSelect(attrs={'name': 'period', 'id': 'period'}))
-    specific_terms = forms.MultipleChoiceField(required=False, choices=term_choices, widget=forms.CheckboxSelectMultiple(
-        attrs={'class': '', 'id': 'specific_terms'}))
-    year = forms.ChoiceField(initial="", required=False, choices=get_years, widget=forms.Select(
-        attrs={'class': 'form-control form-control-sm', 'id': 'year'}))
-    term = forms.ChoiceField(initial="", required=False, choices=get_terms, widget=forms.Select(
-        attrs={'class': 'form-control form-control-sm', 'id': 'term'}))
-    grades = forms.MultipleChoiceField(label='Apply Fee To Grades', choices=get_grades, widget=forms.CheckboxSelectMultiple(
-        attrs={'name': 'grades', 'id': 'grades'}))
+        }

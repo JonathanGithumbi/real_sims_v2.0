@@ -4,6 +4,28 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 
+class Year(models.Model):
+    name = models.CharField(max_length=20)
+    code = models.IntegerField()
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+
+    def __str__(self):
+        return self.name
+
+
+class Term(models.Model):
+    name = models.CharField(max_length=20)
+    code = models.IntegerField()
+    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+
+    def __str__(self):
+        return self.name
+
+  
+
 class AcademicCalendar(models.Model):
     """This Class contains the start and end date for each term of a given year
     The system uses it so that it can find out what term to charge the student for.So it is a very critical part of the system

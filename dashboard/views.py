@@ -14,13 +14,14 @@ from payment.models import Payment
 from django.contrib.auth.decorators import login_required
 
 
-
 @login_required()
 def dashboard(request):
     total_no_students = get_tot_no_students(request)
     total_amount_in_unpaid_bills = get_tot_amt_unpaid_bills(request)
-    total_amount_in_unpaid_fees_arrears_term = get_tot_amt_unpaid_fees_term(request)
-    total_amount_in_paid_fees_arrears_term = get_tot_amt_paid_fees_term(request)
+    total_amount_in_unpaid_fees_arrears_term = get_tot_amt_unpaid_fees_term(
+        request)
+    total_amount_in_paid_fees_arrears_term = get_tot_amt_paid_fees_term(
+        request)
     total_no_transport_subscribers = get_tot_no_transport_subs(request)
     total_no_lunch_subscribers = get_tot_no_lunch_subs(request)
     students_in_each_grade = 0
@@ -46,7 +47,8 @@ def get_tot_no_students(request):
 
 @login_required()
 def get_tot_amt_unpaid_bills(reqeust):
-    unpaid_bills = BillItem.objects.filter(fully_paid=False).aggregate(total=Sum('total'))
+    unpaid_bills = BillItem.objects.filter(
+        fully_paid=False).aggregate(total=Sum('total'))
     if unpaid_bills['total'] == None:
         return 0
     else:
@@ -99,7 +101,6 @@ def get_arrears_distribution(request):
 @login_required()
 def get_no_students_per_grade(request):
     pass
-
 
 
 @login_required()

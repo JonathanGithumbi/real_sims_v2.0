@@ -224,7 +224,7 @@ def login_user(request):
 
             finally:
                 login(request, user)
-                return redirect('dashboard')
+                return redirect('dashboard',permanent=True)
 
         else:
             # Invalid logins
