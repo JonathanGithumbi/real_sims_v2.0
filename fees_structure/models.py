@@ -32,7 +32,7 @@ class FeesStructureBatch(models.Model):
         max_length=30, default=None, null=True, choices=ocurrence_choices)
     # incase the occurence is recurring
     period = models.CharField(
-        max_length=50, default=None, null=True, choices=period_choices, blank=True  )
+        max_length=50, default=None, null=True, choices=period_choices, blank=True)
     # incase the it recurrs on specific terms
     terms = models.ManyToManyField(Term, blank=True)
 
@@ -50,20 +50,6 @@ class FeesStructureBatch(models.Model):
     # one-time charged during registration
     charge_on_registration = models.BooleanField(default=False,
                                                  blank=True)
-
-    def grades_list(self):
-        grades_list = []
-        for grade in self.grades.all():
-            grades_list.append(grade.title)
-
-        return ','.join(grades_list)
-
-    def terms_list(self):
-        terms_list = []
-        for term in self.terms.all():
-            terms_list.append(term.name)
-
-        return ','.join(terms_list)
 
 
 class FeesStructure(models.Model):

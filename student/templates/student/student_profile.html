@@ -23,10 +23,6 @@
                 <div class="table-responsive">
                     <table class="table table-bordered text-gray-900 table-hover table-sm">
                         <tr>
-                            <th>Admission Number</th>
-                            <td>{{ student.admission_number_formatted }}</td>
-                        </tr>
-                        <tr>
                             <th>Name</th>
                             <td>{{ student.first_name }} {{ student.middle_name }} {{ student.last_name }}</td>
                         </tr>
@@ -117,9 +113,7 @@
                                     session.
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">
-                                        Cancel
-                                    </button>
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                                     <a class="btn btn-primary" href="{% url 'logout_user' %}">Logout</a>
                                 </div>
                             </div>
@@ -174,25 +168,24 @@
                                         {{ invoice.term }}
                                     </td>
                                     <td>
-                                        {% if invoice.status == 'cleared' %}
-                                        <span class="badge success">{{invoice.status}}</span>
+                                        {% if invoice.fully_paid == True %}
+                                            <span class="badge success">Fully Paid</span>
                                         {% else %}
-                                        <span class="badge badge-warning">{{invoice.status}}</span>
+                                            <span class="badge badge-secondary">Not Fully Paid</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {{ invoice.amount }}
+                                        {{ invoice.get_total_amount }}
                                     </td>
                                     <td>
                                         {{ invoice.get_amount_paid }}
                                     </td>
                                     <td>
-                                        {{ invoice.balance }}
+                                        {{ invoice.get_balance }}
                                     </td>
                                     <td>
                                         <a class="btn btn-primary btn-sm"
-                                           href="{% url 'invoice_detail' invoice.id %}">View Report</a>
-                                          
+                                           href="{% url 'invoice_detail' invoice.id %}">Details</a>
                                     </td>
                                 </tr>
                             {% endfor %}

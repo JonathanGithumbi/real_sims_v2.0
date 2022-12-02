@@ -1,34 +1,13 @@
-from sre_constants import SUCCESS
-from django.forms import ValidationError
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from regex import P
-from academic_calendar.models import AcademicCalendar
 from fees_structure.models import FeesStructure
-import invoice
 from invoice.models import Invoice, Item, BalanceTable
-
 from payment.models import Payment
 from student.models import Student
+from student.StudentManager import StudentManager
 from .forms import StudentRegistrationForm, EditStudentProfileForm
-from invoice import utils as invoice_utils
 from django.contrib import messages
 from item.models import Item as SalesItem
-
-#from quickbooks import QuickBooks
-#from quickbooks.objects import Customer
-
-#from user_account.models import Token
-#from intuitlib.client import AuthClient
-from django.conf import ENVIRONMENT_VARIABLE, settings
-
-#from quickbooks.exceptions import QuickbooksException
-#from quickbooks.objects import Invoice as QB_Invoice
-#from quickbooks.objects.detailline import SalesItemLine, SalesItemLineDetail
-#from quickbooks.objects import Customer
-#from quickbooks.objects import Item as QB_Item
-#from quickbooks.exceptions import QuickbooksException
-from datetime import date
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -45,78 +24,21 @@ def register_student(request):
 
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
-            # save the student to the database
-            student = form.save()
-
-            # charge the student the term's fees
-            # create invoice for student
-            invoice = Invoice.objects.create(
-                student=student,
-            )
-            ac_cal = AcademicCalendar()
-            invoice.term = ac_cal.get_term()
-            invoice.year = ac_cal.get_year()
-            invoice.grade = student.current_grade
-            invoice.save()  # saving the iinvoice now so that invoice items can have something to refefrence
-            # Populate the lisst of items that the student is going to pay for
-            # Get bare minimum items required
-            items = student.get_items()
-            # add Items for new students Students
-            items.append("Admission")
-            items.append("Diaries")
-            items.append("Report Books")
-            if student.student_is_upper_class():
-                items.append("Upper Class Interview Fee")
-            else:
-                items.append("Lower Class Interview Fee")
-
-            # Save invoice items to db these are not saved directly to qb
-            total_amount = 0
-            for item in items:
-                sales_item_obj = SalesItem.objects.get(name=item)
-                calendar_obj = AcademicCalendar()
-                fee_structure_obj = FeesStructure.objects.get(item=sales_item_obj, grade=student.current_grade,
-                                                              term=calendar_obj.get_term())
-                # Item in this case refers to invoice item
-                local_item_obj = Item.objects.create(
-                    invoice_item=sales_item_obj,
-                    amount=fee_structure_obj.amount,
-                    invoice=invoice
-                )
-                # adding the items to the ivoice, this should modify the amount and balance of the invoice by increasing their values
-                local_item_obj.save()
-                total_amount = total_amount + local_item_obj.amount
-
-            # alter invoice balance and invoice amount
-            invoice.balance = total_amount
-            invoice.amount = total_amount
-            invoice.save(update_fields=['balance', 'amount'])
-
-            # Create Balance record for student
-            balance_obj = BalanceTable.objects.create(
-                student=student,
-                # a negative number indicates that the student owes the school money
-                balance=-(invoice.get_amount())
-            )
-            balance_obj.save()
+            # Get student object
+            student = form.save(commit=False)
+            student_manager = StudentManager()
+            student_manager.register_student(student=student)
             messages.success(request, "{0} {1} {2} registered successfully.".format(
                 student.first_name, student.middle_name, student.last_name), extra_tags="alert-success")
             return redirect(reverse('student_profile', args=[student.id]))
         else:
             messages.error(
-                request, "There was an error in the information provided. Student not registered.", extra_tags='alert-error')
+                request, "Error Registering Student", extra_tags='alert-error')
             return render(request, 'student/registration.html', {'form': form})
     elif request.method == 'GET':
-        # i want to register student only when the term has begun
-        aca_cal = AcademicCalendar()
-        today_date = date.today()
-        if aca_cal.term_begun(today_date):
-            form = StudentRegistrationForm()
-            return render(request, 'student/registration.html', {'form': form})
-        else:
-            messages.error(request, "Please wait until the term begins to register new students.",
-                           extra_tags='alert-warning')
-            return redirect(students)
+        form = StudentRegistrationForm()
+        return render(request, 'student/registration.html', {'form': form})
+        return redirect(students)
 
 
 @login_required()

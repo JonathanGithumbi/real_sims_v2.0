@@ -16,26 +16,8 @@ from django.contrib.auth.decorators import login_required
 
 @login_required()
 def dashboard(request):
-    total_no_students = get_tot_no_students(request)
-    total_amount_in_unpaid_bills = get_tot_amt_unpaid_bills(request)
-    total_amount_in_unpaid_fees_arrears_term = get_tot_amt_unpaid_fees_term(
-        request)
-    total_amount_in_paid_fees_arrears_term = get_tot_amt_paid_fees_term(
-        request)
-    total_no_transport_subscribers = get_tot_no_transport_subs(request)
-    total_no_lunch_subscribers = get_tot_no_lunch_subs(request)
-    students_in_each_grade = 0
-    fees_arrears_distributed_across_each_class = 0
-    return render(request, 'dashboard/dashboard.html', {
-        'total_no_students': total_no_students,
-        'total_amount_in_unpaid_bills': total_amount_in_unpaid_bills,
-        'total_amount_in_unpaid_fees_arrears_term': total_amount_in_unpaid_fees_arrears_term,
-        'total_amount_in_paid_fees_arrears_term': total_amount_in_paid_fees_arrears_term,
-        'total_no_transport_subscribers': total_no_transport_subscribers,
-        'total_no_lunch_subscribers': total_no_lunch_subscribers,
-        'students_in_each_grade': students_in_each_grade,
-        'fees_arrears_distributed_across_each_class': fees_arrears_distributed_across_each_class,
-    })
+    
+    return render(request, 'dashboard/dashboard.html')
 
 
 @login_required()

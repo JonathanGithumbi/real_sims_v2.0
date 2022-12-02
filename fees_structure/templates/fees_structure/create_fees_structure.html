@@ -36,6 +36,11 @@
                                         {{ form.item }}
                                     </div>
                                 </div>
+                                <div class="row" id='cor-row'>
+                                    {{ form.cor.errors }}
+                                    <label for="{{ form.cor.id_for_label }}">Charge Every New Student:</label>
+                                    {{ form.charge_on_registration }}
+                                </div>
                                 <div class="row">
                                     <div class="col">
                                         {{ form.grades.errors }}
@@ -71,11 +76,6 @@
                                         {{ form.terms }}
                                     </div>
                                 </div>
-                                <div class="row" id='cor-row'>
-                                    {{ form.cor.errors }}
-                                    <label for="{{ form.cor.id_for_label }}">Charge only during registration:</label>
-                                    {{ form.charge_on_registration }}
-                                </div>
                                 <div class="row" id='one-time-row'>
                                     <div class="col">
                                         {{ form.year.errors }}
@@ -106,6 +106,9 @@
                                                 <div id="description_div">
                                                     <b>Description: </b> <span id="description_area"></span>
                                                 </div>
+                                                <div id="cor_div">
+                                                    <b>Charge Every New Student: </b> <span id="cor_area"></span>
+                                                </div>
                                                 <div id="grades_div">
                                                     <b>Applied to Grades: </b> <span id="grades_area"></span>
                                                 </div>
@@ -120,9 +123,6 @@
                                                 </div>
                                                 <div id="specific_terms_div">
                                                     <b>Specific Terms: </b> <span id="specific_terms_area"></span>
-                                                </div>
-                                                <div id="cor_div">
-                                                    <b>Charge at Registration Only: </b> <span id="cor_area"></span>
                                                 </div>
                                                 <div id="year_div">
                                                     <b>Year: </b> <span id="year_area"></span>
@@ -166,7 +166,7 @@
                     if(ocurrence == 'recurring'){
                         $("#term_div").hide();
                         $("#year_div").hide();
-                        $("#cor_div").hide();
+                        
                         $("#period_div").show();
                         $("#specific_terms_div").show();
                         document.getElementById("ocurrence_area").innerHTML = ocurrence;
@@ -188,7 +188,7 @@
                     if(ocurrence == 'one-time'){
                         $("#term_div").show();
                         $("#year_div").show();
-                        $("#cor_div").show();
+                        
                         $("#period_div").hide();
                         $("#specific_terms_div").hide();
                         document.getElementById("ocurrence_area").innerHTML = ocurrence;
@@ -202,21 +202,13 @@
                      
                 }
             $(function(){
-                $('#cor').change(function(){        
-                    if(this.checked){
-                        $('#year').prop("disabled",true);   
-                        $('#term').prop("disabled",true);   
-                        } else {
-                        $('#year').prop("disabled",false);
-                        $('#term').prop("disabled",false);
-                    }
-                });
+                
                 $("#year").val("");
                 $("#term").val("");
                 $("#specific_terms_0").prop("checked",false);
                 $("#specific_terms_1").prop("checked",false);
                 $("#specific_terms_2").prop("checked",false);
-                $("#cor").prop("checked",false);
+                
                 $("#period_2").prop("checked",false);
                 $("#period_1").prop("checked",false);
                 $("#id_ocurrence_0").prop("checked",false);
@@ -224,15 +216,14 @@
                 $("#period-row").hide();
                 $("#specific-terms-row").hide();
                 $("#one-time-row").hide();
-                $("#cor-row").hide();
+               
                 $("#id_ocurrence_0").click(function(){
                     $("#year").val("");
                     $("#term").val("");
                     $("#period-row").show();
                     $("#period_0").hide();
                     $("#one-time-row").hide();
-                    $("#cor-row").hide();
-                    $("#cor").prop("checked",false);
+                   
                     $("#specific-terms-row").hide();
                 });
                 $("#id_ocurrence_1").click(function(){
@@ -241,11 +232,11 @@
                     $("#specific_terms_0").prop("checked",false);
                     $("#specific_terms_1").prop("checked",false);
                     $("#specific_terms_2").prop("checked",false);
-                    $("#cor").prop("checked",false);
+                    
                     $("#period-row").hide();
                     $("#specific-terms-row").hide();
                     $("#one-time-row").show();
-                    $("#cor-row").show();
+                    
                 });
                 $("#period_2").click(function(){
                     $("#specific_terms_0").prop("checked",false);
@@ -253,13 +244,13 @@
                     $("#specific_terms_2").prop("checked",false);
                     $("#specific-terms-row").show();
                     $("#one-time-row").hide();
-                    $("#cor-row").hide();
+                    
                 });
                 $("#period_1").click(function(){
                     $("#specific_terms_0").prop("checked",true);
                     $("#specific_terms_1").prop("checked",true);
                     $("#specific_terms_2").prop("checked",true);
-                    $("#cor").prop("checked",false);
+                    
                     $("#specific-terms-row").show();
                 });
                 });

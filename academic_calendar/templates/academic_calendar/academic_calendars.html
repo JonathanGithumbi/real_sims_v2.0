@@ -53,6 +53,8 @@
                             <tr>
                                 <th></th>
                                 <th>Year</th>
+                                <th>Start</th>
+                                <th>End</th>
                                 <th>Terms</th>
                                 <th>Actions</th>
                             </tr>
@@ -62,19 +64,41 @@
                                 <tr>
                                     <td></td>
                                     <td>{{ year.year }}</td>
+                                    <td>{{ year.start }}</td>
+                                    <td>{{ year.end }}</td>
                                     <td>
                                         {% for term in year.term_set.all %}Term {{ term.term }},{% endfor %}
                                     </td>
                                     <td class="">
                                         <a class="btn btn-primary  btn-sm "
-                                           href="{% url 'academic_calendar' year.id %}">view</a>
+                                           href="{% url 'academic_calendar' year.id %}">Terms</a>
+                                        <a class="btn btn-primary  btn-sm "
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target="#edit_year_modal{{ forloop.counter }}">Edit</a>
                                         <a class="btn btn-danger  btn-sm "
                                            href="#"
                                            data-toggle="modal"
-                                           data-target="#delete_year_modal">Delete</a>
+                                           data-target="#delete_year_modal{{ forloop.counter }}">Delete</a>
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="delete_year_modal">
+                                <div class="modal fade" id="edit_year_modal{{ forloop.counter }}">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Edit Year {{ year.year }}</h4>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <form action="{% url 'edit_year' year.id %}" method="post">
+                                                    <input type="submit" value="submit"  class="btn btn-secondary btn-sm"/>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="delete_year_modal{{ forloop.counter }}">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <!-- Modal Header -->

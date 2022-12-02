@@ -50,7 +50,11 @@ def edit_ac_cal(request):
 
 
 def delete_year(request, id):
-    pass
+    year = Year.objects.get(pk=id)
+    year.delete()
+    messages.success(request, "Successfuy deleted the year {0}".format(
+        year.year), extra_tags="alert-success")
+    return redirect('academic_calendars')
 
 
 def create_year(request):
@@ -70,12 +74,14 @@ def create_year(request):
 def academic_calendars(request):
     years = Year.objects.all()
     create_year_form = YearForm()
-    return render(request, 'academic_calendar/academic_calendars.html', {'years': years, 'create_year_form': create_year_form})
+    return render(request, 'academic_calendar/academic_calendars.html',
+     {'years': years, 'create_year_form': create_year_form,'edit_year_form':YearForm})
 
 
 def academic_calendar(request, id):
     year = Year.objects.get(pk=id)
     create_term_form = TermForm()
+    create_term_form.year = year
     return render(request, 'academic_calendar/academic_calendar.html', {'year': year, 'create_term_form': create_term_form})
 
 
@@ -100,3 +106,9 @@ def delete_term(request, id):
     messages.success(
         request, "Term deleted successfully", extra_tags="alert-success")
     return redirect('academic_calendar', year)
+
+
+def edit_year(request, id):
+    year = Year.objects.get(pk=id)
+    year_form = YearForm(instance)
+    pass

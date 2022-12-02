@@ -3,8 +3,8 @@ from calendar import calendar
 from django.db import models
 from fees_structure.models import TERM_CHOICES
 from grade.models import Grade
-import invoice
-from student.models import Student
+
+
 from quickbooks.objects import Account as QB_Account
 from quickbooks.objects import Invoice as QB_Invoice
 from quickbooks.objects.detailline import SalesItemLine, SalesItemLineDetail
@@ -15,78 +15,39 @@ from intuitlib.client import AuthClient
 from django.conf import ENVIRONMENT_VARIABLE, settings
 from quickbooks import QuickBooks
 from item.models import Item as sales_item
-from fees_structure.models import FeesStructure
-from academic_calendar.models import AcademicCalendar
-
-INVOICE_STATUS = [
-    ("paid", "paid"),
-    ('part-paid', 'part-paid'),
-    ('unpaid', 'unpaid')
-]
-
-TERM_CHOICES = [
-    (1, 1),
-    (2, 2),
-    (3, 3)
-]
+from fees_structure.models import FeesStructureBatch
+from academic_calendar.models import Year, Term
+from student.models import Student
 
 
-class InvoiceNumber(models.Model):
-    """Generates the invoice number from instance's id attribute """
-    """should it be linked to qb_invoice invoice number."""
-    created = models.DateTimeField(auto_now_add=True)
-
-
-class Invoice(QBDModelMixin):
+class Invoice(models.Model):
+    """An Invoice. Charged to the active students at the beginning of every term."""
     class Meta:
         db_table = "Invoice_invoice"
-    """This is the invoice that has invoice items within it"""
+
     student = models.ForeignKey(
-        Student, on_delete=models.DO_NOTHING)  # added in views
-    modified = models.DateTimeField(auto_now=True)
-    created = models.DateTimeField(auto_now_add=True)  # created on save()
-    year = models.IntegerField(null=True, default=None)  # added in views
-    term = models.IntegerField(null=True, default=None)  # added in views
-    amount = models.DecimalField(max_digits=8, decimal_places=2, null=True,
-                                 default=0)  # to be added in registration views
+        Student, on_delete=models.CASCADE)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, null=True)
+    term = models.ForeignKey(Term, on_delete=models.CASCADE, null=True)
     grade = models.ForeignKey(
-        Grade, on_delete=models.DO_NOTHING, null=True, default=None)
-    # updated when creating payments
-    paid = models.BooleanField(default=False, null=True)
-    balance = models.DecimalField(max_digits=8, decimal_places=2, default=0,
-                                  null=True)  # hOW MUCH IS LEFT ON THE PAYMENT
+        Grade, on_delete=models.CASCADE, null=True, default=None)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
-    @classmethod
-    def to_qbd_obj(self, **fields):
-        from QBWEBSERVICE.objects import Invoice as QBInvoice
-        return QBInvoice(
-            Customer=self.student,
-            TimeCreated=self.created,
-            TxnDate=self.created,
-        )
-
-    @classmethod
-    def from_qbd_obj(cls, qbd_obj):
-        return cls(
-            qbd_object_id=qbd_obj
-
-        )
-
-    def status(self):
-        if self.balance == 0:
-            return 'cleared'
-        else:
-            return 'not cleared'
+    def fully_paid(self):
+        balance = self.get_balance()
+        if balance != 0:
+            return False
+        if balance == 0:
+            return True
 
     def get_term(self):
-        academic_calendar_obj = AcademicCalendar()
-        term = academic_calendar_obj.get_term(self.created)
-        return term
+        return self.term
 
     def get_year(self):
-        return self.created.year
+        return self.year
 
-    def get_amount(self):
+    def get_total_amount(self):
         amount = 0
         items = Item.objects.filter(invoice=self)
         for item in items:
@@ -94,36 +55,29 @@ class Invoice(QBDModelMixin):
 
         return amount
 
-    def get_balance(self):
-        # amount-payment amount
+    def get_amount_paid(self):
         payments = self.payment_set.filter(invoice=self)
         payment_amount = 0
         for payment in payments:
             payment_amount = payment_amount + payment.amount
 
-        return self.get_amount() - payment_amount
+        return payment_amount
 
-    def get_amount_paid(self):
-        amount_paid = self.amount - self.balance
-        return amount_paid
-
-    def format_invoice_no(self):
-        return 'inv' + str(self.invoice_number).zfill(4)
+    def get_balance(self):
+        # amount-payment amount
+        total_amount = self.get_total_amount()
+        amount_paid = self.get_amount_paid()
+        return total_amount - amount_paid
 
 
 class Item(models.Model):
     """These are invoice items. i.e the items that compose the invoice"""
     """Whenever an invoice item is added to an invoice, the save method modifies the invoice by increasing the amount and balance of the invoice"""
     # item_description = models.CharField(max_length=255,null=True,default=None)
-    invoice_item = models.ForeignKey(
+    sales_item = models.ForeignKey(
         sales_item, on_delete=models.DO_NOTHING, null=True, default=None)
     amount = models.IntegerField(null=True, default=None)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
-    created = models.DateField(null=True, default=None)
-
-    def save(self, *args, **kwargs):
-
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.invoice_item.name
@@ -141,12 +95,16 @@ class BalanceTable(models.Model):
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     modified = models.DateTimeField(auto_now=True)
 
-    def get_amount_dues(self):
-        """return the objects that have a balance of <0 """
-        if self.balance < 0:
-            return abs(self.balance)
-        else:
-            return 0
+    def increase_balance(self, amount):
+        self.balance = self.balance + amount
+        self.save()
+
+    def decrease_balance(self, amount):
+        self.balance = self.balance - amount
+        self.save()
+
+    def get_balance(self):
+        return self.balance
 
 
 #
@@ -268,3 +226,8 @@ class BalanceTable(models.Model):
     #    # save the invoice
     #    qb_invoice_obj.save(qb=client)
     #    return qb_invoice_obj
+# Obsolete Delete when possible
+class InvoiceNumber(models.Model):
+    """Generates the invoice number from instance's id attribute """
+    """should it be linked to qb_invoice invoice number."""
+    created = models.DateTimeField(auto_now_add=True)

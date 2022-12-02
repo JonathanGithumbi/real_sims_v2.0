@@ -163,3 +163,16 @@ should be able to serve as the central point of adding transactions to an expens
 
 28/11/2021
 --dashboard loads too slowly use ajax to fetch data instead
+
+2/12/2022
+-- design decision:eliminate drop downs have one page for each app with modals for forms;detail views will have their own page and navigation 
+   will be a pill at the top of the page that will show you where you are in the application
+
+-- remember! dont delete data simply remove them from the view of the user
+-- the students must be graduated before they can be invoiced
+-- the system musnt relly solely upon the user to create the terms and year, it should be able to do that automatically 
+so that it preserves its functionality awaiting aany edits from the user if at all necessary
+
+--- invoicing should only be done at the beginning of the term
+--- no user should be able to delete and invoice, all invoicing is done by the system based on the billing plan
+-- the first protocol of all protocols will be to ensure that there is a year object and term object 
