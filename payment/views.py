@@ -22,6 +22,7 @@ from django.contrib import messages
 from invoice.models import Item as Invoice_Item
 from grade.models import Grade
 from django.contrib.auth.decorators import login_required
+from payment.PaymentManager import PaymentManager
 
 
 @login_required()
@@ -31,8 +32,35 @@ def payments(request):
 
 
 @login_required()
-def make_payment(request):
-    # Make a payment for student
+def make_payment(request, id):
+    invoice = Invoice.objects.get(pk=id)
+
+    if request.method == 'POST':
+        payment_form = PaymentCreationForm(request.POST)
+        if payment_form.is_valid():
+            payment_obj = payment_form.save(commit=False)
+            payment_manager = PaymentManager()
+            payment_manager.make_payment(payment=payment_obj, invoice=invoice)
+            messages.success(
+                request, 'Successfully recorded payment', extra_tags='alert-success')
+            return redirect('student_profile', invoice.student.id)
+        else:
+            messages.error(request, "Error Recording Payment",
+                           extra_tags='alert-success')
+            return render(request, 'student/student_profile.html')
+
+
+@login_required()
+def payment_summaries(request):
+    return render(request, 'payment/payment_summaries.html')
+
+
+def chart_data(request):
+    pass
+
+
+"""
+# Make a payment for student
     # Get the student the payment is being made for
     # make_paymnt_POST
     if request.method == 'POST':
@@ -556,19 +584,4 @@ def make_payment(request):
             # there are no unpaid invoices
             # now you start the process of applying payments
         else:
-            # form != valid
-            return render(request, 'payment/create_payment.html', {'form': form_obj})
-    if request.method == 'GET':
-        # request method
-        # make a new payment creation form
-        form = PaymentCreationForm()
-        return render(request, 'payment/create_payment.html', {'form': form})
-
-
-@login_required()
-def payment_summaries(request):
-    return render(request, 'payment/payment_summaries.html')
-
-
-def chart_data(request):
-    pass
+"""

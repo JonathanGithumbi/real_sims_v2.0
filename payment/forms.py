@@ -8,9 +8,8 @@ from .models import Payment
 class PaymentCreationForm(forms.ModelForm):
     class Meta:
         model = Payment
-        fields = ['student','date_paid','amount']
+        fields = ['date_paid','amount']
         widgets = {
-            'student': Select(attrs={'class': 'form-select form-control form-control-sm payment-select', 'id': 'student'}),
             'date_paid': forms.DateInput(attrs={'class': 'form-control form-control-sm', 'id': 'floatingInput', 'type': 'date'}),
             'amount': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'id': 'quantity', 'min': 1}),
         }

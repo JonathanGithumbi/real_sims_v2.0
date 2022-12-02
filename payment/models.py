@@ -29,5 +29,11 @@ class Payment(models.Model):
     invoice = models.ForeignKey(
         Invoice, on_delete=models.CASCADE, null=True, default=None)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
-    note = models.CharField(max_length=255, null=True,
-                            default="Single Payment")
+
+
+#obsolete:discard when possible
+class OverFlow(models.Model):
+    """This method holds an account of all instances where a student may have overpayed and invoice"""
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    amount = models.IntegerField()
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, null=True)

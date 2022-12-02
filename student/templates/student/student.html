@@ -33,7 +33,6 @@
                                 <th>Admission Number</th>
                                 <th>Name</th>
                                 <th>Status</th>
-                                <th>Fees Balance</th>
                                 <th>Current Grade</th>
                                 <th>Actions</th>
                             </tr>
@@ -52,7 +51,6 @@
                                             <span class="badge badge-danger">Inactive</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ student.balancetable.get_amount_dues }}</td>
                                     <td>{{ student.current_grade }}</td>
                                     <td>
                                         <a href="{% url 'student_profile' student.id %} "

@@ -186,6 +186,34 @@
                                     <td>
                                         <a class="btn btn-primary btn-sm"
                                            href="{% url 'invoice_detail' invoice.id %}">Details</a>
+                                        <a class="btn btn-primary  btn-sm "
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target="#make_payment_modal{{ forloop.counter }}"
+                                           disable>Record Payment</a>
+                                        <div class="modal fade" id="make_payment_modal{{ forloop.counter }}">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">
+                                                            Record payment for this invoice
+                                                        </h4>
+                                                    </div>
+                                                    <!-- Modal Body -->
+                                                    <div class="modal-body">
+                                                        <form action="{% url 'make_payment' invoice.id %}" method="post">
+                                                            {% csrf_token %}
+                                                            {{ make_payment_form.as_p }}
+                                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                                                                Cancel
+                                                            </button>
+                                                            <input type="submit" value="submit"  class="btn btn-success btn-sm"/>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}

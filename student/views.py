@@ -10,6 +10,7 @@ from django.contrib import messages
 from item.models import Item as SalesItem
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from payment.forms import PaymentCreationForm
 
 
 @login_required()
@@ -46,8 +47,10 @@ def student_profile(request, student_id):
     student = Student.objects.get(pk=student_id)
     invoices = Invoice.objects.filter(student=student)
     payments = Payment.objects.filter(student=student)
+    make_payment_form = PaymentCreationForm()
+    make_payment_form.student = student
     return render(request, 'student/student_profile.html',
-                  {'student': student, 'invoices': invoices, 'payments': payments})
+                  {'student': student, 'invoices': invoices, 'payments': payments, 'make_payment_form': make_payment_form})
 
 
 @login_required()
