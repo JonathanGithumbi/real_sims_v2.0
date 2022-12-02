@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible small fade show">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {{ form.as_p }}
+    </div>
+    <!-- /.container-fluid -->
+{% endblock %}

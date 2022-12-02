@@ -161,9 +161,7 @@
                      aria-labelledby="headingUtilities"
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        {% if perms.fees_structure.can_create_the_fees_structure %}
-                            <a class="collapse-item" href="{% url 'create_fees_structure' %}">Add Fees Item</a>
-                        {% endif %}
+                        <a class="collapse-item" href="{% url 'academic_calendars' %}">Academic Calendars</a>
                     </div>
                 </div>
             </li>
@@ -237,7 +235,7 @@
                      aria-labelledby="headingUtilities"
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="#">QuickBooks Settings</a>
+                        <a class="collapse-item" href="{% url 'quickbooks_settings' %}">QuickBooks Settings</a>
                         <a class="collapse-item" href="{% url 'password_change' %}">Change Password</a>
                         <a class="collapse-item" href="{% url 'logout_user' %}">Logout</a>
                     </div>

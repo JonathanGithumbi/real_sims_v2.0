@@ -216,7 +216,7 @@ def login_user(request):
         if user is not None:
             # try to refresh tokens purely quickbooks related
             try:
-                refresh(request)    
+                refresh(request)
             except:
                 request.session['qb_synced'] = False
             else:
@@ -224,7 +224,7 @@ def login_user(request):
 
             finally:
                 login(request, user)
-                return redirect('dashboard',permanent=True)
+                return redirect('dashboard', permanent=True)
 
         else:
             # Invalid logins
@@ -243,3 +243,22 @@ def logout_view(request):
     logout(request)
 
     return redirect(reverse('login'))
+
+
+def quickbooks_connection_status():
+    # ...Check Status Here
+    # ...
+    connection_status = True
+    if connection_status == True:
+        return 'online'
+    if connection_status == False:
+        return 'offline'
+
+
+def quickbooks_settings(request):
+    connection_status = quickbooks_connection_status()
+    return render(request, 'user_account/quickbooks_settings.html', {'user': request.user, 'connection_status': connection_status})
+
+
+def download_qwc(request, id):
+    pass

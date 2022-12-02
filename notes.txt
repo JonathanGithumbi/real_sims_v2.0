@@ -160,3 +160,6 @@ should be able to serve as the central point of adding transactions to an expens
 
 ---Since they have been saving their transactions to qb, i can support migration of data into sims.
 --- DOnt be a dummy , charge them separately for migrating records, 
+
+28/11/2021
+--dashboard loads too slowly use ajax to fetch data instead

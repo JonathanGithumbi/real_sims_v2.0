@@ -1,0 +1,129 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible small fade show">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <br>
+        <!-- DataTables Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class"m-0">{{ year.year }} Academic Calendar</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div>
+                        <a class="btn btn-primary  btn-sm "
+                           href="#"
+                           data-toggle="modal"
+                           data-target="#add_term_modal">Add Term</a>
+                    </div>
+                    <div class="modal fade" id="add_term_modal">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">New Term</h4>
+                                </div>
+                                <!-- Modal Body -->
+                                <div class="modal-body">
+                                    <form action="{% url 'create_term' %}" method="post">
+                                        {% csrf_token %}
+                                        {{ create_term_form.as_p }}
+                                        <input type="submit" value="submit" class="btn btn-sm btn-primary">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class=" table table-bordered table-sm text-gray-900"
+                           id="AcademicCalendarTable"
+                           style="width:100%">
+                        <thead class="thead-light">
+                            <tr>
+                                <th></th>
+                                <th>Term</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for term  in year.term_set.all %}
+                                <tr>
+                                    <td></td>
+                                    <td>Term {{ term.term }}</td>
+                                    <td>{{ term.start }}</td>
+                                    <td>{{ term.end }}</td>
+                                    <td class="">
+                                        <a class="btn btn-primary  btn-sm "
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target="#edit_term_modal">Edit</a>
+                                        <a class="btn btn-danger  btn-sm "
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target="#delete_term_modal{{ forloop.counter }}">Delete</a>
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="edit_term_modal">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Edit Term {{ term.term }}</h4>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <form action="{% url 'edit_term' term.id %}" method="post">
+                                                    {{ edit_form.as_p }}
+                                                    <input type="submit" value="submit"  class="btn btn-secondary btn-sm"/>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="delete_term_modal{{ forloop.counter }}">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Discard Term {{ term.term }}</h4>
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                                <a class="btn btn-danger btn-sm" href="{% url 'delete_term' term.id %}">
+                                                    <span class="text">Delete</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    {% block script %}
+        <script>
+        $(document).ready(function () {
+            //Set the formats for DataTales
+            $.fn.dataTable.moment( 'MMM. D, YYYY, hh:mm' );
+    //Initialise the table
+    
+        </script>
+    {% endblock script %}
+{% endblock %}

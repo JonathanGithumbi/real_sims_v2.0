@@ -5,6 +5,9 @@ from .forms import AuthFormWithBootstrapSpecifics, PasswordResetFormWithBootstra
 from . import views
 
 urlpatterns = [
+    path('quickbooks-settings/', views.quickbooks_settings,
+         name='quickbooks_settings'),
+    path('download-qwc/<int:id>/', views.download_qwc, name='download_qwc'),
     path('', views.login_user, name='login'),
     path('logout/', views.logout_view, name='logout_user'),
 

@@ -56,11 +56,39 @@ def get_years():
 
 
 class CreateFeesStructureForm(forms.ModelForm):
-
     class Meta:
         model = FeesStructureBatch
         fields = ('item', 'grades', 'amount', 'ocurrence', 'period',
                 'terms', 'year', 'term', 'charge_on_registration')
+
+        widgets = {
+            'item': forms.Select(
+                attrs={'class': 'form-control form-control-sm', 'id': 'description'}),
+            'grades': forms.CheckboxSelectMultiple(
+                attrs={'name': 'grades', 'id': 'grades'}),
+            'amount': forms.NumberInput(
+                attrs={'class': 'form-control form-control-sm', 'id': 'amount'}),
+            'ocurrence': forms.RadioSelect(
+                attrs={'name': 'ocurrence'}),
+            'period': forms.RadioSelect(attrs={'name': 'period', 'id': 'period'}),
+            'terms': forms.CheckboxSelectMultiple(
+                attrs={'class': '', 'id': 'specific_terms'}),
+            'year': forms.Select(
+                attrs={'class': 'form-control form-control-sm', 'id': 'year'}),
+            'term': forms.Select(
+                attrs={'class': 'form-control form-control-sm', 'id': 'term'}),
+            'charge_on_registration': forms.CheckboxInput(
+                attrs={'name': 'cor', 'id': 'cor'})
+
+        }
+
+
+class EditFeesStructureForm(forms.ModelForm):
+
+    class Meta:
+        model = FeesStructureBatch
+        fields = ('item', 'grades', 'amount', 'ocurrence', 'period',
+                  'terms', 'year', 'term', 'charge_on_registration')
 
         widgets = {
             'item': forms.Select(
