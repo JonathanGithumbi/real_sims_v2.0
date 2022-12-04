@@ -34,20 +34,12 @@ def payments(request):
 @login_required()
 def make_payment(request, id):
     invoice = Invoice.objects.get(pk=id)
-
-    if request.method == 'POST':
-        payment_form = PaymentCreationForm(request.POST)
-        if payment_form.is_valid():
-            payment_obj = payment_form.save(commit=False)
-            payment_manager = PaymentManager()
-            payment_manager.make_payment(payment=payment_obj, invoice=invoice)
-            messages.success(
-                request, 'Successfully recorded payment', extra_tags='alert-success')
-            return redirect('student_profile', invoice.student.id)
-        else:
-            messages.error(request, "Error Recording Payment",
-                           extra_tags='alert-success')
-            return render(request, 'student/student_profile.html')
+    payment_form = PaymentCreationForm(request.POST)
+    payment_manager = PaymentManager()
+    payment_manager.make_payment(payment_form, invoice=invoice)
+    messages.success(
+        request, 'Successfully recorded payment', extra_tags='alert-success')
+    return redirect('student_profile', invoice.student.id)
 
 
 @login_required()

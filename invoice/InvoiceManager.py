@@ -1,5 +1,7 @@
-from invoice.models import Invoice,Item,BalanceTable
+from invoice.models import Invoice, Item, BalanceTable
 from fees_structure.models import FeesStructureBatch
+from item.ItemManager import ItemManager
+
 
 class InvoiceManager():
     """This invoice manager is in charge of invoicing one student at registration and all active students at the beginning of the term"""
@@ -28,6 +30,34 @@ class InvoiceManager():
                 amount=fees_structure.amount,
                 invoice=invoice
             )
+
+        # also invoice for any optionals
+        if student.lunch == True:
+            # Create an invoice item for the lunch item
+            item_manager = ItemManager()
+            lunch_sales_item = item_manager.get_lunch_item()
+            lunch_item_amount = FeesStructureBatch.objects.get(
+                item=lunch_sales_item, grades__in=[student.current_grade]).amount
+            lunch_item = Item.objects.create(
+                sales_item=lunch_sales_item,
+                amount=lunch_item_amount,
+                invoice=invoice
+            )
+        if student.transport == True:
+            # Create an invoice item for the transport item
+            item_manager = ItemManager()
+            transport_sales_item = item_manager.get_transport_item()
+            transport_item_amount = FeesStructureBatch.objects.get(
+                item=transport_sales_item, grades__in=[student.current_grade]).amount
+            transport_item = Item.objects.create(
+                sales_item=transport_sales_item,
+                amount=transport_item_amount,
+                invoice=invoice
+            )
+
+        # set the invoice balance
+        invoice.balance = invoice.get_total_amount()
+        invoice.save(update_fields=['balance'])
 
         # create and update the balancetable
         bal_record = BalanceTable.objects.create(student=invoice.student)
@@ -87,10 +117,110 @@ class InvoiceManager():
                 )
         else:
             pass
-
+        # set the invoice balance
+        invoice.balance = invoice.get_total_amount()
+        invoice.save(update_fields=['balance'])
         # update the balancetable
         bal_record = BalanceTable.objects.get(student=invoice.student)
         bal_record.increase_balance(invoice.get_total_amount())
 
         # return teh charge
         return invoice
+
+    def invoice_student_lunch(self, student):
+        """This method invoices a student for lunch"""
+
+        # Get the current term's invoice
+        curr_invoice = Invoice.objects.get(
+            student=student, year=student.current_year, term=student.current_term)
+
+        # Create an invoice item for the lunch item
+        item_manager = ItemManager()
+        lunch_sales_item = item_manager.get_lunch_item()
+        lunch_item_amount = FeesStructureBatch.objects.get(
+            item=lunch_sales_item, grades__in=[student.current_grade]).amount
+        lunch_item = Item.objects.create(
+            sales_item=lunch_sales_item,
+            amount=lunch_item_amount,
+            invoice=curr_invoice
+        )
+        # set the invoice balance
+        curr_invoice.balance = curr_invoice.get_total_amount()
+        curr_invoice.save(update_fields=['balance'])
+        # Increase the balance record
+        bal_record = BalanceTable.objects.get(student=student)
+        bal_record.increase_balance(lunch_item_amount)
+
+        return lunch_item
+
+    def uninvoice_student_lunch(self, student):
+        """This method uninvoices a student from lunch"""
+        # Get the current term's invoice
+        curr_invoice = Invoice.objects.get(
+            student=student, year=student.current_year, term=student.current_term)
+
+        # get the lunch sales item
+        item_manager = ItemManager()
+        lunch_sales_item = item_manager.get_lunch_item()
+        # find and delete the lunch invoice item
+        lunch_item = Item.objects.get(
+            invoice=curr_invoice, sales_item=lunch_sales_item)
+        lunch_item.delete()
+        # set the invoice balance
+        curr_invoice.balance = curr_invoice.get_total_amount()
+        curr_invoice.save(update_fields=['balance'])
+        # decrease the student's balance
+        bal_record = BalanceTable.objects.get(student=student)
+        bal_record.decrease_balance(lunch_item.amount)
+        return True
+
+    def invoice_student_transport(self, student):
+        """This method invoices a student for transport"""
+        # Get the current term's invoice
+        curr_invoice = Invoice.objects.get(
+            student=student, year=student.current_year, term=student.current_term)
+
+        # Create an invoice item for the transport item
+        item_manager = ItemManager()
+        transport_sales_item = item_manager.get_transport_item()
+        transport_item_amount = FeesStructureBatch.objects.get(
+            item=transport_sales_item, grades__in=[student.current_grade]).amount
+        transport_item = Item.objects.create(
+            sales_item=transport_sales_item,
+            amount=transport_item_amount,
+            invoice=curr_invoice
+        )
+        # set the invoice balance
+        curr_invoice.balance = curr_invoice.get_total_amount()
+        curr_invoice.save(update_fields=['balance'])
+        # Increase the balance record
+        bal_record = BalanceTable.objects.get(student=student)
+        bal_record.increase_balance(transport_item_amount)
+
+        return transport_item
+
+    def uninvoice_student_transport(self, student):
+        """This method uninvoices a student from transport"""
+        # Get the current term's invoice
+        curr_invoice = Invoice.objects.get(
+            student=student, year=student.current_year, term=student.current_term)
+
+        # get the transport sales item
+        item_manager = ItemManager()
+        transport_sales_item = item_manager.get_transport_item()
+        # find and delete the transport invoice item
+        transport_item = Item.objects.get(
+            invoice=curr_invoice, sales_item=transport_sales_item)
+        transport_item.delete()
+        # set the invoice balance
+        curr_invoice.balance = curr_invoice.get_total_amount()
+        curr_invoice.save(update_fields=['balance'])
+        # decrease the student's balance
+        bal_record = BalanceTable.objects.get(student=student)
+        bal_record.decrease_balance(transport_item.amount)
+        return True
+
+    def receive_payment(self, amount, invoice):
+        invoice.balance = invoice.balance - amount
+        invoice.save(update_fields=['balance'])
+        return True

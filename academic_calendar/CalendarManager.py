@@ -22,11 +22,8 @@ class CalendarManager():
             year_obj = Year.objects.get(year=int(today.year))
             return year_obj
         else:
-            try:
-                year_obj = Year.objects.filter(year=int(date.year))
-                return year_obj
-            except:
-                return None
+            year_obj = Year.objects.get(year=date.year)
+            return year_obj
 
     def get_term(self, date=None):
         """This method returns the term object of the current term if no arg is given, otherwise returns the term object of the date passed in"""

@@ -31,41 +31,38 @@ class Student(models.Model):
 
     class Meta:
         ordering = ['-date_of_admission']
-
-    admission_number = models.IntegerField(null=True, default=None)
-    admission_number_formatted = models.CharField(
-        max_length=255, default=None, null=True)
-    name = models.CharField(max_length=255, null=True)
-    first_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, blank=True)
     middle_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
     grade_admitted_to = models.ForeignKey(
         Grade, on_delete=models.CASCADE, related_name='grade_admitted_to')
     current_grade = models.ForeignKey(
         Grade, on_delete=models.CASCADE, blank=True, null=True)
-    date_of_admission = models.DateField(auto_now_add=True)
+    date_of_admission = models.DateField(auto_now_add=True, blank=True)
     year_admitted = models.ForeignKey(
-        Year, on_delete=models.CASCADE, null=True)
+        Year, on_delete=models.CASCADE, null=True, blank=True)
     term_admitted = models.ForeignKey(
-        Term, on_delete=models.CASCADE, null=True)
+        Term, on_delete=models.CASCADE, null=True, blank=True)
     current_term = models.ForeignKey(
-        Term, on_delete=models.CASCADE, related_name='current_term', null=True)
+        Term, on_delete=models.CASCADE, related_name='current_term', null=True, blank=True)
     current_year = models.ForeignKey(
-        Year, on_delete=models.CASCADE, related_name='current_year', null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    primary_contact_name = models.CharField(max_length=255)
+        Year, on_delete=models.CASCADE, related_name='current_year', null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
+    primary_contact_name = models.CharField(max_length=255, blank=True)
     primary_contact_phone_number = models.CharField(max_length=255, blank=True)
-    secondary_contact_name = models.CharField(max_length=255)
+    secondary_contact_name = models.CharField(max_length=255, blank=True)
     secondary_contact_phone_number = models.CharField(
         max_length=255, blank=True)
 
     # This active flag defines whether or not the student gets  invoiced
-    active = models.BooleanField(null=True, default=True)
+    active = models.BooleanField(null=True, default=True, blank=True)
+
+    # This visible flag will determing whether the student is visible; an alternative to deleting data
+    visible = models.BooleanField(null=True, default=True, blank=True)
 
     # optionals
-    lunch = models.BooleanField(default=False)
-    transport = models.BooleanField(default=False)
-    synced = models.BooleanField(default=False)
+    lunch = models.BooleanField(default=False, blank=True)
+    transport = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.middle_name} {self.last_name}"

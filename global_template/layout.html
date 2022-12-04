@@ -31,24 +31,10 @@
                 <!-- Heading -->
                 <div class="sidebar-heading">Students</div>
                 <li class="nav-item">
-                    <a class="nav-link collapsed"
-                       href="#"
-                       data-toggle="collapse"
-                       data-target="#collapseStudents"
-                       aria-expanded="true"
-                       aria-controls="collapseStudents">
+                    <a class="nav-link " href="{% url 'students' %}">
                         <i class="fas fa-fw fa-male"></i>
                         <span>Students</span>
                     </a>
-                    <div id="collapseStudents"
-                         class="collapse"
-                         aria-labelledby="headingUtilities"
-                         data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="{% url 'register_student' %}">Register New Student</a>
-                            <a class="collapse-item" href="{% url 'students' %}">View Students</a>
-                        </div>
-                    </div>
                 </li>
             {% endif %}
             <!-- Divider -->
@@ -167,9 +153,7 @@
             </li>
             <!-- Divider -->
             <hr class="sidebar-divider">
-            <div class="sidebar-heading">
-                Fees Structure
-            </div>
+            <div class="sidebar-heading">Fees Structure</div>
             <li class="nav-item">
                 <a class="nav-link collapsed"
                    href="#"

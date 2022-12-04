@@ -19,26 +19,7 @@
                 <h6 class="m-0 font-weight-bold ">Details</h6>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table text-gray-900 table-bordered table-hover table-sm">
-                        <tr>
-                            <th>Student Name</th>
-                            <td>{{ invoice.student }}</td>
-                        </tr>
-                        <tr>
-                            <th>Grade</th>
-                            <td>{{ invoice.student.current_grade }}</td>
-                        </tr>
-                        <tr>
-                            <th>Year</th>
-                            <td>{{ invoice.year }}</td>
-                        </tr>
-                        <tr>
-                            <th>Term</th>
-                            <td>{{ invoice.term }}</td>
-                        </tr>
-                    </table>
-                </div>
+                
             </div>
         </div>
         <!--Invoice items Table-->
@@ -47,22 +28,7 @@
                 <h6 class="m-0 font-weight-bold">Invoice items</h6>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered text-gray-900 table-hover table-sm">
-                        {% for item in items %}
-                            <tr>
-                                <th>{{ item.invoice_item }}</th>
-                                <td>{{ item.amount }} Ksh</td>
-                            </tr>
-                        {% endfor %}
-                        <tr class="table-danger">
-                            <th>TOTAL</th>
-                            <td>
-                                <b>{{ invoice.get_amount }} Ksh</b>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                
             </div>
         </div>
         <!--invoice payments-->
@@ -71,29 +37,7 @@
                 <h6 class="m-0 font-weight-bold ">Invoice Payments</h6>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table id=""
-                           class="display table-sm text-gray-900 table table-bordered table-hover">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Date Paid</th>
-                                <th>Note</th>
-                                <th>Amount</th>
-                                <th>Balance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for payment in payments %}
-                                <tr>
-                                    <td>{{ payment.date_paid }}</td>
-                                    <td>{{ payment.note }}</td>
-                                    <td>{{ payment.amount }} Ksh</td>
-                                    <td>{{ payment.bal_on_inv }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                
             </div>
         </div>
     </div>

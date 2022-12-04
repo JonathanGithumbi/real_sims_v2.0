@@ -178,3 +178,8 @@ so that it preserves its functionality awaiting aany edits from the user if at a
 -- the first protocol of all protocols will be to ensure that there is a year object and term object 
 
 --- do form validation on the frontend
+
+3/12/2022
+ --- reduce padding on student page. too much padding makes it look clunky and unprofessional
+ --- in students table should be fetching data via ajax rather than from the backend
+ -- fees structure validation logic: a grade should not be charged twice for the same item

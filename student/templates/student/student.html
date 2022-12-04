@@ -4,7 +4,13 @@
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
-        <br>
+        <div class='row'>
+            <div class='col'>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item active">.../students/</li>
+                </ul>
+            </div>
+        </div>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -15,35 +21,142 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <!-- DataTales Example -->
+        <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold ">Registered Students</h6>
+                <h5 class="m-0 font-weight-bold ">Registered Students</h5>
+                <small>total number of active students: <span class="badge badge-secondary">{{ active_students }}</span></small>
+                <br>
+                <hr >
+                <button class="btn btn-primary  btn-sm "
+                        href="#"
+                        data-toggle="modal"
+                        data-target="#register_student_modal"
+                        disable>
+                    Register Student
+                </button>
             </div>
             <div class="card-body">
+                <div class="modal  fade" id="register_student_modal">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="card-header py-3">
+                                <h5 class="m-0 font-weight-bold ">Student Registration Form</h5>
+                            </div>
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+                                <form action="{% url 'register_student' %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                {{ student_registration_form.first_name.errors }}
+                                                <label for="{{ student_registration_form.first_name.id_for_label }}">First Name:</label>
+                                                {{ student_registration_form.first_name }}
+                                            </div>
+                                            <div class="col">
+                                                {{ student_registration_form.middle_name.errors }}
+                                                <label for="{{ student_registration_form.middle_name.id_for_label }}">Middle Name:</label>
+                                                {{ student_registration_form.middle_name }}
+                                            </div>
+                                            <div class="col">
+                                                {{ student_registration_form.last_name.errors }}
+                                                <label for="{{ student_registration_form.last_name.id_for_label }}">Last Name:</label>
+                                                {{ student_registration_form.last_name }}
+                                            </div>
+                                        </div>
+                                        <div class="row" style="width:34.3%">
+                                            <div class="col">
+                                                {{ student_registration_form.grade_admitted_to.errors }}
+                                                <label for="{{ student_registration_form.grade_admitted_to.id_for_label }}">Joining Grade:</label>
+                                                {{ student_registration_form.grade_admitted_to }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                {{ student_registration_form.primary_contact_name.errors }}
+                                                <label for="{{ student_registration_form.primary_contact_name.id_for_label }}">
+                                                    Name of Primary
+                                                    Contact
+                                                </label>
+                                                {{ student_registration_form.primary_contact_name }}
+                                            </div>
+                                            <div class="col">
+                                                {{ student_registration_form.primary_contact_phone_number.errors }}
+                                                <label for="{{ student_registration_form.primary_contact_phone_number.id_for_label }}">
+                                                    Phone Number
+                                                    of Primary Contact:
+                                                </label>
+                                                {{ student_registration_form.primary_contact_phone_number }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                {{ student_registration_form.secondary_contact_name.errors }}
+                                                <label for="{{ student_registration_form.secondary_contact_name.id_for_label }}">
+                                                    Name of Secondary
+                                                    Contact:
+                                                </label>
+                                                {{ student_registration_form.secondary_contact_name }}
+                                            </div>
+                                            <div class="col">
+                                                {{ student_registration_form.secondary_contact_phone_number.errors }}
+                                                <label for="{{ student_registration_form.secondary_contact_phone_number.id_for_label }}">
+                                                    Secondary
+                                                    Contact Phone Number:
+                                                </label>
+                                                {{ student_registration_form.secondary_contact_phone_number }}
+                                            </div>
+                                        </div>
+                                        <hr class="sidebar-divider">
+                                        <div class="row">
+                                            <div class="student_registration_form-check">
+                                                {{ student_registration_form.lunch.errors }}
+                                                <label class="student_registration_form-check-label"
+                                                       for="{{ student_registration_form.lunch.id_for_label }}">
+                                                    {{ student_registration_form.lunch }}Subscribe to Lunch
+                                                    :
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="student_registration_form-check">
+                                                {{ student_registration_form.transport.errors }}
+                                                <label class="student_registration_form-check-label"
+                                                       for="{{ student_registration_form.transport.id_for_label }}"
+                                                       class="student_registration_form-check-label">
+                                                    {{ student_registration_form.transport }}Subscribe to Transport:
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="table-responsive">
-                    <table id="StudentsdataTable"
+                    <table id="studentsdatatable"
                            class="table text-gray-900 table-bordered table-sm"
                            width="100%"
                            cellspacing="0">
                         <thead class="thead-light">
                             <tr>
-                                <th></th>
-                                <th>Date Registered</th>
-                                <th>Admission Number</th>
                                 <th>Name</th>
-                                <th>Status</th>
                                 <th>Current Grade</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for student in students %}
                                 <tr>
-                                    <td></td>
-                                    <td>{{ student.date_of_admission }}</td>
-                                    <td>{{ student.admission_number_formatted }}</td>
                                     <td>{{ student }}</td>
+                                    <td>{{ student.current_grade }}</td>
                                     <td>
                                         {% if student.active == True %}
                                             <span class="badge badge-success">Active</span>
@@ -51,10 +164,9 @@
                                             <span class="badge badge-danger">Inactive</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ student.current_grade }}</td>
                                     <td>
                                         <a href="{% url 'student_profile' student.id %} "
-                                           class="btn btn-primary  btn-sm">profile</a>
+                                           class="btn btn-primary  btn-sm">Details</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -67,78 +179,10 @@
     <!-- /.container-fluid -->
     {% block script %}
         <script>
-        $(document).ready(function () {
-            $.fn.dataTable.moment( 'MMM. D, YYYY' );
-    //Initialise the table
-    var table = $('#StudentsdataTable').DataTable({
-        
-        fixedHeader: true,
-        order: [[0, 'desc']],
-        
-        dom: 'Bfrtip',
-        lengthMenu: [
-        10, 25, 50, -1
-        ],
-        buttons: [
-        {
-                text: 'New Student',
-                action: function ( e, dt, node, config ) {
-                     window.location.href = "{% url 'register_student' %}"
-
-                }
-            },
-        
-        {
-            extend: 'searchBuilder',
-            config: {
-                depthLimit: 2
-            }
-        },
-        {
-            extend: 'excel',
-            messageBottom: "Kings Educational Center Information Management System",
-            title: "Students Report",
-            messageTop:function(){
-                var curr_date = new Date();
-                txt_curr_date = curr_date.toString();
-            },
-            exportOptions: {
-                    columns: ':visible'
-                }
-        },
-        {
-            extend: 'pdf',
-            messageBottom: "Kings Educational Center Information Management System",
-            download:'open',
-            title: "Students Report",
-            messageTop: function(){
-                var curr_date = new Date();
-                txt_curr_date = curr_date.toString();
-                return txt_curr_date;
-            },
-            exportOptions: {
-                    columns: ':visible'
-                }
-        },
-        'pageLength', 
-        'colvis'
-        ],
-        columnDefs: [{
-        orderable: false,
-        className: 'select-checkbox',
-        targets: 0
-        }],
-        select: {
-        style: 'multi',
-        selector: 'td:first-child'
-        },
-        order: [[0, 'asc']]
-    });
-
-    //Add Styling to the buttons
-    table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
-
-});
+            $(document).ready(function(){
+                var table = $('#studentsdatatable').DataTable({});
+            });
+       
         </script>
     {% endblock script %}
 {% endblock %}
