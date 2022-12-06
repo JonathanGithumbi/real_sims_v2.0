@@ -14,17 +14,19 @@ class Year(models.Model):
         return str(self.year)
 
 
-
 class Term(models.Model):
-    term = models.IntegerField()
+    TERM_CHOICES = [
+        (1, 1),
+        (2, 2),
+        (3, 3),
+    ]
+    term = models.IntegerField(choices=TERM_CHOICES)
     start = models.DateField()
     end = models.DateField()
     year = models.ForeignKey(Year, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return str(self.term)
-
-
 
 
 # obsolete: delete when possible

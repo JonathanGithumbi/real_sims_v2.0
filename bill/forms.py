@@ -39,6 +39,6 @@ class EditBillItemForm(forms.ModelForm):
 
 
 class TopUpForm(forms.Form):
-    amount = forms.CharField(
-        max_length=6, widget=forms.TextInput
+    amount = forms.IntegerField(
+        widget=forms.NumberInput
         (attrs={'class': 'form-control form-control-sm', 'id': 'amount'}))

@@ -23,44 +23,7 @@
                                 <h5>Top Up Petty Cash</h5>
                             </div>
                             <hr>
-                            <form action="{% url 'topup' %}" method="post" name="topup_form">
-                                {% csrf_token %}
-                                <div class="row">
-                                    <div class="col">
-                                        {{ form.amount.errors }}
-                                        <label for="{{ form.amount.id_for_label }}">Amount:</label>
-                                        {{ form.amount }}
-                                    </div>
-                                </div>
-                                <br>
-                                <a class="btn btn-primary btn-sm"
-                                   onclick="confirm_topup()"
-                                   href="#"
-                                   data-toggle="modal"
-                                   data-target="#confirm_topup_modal">Submit</a>
-                                <div class="modal fade" id="confirm_topup_modal">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <!-- Modal Header -->
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Confirm Topup Amount</h4>
-                                            </div>
-                                            <!-- Modal body -->
-                                            <div class="modal-body">
-                                                <b>Confirm topup of :</b> <span id="amount_area"></span><span>Ksh</span>
-                                            </div>
-                                            <!-- Modal footer -->
-                                            <div class="modal-footer">
-                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
-                                                <input type="submit"
-                                                       class="btn btn-success btn-sm"
-                                                       value="Submit"
-                                                       data-bs-dismiss="modal">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                            
                         </div>
                     </div>
                 </div>

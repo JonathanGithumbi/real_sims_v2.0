@@ -18,15 +18,15 @@
         <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h4 class"m-0">Quickbooks Settings</h4>
-                <h6 class"m-0">
+                <h5 class"m-0">Quickbooks Settings</h5>
+                <small class"m-0">
                     Quickbooks Connection Status:
                     {% if connection_status == 'online' %}
                         <span class="badge badge-success">online</span>
                     {% else %}
                         <span class="badge badge-danger">offline</span>
                     {% endif %}
-                </h6>
+                </small>
             </div>
             <div class="card-body">
                 <h5>Quickbooks Connector File:</h5>

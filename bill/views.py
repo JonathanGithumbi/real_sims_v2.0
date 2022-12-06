@@ -8,16 +8,22 @@ from bill_payment.models import BillPayment
 from .forms import EditBillItemForm, TopUpForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from .BillManager import BillManager
+from .PettyCashManager import PettyCashManager
+from django.http import HttpResponse
 
 
 @login_required()
 # @permission_required("can_view_bill")
 def bills(request):
     #!use some kind of limiter to reduce the load on the db server
+    create_bill_form = CreateBillItemForm()
+    edit_bill_form = EditBillItemForm()
+    topup_form = TopUpForm()
     bills = BillItem.objects.all().order_by('-created')
     petty_cash = PettyCash.objects.get(pk=1)
     petty_cash_balance = petty_cash.balance
-    return render(request, 'bill/bills.html', {'bills': bills, 'petty_cash_balance': petty_cash_balance})
+    return render(request, 'bill/bills.html', {'bills': bills, 'petty_cash_balance': petty_cash_balance, 'edit_bill_form': edit_bill_form, 'create_bill_form': create_bill_form, 'topup_form': topup_form})
 
 
 login_required()
@@ -25,66 +31,31 @@ login_required()
 
 
 def create_bill(request):
-    # decreases the petty cash balance by the total,that is also the transaction's balance snapshot
-    if request.method == 'GET':
-        form = CreateBillItemForm()
-        return render(request, 'bill/create_bill.html', {'form': form})
-    if request.method == 'POST':
-        form = CreateBillItemForm(request.POST)
-        if form.is_valid():
-            bill_item_obj = form.save()
-            petty_cash_obj = PettyCash.objects.get(pk=1)
-
-            bill_item_obj.balance = petty_cash_obj.balance - bill_item_obj.total
-            user_id = request.user.id
-            user = User.objects.get(pk=user_id)
-            bill_item_obj.user = user
-            bill_item_obj.save(update_fields=['balance', 'user'])
-
-            petty_cash_obj.balance = petty_cash_obj.balance - bill_item_obj.total
-            petty_cash_obj.save(update_fields=['balance', 'modified'])
-            # also save the  bill to quickbooks
-            try:
-                qb_bill_item = bill_item_obj.create_qb_bill()
-            except:
-                pass
-            else:
-                bill_item_obj.qb_id = qb_bill_item.Id
-                bill_item_obj.synced = True
-                bill_item_obj.save(update_fields=['qb_id', 'synced'])
-            messages.success(request, "{0} Bill recorded successfully".format(
-                bill_item_obj.description), extra_tags='alert-success')
-            return redirect(reverse('bills'))
-        else:
-            return render(request, 'bill/create_bill.html', {'form': form})
-
-
-login_required()
-# @permission_required("can_pay_bill")
-
-
-def pay_bill(request, id):
-    bill_obj = BillItem.objects.get(pk=id)
-
-    # create a bill payment object.
-    # bill pay
-    bill_payment_obj = BillPayment.objects.create(
-
-        amount=bill_obj.total,
-        bill=bill_obj,
-    )
-    bill_payment_obj.save()
-    bill_obj.fully_paid = True
-    bill_obj.save(update_fields=['fully_paid'])
-
-    #qb_payment = bill_payment_obj.create_qb_bill_payment_obj()
-    #bill_payment_obj.qb_id = qb_payment.Id
-    #bill_payment_obj.synced = True
-    #bill_payment_obj.save(update_fields=['qb_id', 'synced'])
-
-    messages.success(request, "{0} Bill Payment recorded Successfully".format(
-        bill_obj.description), extra_tags='alert-success')
+    form = CreateBillItemForm(request.POST)
+    bill_manager = BillManager()
+    bill_item_obj = bill_manager.create_bill(form)
+    messages.success(request, "{0} Bill recorded successfully".format(
+        bill_item_obj.description), extra_tags='alert-success')
     return redirect('bills')
+
+
+@login_required()
+def topup(request):
+    topup_form = TopUpForm(request.POST)
+    bill_manager = BillManager()
+    bill_manager.create_deposit_bill(topup_form)
+    messages.success(request, "Top Up Successfull",
+                     extra_tags='alert-success')
+    return redirect(reverse('bills'))
+
+
+@login_required()
+def delete_bill(request, id):
+    bill_obj = BillItem.objects.get(pk=id)
+    bill_manager = BillManager()
+    bill_manager.delete_bill(bill_obj)
+    messages.success(request, "Bill Deleted Successfully")
+    return redirect(reverse('bills'))
 
 
 login_required()
@@ -96,7 +67,7 @@ def edit_bill(request, id):
 
     if request.method == 'GET':
         bill_edit_form = EditBillItemForm(instance=bill_obj)
-        return render(request, 'bill/edit_bill.html', {'form': bill_edit_form, 'bill': bill_obj})
+        return HttpResponse(bill_edit_form.as_p())
     if request.method == 'POST':
         initial_data = {
             'recipient': bill_obj.recipient,
@@ -142,69 +113,8 @@ def edit_bill(request, id):
 
 
 @login_required()
-def delete_bill(request, id):
-    bill_obj = BillItem.objects.get(pk=id)
-    petty_cash = PettyCash.objects.get(pk=1)
-    if bill_obj.category == "Deposit":
-        petty_cash.balance = petty_cash.balance - bill_obj.total
-        petty_cash.save(update_fields=['balance', 'modified'])
-        bill_obj.delete()
-        messages.success(request, "Top Up Discarded Successfully")
-        return redirect(reverse('bills'))
-        # return the total amount back to the petty_cash
-
-    petty_cash.balance = petty_cash.balance + bill_obj.total
-    petty_cash.save(update_fields=['balance', 'modified'])
-    bill_obj.delete()
-    messages.success(request, "Bill Discarded Successfully")
-    return redirect(reverse('bills'))
-
-
-@login_required()
 def view_summaries(request):
     return render(request, 'bill/bill_summaries.html')
-
-
-@login_required()
-def topup(request):
-    if request.method == 'GET':
-        topupform = TopUpForm()
-        return render(request, 'bill/topup.html', {'form': topupform})
-
-    if request.method == "POST":
-        topup_form = TopUpForm(request.POST)
-        if topup_form.is_valid():
-            amount = topup_form.cleaned_data['amount']
-            petty_cash_object = PettyCash.objects.get(pk=1)
-            user_id = request.user.id
-            user = User.objects.get(pk=user_id)
-
-            # topup algorithm
-            # topup means increasing the petty cash balance and creating a billitem and also reflecting it to qb
-            depo_transaction = BillItem.objects.create(
-                category="Deposit",
-                description="Petty Cash Top Up",
-                total=int(amount),
-                quantity=1,
-                price_per_quantity=int(amount),
-                balance=petty_cash_object.balance + int(amount),
-                recipient=user.username,
-
-            )
-            petty_cash_object.balance = int(
-                petty_cash_object.balance) + int(amount)
-            petty_cash_object.save(update_fields=['balance', 'modified'])
-
-            #
-            # record to qb
-            #
-
-            messages.info(request, "Petty Cash Top Up Successfull",
-                          extra_tags='alert-success')
-            return redirect(reverse('bills'))
-        else:
-            return render(request, 'bill/topup.html', {'form': topup_form
-                                                       })
 
 
 # One class view per chart

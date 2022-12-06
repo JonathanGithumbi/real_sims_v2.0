@@ -18,7 +18,131 @@
         <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class"m-0">Billing Items</h5>
+                <h5 class="m-0 font-weight-bold ">Fees Structure Billing Items</h5>
+                <hr >
+                <button class="btn btn-primary  btn-sm "
+                        href="#"
+                        data-toggle="modal"
+                        data-target="#add_billingitem_modal">
+                    Add Billing Item
+                </button>
+                <button class="btn btn-primary  btn-sm "
+                        href="#"
+                        data-toggle="modal"
+                        data-target="#add_salesitem_modal">
+                    Add Sales Item
+                </button>
+            </div>
+            <div class="modal  fade" id="add_salesitem_modal">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold ">New Sales Item Form</h5>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <form action="{% url 'add_salesitem' %}" method="post">
+                                {% csrf_token %}
+                                <div class="row" id='item-name-row'>
+                                    <div class="col">
+                                        {{ add_salesitem_form.name.errors }}
+                                        <label for="{{ add_salesitem_form.name.id_for_label }}">Name:</label>
+                                        {{ add_salesitem_form.name }}
+                                    </div>
+                                </div>
+                                <br>
+                                <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal  fade" id="add_billingitem_modal">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold ">New Billing Item Form</h5>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <form action="{% url 'create_fees_structure' %}"
+                                  method="post"
+                                  id="add_fees_item_form"
+                                  name="add_fees_item_form">
+                                {% csrf_token %}
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            {{ add_billing_item_form.description.errors }}
+                                            <label for="{{ add_billing_item_form.description.id_for_label }}">Item:</label>
+                                            {{ add_billing_item_form.item }}
+                                        </div>
+                                    </div>
+                                    <div class="row" id='cor-row'>
+                                        <div class="col">
+                                            {{ add_billing_item_form.cor.errors }}
+                                            <label for="{{ add_billing_item_form.cor.id_for_label }}">Charge Every New Student:</label>
+                                            {{ add_billing_item_form.charge_on_registration }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            {{ add_billing_item_form.grades.errors }}
+                                            <label for="{{ add_billing_item_form.grades.id_for_label }}">Apply to Grades:</label>
+                                            {{ add_billing_item_form.grades }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            {{ add_billing_item_form.amount.errors }}
+                                            <label for="{{ add_billing_item_form.amount.id_for_label }}">Amount:</label>
+                                            {{ add_billing_item_form.amount }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            {{ add_billing_item_form.ocurrence.errors }}
+                                            <label for="{{ add_billing_item_form.ocurrence.id_for_label }}">ocurrence:</label>
+                                            {{ add_billing_item_form.ocurrence }}
+                                        </div>
+                                    </div>
+                                    <div class="row" id='period-row'>
+                                        <div class="col">
+                                            {{ add_billing_item_form.period.errors }}
+                                            <label for="{{ add_billing_item_form.period.id_for_label }}">Period:</label>
+                                            {{ add_billing_item_form.period }}
+                                        </div>
+                                    </div>
+                                    <div class="row" id='specific-terms-row'>
+                                        <div class="col">
+                                            {{ add_billing_item_form.specific_terms.errors }}
+                                            <label for="{{ add_billing_item_form.specific_terms.id_for_label }}">Terms:</label>
+                                            {{ add_billing_item_form.terms }}
+                                        </div>
+                                    </div>
+                                    <div class="row" id='one-time-row'>
+                                        <div class="col">
+                                            {{ add_billing_item_form.year.errors }}
+                                            <label for="{{ add_billing_item_form.year.id_for_label }}">Year:</label>
+                                            {{ add_billing_item_form.year }}
+                                        </div>
+                                        <div class="col">
+                                            {{ add_billing_item_form.term.errors }}
+                                            <label for="{{ add_billing_item_form.term.id_for_label }}">Term:</label>
+                                            {{ add_billing_item_form.term }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -35,37 +159,66 @@
                                 <th>period</th>
                                 <th>terms</th>
                                 <th>year</th>
-                                <th>term</th>
-                                <th>Charge on Registration</th>
-                                <th>Created</th>
-                                <th>Actions</th>
+                                <th>
+                                    term
+                                </th>
+                                <th>
+                                    Charge on Registration
+                                </th>
+                                <th>
+                                    Created
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for fees_structure  in fees_structures %}
                                 <tr>
-                                    <td></td>
-                                    <td>{{ fees_structure.item }}</td>
-                                    <td>{{ fees_structure.grades_list }}</td>
-                                    <td>{{ fees_structure.amount }}</td>
-                                    <td>{{ fees_structure.ocurrence }}</td>
-                                    <td>{{ fees_structure.period }}</td>
-                                    <td>{{ fees_structure.terms_list }}</td>
-                                    <td>{{ fees_structure.year }}</td>
-                                    <td>{{ fees_structure.term }}</td>
-                                    <td>{{ fees_structure.charge_on_registration }}</td>
-                                    <td>{{ fees_structure.created }}</td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.item }}
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.grades_list }}
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.amount }}
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.ocurrence }}
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.period }}
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.terms_list }}
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.year }}
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.term }}
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.charge_on_registration }}
+                                    </td>
+                                    <td>
+                                        {{ fees_structure.created }}
+                                    </td>
                                     <td class="">
                                         <a class="btn btn-primary  btn-sm "
                                            href="{% url 'edit_fees_structure' fees_structure.id %}">Edit</a>
-                                        <br>
                                         <a class="btn btn-danger  btn-sm "
                                            href="#"
                                            data-toggle="modal"
-                                           data-target="#delete_fees_structure_modal">Delete</a>
+                                           data-target=" #delete_fees_structure_modal{{ forloop.counter }} ">Delete</a>
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="delete_fees_structure_modal">
+                                <div class="modal fade"
+                                     id="delete_fees_structure_modal{{ forloop.counter }}">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <!-- Modal Header -->
@@ -97,6 +250,55 @@
     {% block script %}
         <script>
         $(document).ready(function () {
+            $("#year").val("");
+                $("#term").val("");
+                $("#specific_terms_0").prop("checked",false);
+                $("#specific_terms_1").prop("checked",false);
+                $("#specific_terms_2").prop("checked",false);
+                
+                $("#period_2").prop("checked",false);
+                $("#period_1").prop("checked",false);
+                $("#id_ocurrence_0").prop("checked",false);
+                $("#id_ocurrence_1").prop("checked",false);
+                $("#period-row").hide();
+                $("#specific-terms-row").hide();
+                $("#one-time-row").hide();
+               
+                $("#id_ocurrence_0").click(function(){
+                    $("#year").val("");
+                    $("#term").val("");
+                    $("#period-row").show();
+                    $("#period_0").hide();
+                    $("#one-time-row").hide();
+                   
+                    $("#specific-terms-row").hide();
+                });
+                $("#id_ocurrence_1").click(function(){
+                    $("#period_2").prop("checked",false);
+                    $("#period_1").prop("checked",false);
+                    $("#specific_terms_0").prop("checked",false);
+                    $("#specific_terms_1").prop("checked",false);
+                    $("#specific_terms_2").prop("checked",false);
+                    
+                    $("#period-row").hide();
+                    $("#specific-terms-row").hide();
+                    $("#one-time-row").show();
+                    
+                });
+                $("#period_2").click(function(){
+                    $("#specific_terms_0").prop("checked",false);
+                    $("#specific_terms_1").prop("checked",false);
+                    $("#specific_terms_2").prop("checked",false);
+                    $("#specific-terms-row").show();
+                    $("#one-time-row").hide();
+                    
+                });
+                $("#period_1").click(function(){
+                    $("#specific_terms_0").prop("checked",true);
+                    $("#specific_terms_1").prop("checked",true);
+                    $("#specific_terms_2").prop("checked",true);
+                    
+                    $("#specific-terms-row").show();
             //Set the formats for DataTales
             $.fn.dataTable.moment( 'MMM. D, YYYY, hh:mm' );
     //Initialise the table
@@ -109,13 +311,6 @@
         10, 25, 50, -1
         ],
         buttons: [
-        {
-                text: 'New Fees Item',
-                action: function ( e, dt, node, config ) {
-                     window.location.href = "{% url 'create_fees_structure' %}"
-
-                }
-            },
         
         {
             extend: 'searchBuilder',

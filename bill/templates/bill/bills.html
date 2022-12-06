@@ -18,7 +18,114 @@
         <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class"m-0">Petty Cash Balance: {{ petty_cash_balance }}Ksh</h5>
+                <h5 class="m-0 font-weight-bold ">Petty Cash Records</h5>
+                <small>Balance: <span class="badge badge-secondary">{{ petty_cash_balance }} Ksh.</span></small>
+                <br>
+                <hr >
+                <button class="btn btn-primary  btn-sm "
+                        href="#"
+                        data-toggle="modal"
+                        data-target="#new_bill_modal"
+                        disable>
+                    New Bill
+                </button>
+                <button class="btn btn-primary  btn-sm "
+                        href="#"
+                        data-toggle="modal"
+                        data-target="#top_up_modal"
+                        disable>
+                    Top Up Balance
+                </button>
+            </div>
+            <div class="modal  fade" id="new_bill_modal">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold ">Record New Bill</h5>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <form action="{% url 'create_bill' %}" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col">
+                                        {{ create_bill_form.recipient.errors }}
+                                        <label for="{{ create_bill_form.recipient.id_for_label }}">Recipient:</label>
+                                        {{ create_bill_form.recipient }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ create_bill_form.description.errors }}
+                                        <label for="{{ create_bill_form.description.id_for_label }}">Description:</label>
+                                        {{ create_bill_form.description }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ create_bill_form.vendor.errors }}
+                                        <label for="{{ create_bill_form.category.id_for_label }}">Category:</label>
+                                        {{ create_bill_form.category }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ create_bill_form.quantity.errors }}
+                                        <label for="{{ create_bill_form.quantity.id_for_label }}">Quantity:</label>
+                                        {{ create_bill_form.quantity }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ create_bill_form.price_per_quantity.errors }}
+                                        <label for="{{ create_bill_form.price_per_quantity.id_for_label }}">
+                                            Price Per
+                                            Quantity
+                                        </label>
+                                        {{ create_bill_form.price_per_quantity }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ create_bill_form.total.errors }}
+                                        <label for="{{ create_bill_form.total.id_for_label }}">Total:</label>
+                                        {{ create_bill_form.total }}
+                                    </div>
+                                </div>
+                                <br>
+                                <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal  fade" id="top_up_modal">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold ">Top up petty cash balance</h5>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <form action="{% url 'topup' %}" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col">
+                                        {{ topup_form.amount.errors }}
+                                        <label for="{{ topup_form.amount.id_for_label }}">Amount:</label>
+                                        {{ topup_form.amount }}
+                                    </div>
+                                </div>
+                                <br>
+                                <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -35,105 +142,204 @@
                                 <th>no. of units</th>
                                 <th>Price per unit</th>
                                 <th>Total Amount</th>
-                                <th>Petty Cash Balance</th>
-                                {% if perms.bill.can_edit_bill %}<th>Actions</th>{% endif %}
+                                <th>Petty Cash Balance Snapshot</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for bill in bills %}
                                 <tr>
                                     <td></td>
-                                    <td>{{ bill.created }}</td>
-                                    <td>{{ bill.description }}</td>
-                                    <td>{{ bill.category }}</td>
-                                    <td>{{ bill.recipient }}</td>
-                                    <td>{{ bill.quantity }}</td>
-                                    <td>{{ bill.price_per_quantity }}</td>
-                                    <td>{{ bill.total }}</td>
-                                    <td>{{ bill.balance }}</td>
-                                    {% if perms.bill.can_edit_bill  %}
-                                        <td class="">
-                                            {% if bill.fully_paid == False %}
-                                                <a class="btn btn-success  btn-sm "
-                                                   href="#"
-                                                   data-toggle="modal"
-                                                   data-target="#bill_payment_modal{{ forloop.counter }}">
-                                                Confirm</a>
-                                                <a class="btn btn-primary  btn-sm " href="{% url 'edit_bill' bill.id %}">Edit</a>
-                                                <br>
-                                                <a class="btn btn-danger  btn-sm "
-                                                   href="#"
-                                                   data-toggle="modal"
-                                                   data-target="#delete_payment_modal">Cancel</a>
-                                            {% else %}
-                                                <button disabled
-                                                        class="btn btn-secondary  btn-sm"
-                                                        href="#"
-                                                        data-toggle="modal"
-                                                        data-target="#bill_payment_modal">
-                                                </span>
-                                                <span class="text">Actions Disabled</span>
-                                            </button>
-                                        {% endif %}
+                                    <td>
+                                        {{ bill.created }}
                                     </td>
-                                {% endif %}
-                            </tr>
-                            <!--Modal-->
-                            <div class="modal fade" id="bill_payment_modal{{ forloop.counter }}">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Confirm Bill Payment</h4>
+                                    <td>
+                                        {{ bill.description }}
+                                    </td>
+                                    <td>
+                                        {{ bill.category }}
+                                    </td>
+                                    <td>
+                                        {{ bill.recipient }}
+                                    </td>
+                                    <td>
+                                        {{ bill.quantity }}
+                                    </td>
+                                    <td>
+                                        {{ bill.price_per_quantity }}
+                                    </td>
+                                    <td>
+                                        {{ bill.total }}
+                                    </td>
+                                    <td>
+                                        {{ bill.balance }}
+                                    </td>
+                                    <td class="">
+                                        <a class="btn btn-primary  btn-sm "
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target="#edit_bill_modal{{ forloop.counter }}">
+                                            Edit
+                                        </a>
+                                        <div class="modal  fade" id="edit_bill_modal{{ forloop.counter }}">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <!-- Modal Header -->
+                                                    <div class="card-header py-3">
+                                                        <h5 class="m-0 font-weight-bold ">
+                                                            Edit Bill
+                                                        </h5>
+                                                    </div>
+                                                    <!-- Modal Body -->
+                                                    <div class="modal-body">
+                                                        <form action="{% url 'edit_bill' bill.id %} " method="post">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    {{ edit_bill_form.recipient.errors }}
+                                                                    <label for="{{ edit_bill_form.recipient.id_for_label }}">
+                                                                        Recipient:
+                                                                    </label>
+                                                                    {{ edit_bill_form.recipient }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    {{ edit_bill_form.description.errors }}
+                                                                    <label for="{{ edit_bill_form.description.id_for_label }}">
+                                                                        Description:
+                                                                    </label>
+                                                                    {{ edit_bill_form.description }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    {{ edit_bill_form.vendor.errors }}
+                                                                    <label for="{{ edit_bill_form.category.id_for_label }}">
+                                                                        Category:
+                                                                    </label>
+                                                                    {{ edit_bill_form.category }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    {{ edit_bill_form.quantity.errors }}
+                                                                    <label for="{{ edit_bill_form.quantity.id_for_label }}">
+                                                                        Quantity:
+                                                                    </label>
+                                                                    {{ edit_bill_form.quantity }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    {{ edit_bill_form.price_per_quantity.errors }}
+                                                                    <label for="{{ edit_bill_form.price_per_quantity.id_for_label }}">
+                                                                        Price Per
+                                                                        Quantity
+                                                                    </label>
+                                                                    {{ edit_bill_form.price_per_quantity }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    {{ edit_bill_form.total.errors }}
+                                                                    <label for="{{ edit_bill_form.total.id_for_label }}">
+                                                                        Total:
+                                                                    </label>
+                                                                    {{ edit_bill_form.total }}
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                                                                Cancel
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            Bill: {{ bill.description }}
-                                            <br>
-                                            Amount: {{ bill.total }}
+                                        <a class="btn btn-danger  btn-sm "
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target="#delete_bill_modal{{ forloop.counter }}">
+                                            Delete
+                                        </a>
+                                        <div class="modal  fade" id="delete_bill_modal{{ forloop.counter }}">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <!-- Modal Header -->
+                                                    <div class="card-header py-3">
+                                                        <h5 class="m-0 font-weight-bold ">
+                                                            Delete Bill
+                                                        </h5>
+                                                    </div>
+                                                    <!-- Modal Body -->
+                                                    <div class="modal-body">
+                                                        <p>
+                                                            You are about to delete {{ bill.description }} bill. Continue ?
+                                                        </p>
+                                                        <a class="btn btn-success btn-sm "
+                                                           href="{% url 'delete_bill' bill.id %}">ok</a>
+                                                        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
-                                                Cancel
-                                            </button>
-                                            <a class="btn btn-success btn-sm" href="{% url 'pay_bill' bill.id %}">
-                                                <span class="text">submit</span></a>
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="delete_payment_modal">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">
+                                                    Confirm Cancellation
+                                                </h4>
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                                <a class="btn btn-success btn-sm" href="{% url 'delete_bill' bill.id %}">
+                                                    <span class="text">Submit</span></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="modal fade" id="delete_payment_modal">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">
-                                                Confirm Cancellation
-                                            </h4>
-                                        </div>
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
-                                                Cancel
-                                            </button>
-                                            <a class="btn btn-success btn-sm" href="{% url 'delete_bill' bill.id %}">
-                                                <span class="text">Submit</span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- /.container-fluid -->
-{% block script %}
-    <script>
+    <!-- /.container-fluid -->
+    {% block script %}
+        <script>
         $(document).ready(function () {
+            $("#edit_bill_modal").on("show.bs.modal",function(event){
+                alert("modal opened");
+            });
+
+            $("#quantity").keyup(function () {
+
+                var quantity = $("#quantity").val();
+                var price_per_quantity = $("#price_per_quantity").val();
+                var total = quantity * price_per_quantity;
+
+                $("#total").val(total);
+            });
+            $("#price_per_quantity").keyup(function () {
+                var quantity = $("#quantity").val();
+                var price_per_quantity = $("#price_per_quantity").val();
+                var total = quantity * price_per_quantity;
+
+                $("#total").val(total);
+            });
             //Set the formats for DataTales
             $.fn.dataTable.moment( 'MMM. D, YYYY, hh:mm' );
     //Initialise the table
@@ -146,20 +352,7 @@
         10, 25, 50, -1
         ],
         buttons: [
-        {
-                text: 'Top Up',
-                action: function ( e, dt, node, config ) {
-                     window.location.href = "{% url 'topup' %}"
-
-                }
-            },
-            {
-                text: 'New Bill',
-                action: function ( e, dt, node, config ) {
-                     window.location.href = "{% url 'create_bill' %}"
-
-                }
-            },
+        
         {
             extend: 'searchBuilder',
             config: {
@@ -210,6 +403,6 @@
     table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
 
 });
-    </script>
-{% endblock script %}
+        </script>
+    {% endblock script %}
 {% endblock %}

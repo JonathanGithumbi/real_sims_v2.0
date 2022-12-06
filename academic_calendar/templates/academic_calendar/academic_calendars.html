@@ -3,6 +3,13 @@
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
+        <div class='row'>
+            <div class='col'>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item active">.../academic-calendars/</li>
+                </ul>
+            </div>
+        </div>
         <br>
         {% if messages %}
             <ul class="messages">
@@ -18,29 +25,29 @@
         <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class"m-0">Available Academic Calendars</h5>
+                <h5 class="m-0 font-weight-bold ">Available Academic Calendars</h5>
+                <hr >
+                <a class="btn btn-primary  btn-sm "
+                   href="#"
+                   data-toggle="modal"
+                   data-target="#add_year_modal">Add Academic Calendar</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <div>
-                        <a class="btn btn-primary  btn-sm "
-                           href="#"
-                           data-toggle="modal"
-                           data-target="#add_year_modal">Add Academic Calendar</a>
-                    </div>
                     <div class="modal fade" id="add_year_modal">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <!-- Modal Header -->
-                                <div class="modal-header">
-                                    <h4 class="modal-title">New Academic Calendar</h4>
+                                <div class="card-header py-3">
+                                    <h5 class"m-0">New Academic Calendar</h5>
                                 </div>
                                 <!-- Modal Body -->
                                 <div class="modal-body">
                                     <form action="{% url 'create_year' %}" method="post">
                                         {% csrf_token %}
                                         {{ create_year_form.as_p }}
-                                        <input type="submit" value="submit" class="btn btn-sm btn-primary">
+                                        <input type="submit" value="submit" class="btn btn-sm btn-success">
+                                        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -86,8 +93,8 @@
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <!-- Modal Header -->
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Edit Year {{ year.year }}</h4>
+                                            <div class="card-header py-3">
+                                                <h5 class"m-0">Edit Year {{ year.year }}</h5>
                                             </div>
                                             <!-- Modal Body -->
                                             <div class="modal-body">
@@ -102,14 +109,14 @@
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <!-- Modal Header -->
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Discard Year {{ year.year }}</h4>
+                                            <div class="card-header py-3">
+                                                <h5 class"m-0">Delete Academic Calendar for Year {{ year.year }} ?</h5>
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
                                                 <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                                 <a class="btn btn-danger btn-sm" href="{% url 'delete_year' year.id %}">
-                                                    <span class="text">Discacrd</span></a>
+                                                    <span class="text">Delete</span></a>
                                             </div>
                                         </div>
                                     </div>

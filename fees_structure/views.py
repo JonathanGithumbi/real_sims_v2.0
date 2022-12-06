@@ -7,35 +7,25 @@ from grade.models import Grade
 from django.contrib import messages
 from user_account.models import User
 from academic_calendar.models import Year
+from item.forms import CreateSalesItemForm
+from fees_structure.FeesStructureManager import FeesStructureManager
 
 
 def create_fees_structure(request):
-    """This method creates a separate fees structure for each grade."""
-    if request.method == 'GET':
-        form = CreateFeesStructureForm()
-        return render(request, 'fees_structure/create_fees_structure.html', {'form': form})
-    if request.method == 'POST':
-
-        form = CreateFeesStructureForm(request.POST)
-        if form.is_valid():
-            fees_structure_batch = form.save()
-
-            fees_structure_batch.created_by = request.user
-            fees_structure_batch.last_modified_by = request.user
-            fees_structure_batch.save(
-                update_fields=['last_modified_by', 'last_modified', 'created_by'])
-            messages.success(
-                request, "Billing Items Created Successfully", extra_tags='alert-success')
-            return redirect('view_fees_structure', permanent=True)
-        else:
-            messages.error(
-                request, "Error!", extra_tags='alert-danger')
-            return render(request, 'fees_structure/create_fees_structure.html', {'form': form})
+    create_feesstructure_form = CreateFeesStructureForm(request.POST)
+    feesstructure_manager = FeesStructureManager()
+    fees_obj = feesstructure_manager.create_feesstructure(
+        create_feesstructure_form)
+    messages.success(
+        request, "Billing Item: {0} Created Successfully".format(fees_obj.item), extra_tags='alert-success')
+    return redirect('view_fees_structure', permanent=True)
 
 
 def view_fees_structure(request):
+    add_billing_item_form = CreateFeesStructureForm()
     fees_structures = FeesStructureBatch.objects.all()
-    return render(request, 'fees_structure/view_fees_structure.html', {'fees_structures': fees_structures})
+    add_salesitem_form = CreateSalesItemForm()
+    return render(request, 'fees_structure/view_fees_structure.html', {'fees_structures': fees_structures, 'add_billing_item_form': add_billing_item_form, 'add_salesitem_form': add_salesitem_form})
 
 
 def edit_fees_structure(request, id):
@@ -76,7 +66,8 @@ def edit_fees_structure(request, id):
 
 def delete_fees_structure(request, id):
     fees_structure = FeesStructureBatch.objects.get(pk=id)
-    fees_structure = fees_structure.delete()
-    messages.info(
-        request, "Fees Structure Deleted Successfullly", extra_tags='alert-success')
+    feesstructure_manager = FeesStructureManager()
+    feesstructure_manager.delete_feesstructure(fees_structure)
+    messages.success(
+        request, "Billing Item:{} Deleted Successfullly".format(fees_structure.item), extra_tags='alert-success')
     return redirect('view_fees_structure')

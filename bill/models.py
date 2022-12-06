@@ -72,10 +72,6 @@ class BillItem(models.Model):
             ("can_view_summaries", "Can view bill summaries"),
             ("can_topup_pettycash", "Can Topup Petty Cash")
         ]
-    """This model represents a bill item from a third party vendor,"""
-    """This bill records the bills that the school incurs, or the models records the money going out of the school 
-    for any purpose."""
-    """A bill is created whenever third party services are rendered"""
 
     category = models.CharField(
         max_length=22, choices=CATEGORY_CHOICES, default=None, null=True)
@@ -86,15 +82,30 @@ class BillItem(models.Model):
     # this balance represents the petty cash balance that remained after the addition of this item, like a snapshot of the balance in time
     balance = models.IntegerField(default=0, null=True)
     recipient = models.CharField(max_length=255, null=True, default="")
-    synced = models.BooleanField(default=False)
+
     created = models.DateTimeField(auto_now_add=True)
-    qb_id = models.CharField(max_length=255, null=True, default=None)
-    fully_paid = models.BooleanField(default=False)
-    user = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, null=True, default=None)
+
 
     def __str__(self):
         return self.description
+
+    def retrieve_qb_bill(self):
+        pass
+
+    def update_qb_bill(self):
+        pass
+
+    def delete_qb_bill(self):
+        pass
+
+    def pay_bill(self, bill_payment_obj):
+        bill_obj = self
+        qb_bill_payment_obj = bill_payment_obj.create_qb_bill_payment_obj(self)
+
+        return bill_payment_obj
+
+    def get_petty_cash_balance(self):
+        return self.petty_cash_balance
 
     # def create_qb_bill(self):
     #    access_token_obj = Token.objects.get(name='access_token')
@@ -138,21 +149,3 @@ class BillItem(models.Model):
     #    bill.Line.append(acc_based_expense_line)
     #    saved_bill = bill.save(qb=client)
     #    return saved_bill
-
-    def retrieve_qb_bill(self):
-        pass
-
-    def update_qb_bill(self):
-        pass
-
-    def delete_qb_bill(self):
-        pass
-
-    def pay_bill(self, bill_payment_obj):
-        bill_obj = self
-        qb_bill_payment_obj = bill_payment_obj.create_qb_bill_payment_obj(self)
-
-        return bill_payment_obj
-
-    def get_petty_cash_balance(self):
-        return self.petty_cash_balance

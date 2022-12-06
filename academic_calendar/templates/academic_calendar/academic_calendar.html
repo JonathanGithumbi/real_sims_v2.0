@@ -3,7 +3,16 @@
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
-        <br>
+        <div class='row'>
+            <div class='col'>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'academic_calendars' %}">.../academic-calendars</a>
+                    </li>
+                    <li class="breadcrumb-item active">calendar:{{ year.year }}</li>
+                </ul>
+            </div>
+        </div>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -18,29 +27,29 @@
         <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class"m-0">{{ year.year }} Academic Calendar</h5>
+                <h5 class="m-0 font-weight-bold ">{{ year.year }} Academic Calendar</h5>
+                <hr >
+                <a class="btn btn-primary  btn-sm "
+                   href="#"
+                   data-toggle="modal"
+                   data-target="#add_term_modal">Add Term</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <div>
-                        <a class="btn btn-primary  btn-sm "
-                           href="#"
-                           data-toggle="modal"
-                           data-target="#add_term_modal">Add Term</a>
-                    </div>
                     <div class="modal fade" id="add_term_modal">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <!-- Modal Header -->
-                                <div class="modal-header">
-                                    <h4 class="modal-title">New Term</h4>
+                                <div class="card-header py-3">
+                                    <h5 class"m-0">Create New Term</h5>
                                 </div>
                                 <!-- Modal Body -->
                                 <div class="modal-body">
-                                    <form action="{% url 'create_term' %}" method="post">
+                                    <form action="{% url 'create_term' year.id %}" method="post">
                                         {% csrf_token %}
                                         {{ create_term_form.as_p }}
-                                        <input type="submit" value="submit" class="btn btn-sm btn-primary">
+                                        <input type="submit" value="submit" class="btn btn-sm btn-success">
+                                        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -80,14 +89,15 @@
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <!-- Modal Header -->
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Edit Term {{ term.term }}</h4>
+                                            <div class="card-header py-3">
+                                                <h5 class"m-0">Edit Term {{ term.term }}</h5>
                                             </div>
                                             <!-- Modal Body -->
                                             <div class="modal-body">
                                                 <form action="{% url 'edit_term' term.id %}" method="post">
                                                     {{ edit_form.as_p }}
-                                                    <input type="submit" value="submit"  class="btn btn-secondary btn-sm"/>
+                                                    <input type="submit" value="submit"  class="btn btn-success btn-sm"/>
+                                                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -97,14 +107,14 @@
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <!-- Modal Header -->
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Discard Term {{ term.term }}</h4>
+                                            <div class="card-header py-3">
+                                                <h5 class"m-0">Delete Term {{ term.term }} ?</h5>
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
-                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                                 <a class="btn btn-danger btn-sm" href="{% url 'delete_term' term.id %}">
                                                     <span class="text">Delete</span></a>
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                             </div>
                                         </div>
                                     </div>

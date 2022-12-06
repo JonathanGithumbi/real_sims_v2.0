@@ -18,7 +18,7 @@ class TermForm(forms.ModelForm):
         model = Term
         fields = ('term', 'start', 'end')
         widgets = {
-            'term': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'id': 'year'}),
+            'term': forms.Select(attrs={'class': 'form-control form-control-sm', 'id': 'year'}),
             'start': forms.DateInput(attrs={'class': 'form-control form-control-sm', 'id': 'start', 'type': 'date'}),
             'end': forms.DateInput(attrs={'class': 'form-control form-control-sm', 'id': 'end', 'type': 'date'}),
 

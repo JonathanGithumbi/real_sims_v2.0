@@ -4,6 +4,7 @@ from .models import Year, Term
 from .forms import YearForm, TermForm
 from django.contrib import messages
 from django.shortcuts import redirect
+from .CalendarManager import CalendarManager
 
 
 def create_term(request):
@@ -51,31 +52,27 @@ def edit_ac_cal(request):
 
 def delete_year(request, id):
     year = Year.objects.get(pk=id)
-    year.delete()
+    calendar_manager = CalendarManager()
+    calendar_manager.delete_year(year)
     messages.success(request, "Successfuy deleted the year {0}".format(
         year.year), extra_tags="alert-success")
     return redirect('academic_calendars')
 
 
 def create_year(request):
-    if request.method == 'POST':
-        create_year_form = YearForm(request.POST)
-        if create_year_form.is_valid():
-            create_year_form.save()
-            return redirect('academic_calendars')
-        else:
-            messages.error(
-                request, "error creating academic calendar", extra_tags="alert-danger")
-            return render(request, 'academic_calendar.html', {'create_year_form': create_year_form})
-    else:
-        pass
+    create_year_form = YearForm(request.POST)
+    calendar_manager = CalendarManager()
+    year = calendar_manager.create_year(create_year_form)
+    messages.success(
+        request, "Successfully created academic calendar for : {0}".format(year.year), extra_tags="alert-success")
+    return redirect('academic_calendars')
 
 
 def academic_calendars(request):
     years = Year.objects.all()
     create_year_form = YearForm()
     return render(request, 'academic_calendar/academic_calendars.html',
-     {'years': years, 'create_year_form': create_year_form,'edit_year_form':YearForm})
+                  {'years': years, 'create_year_form': create_year_form, 'edit_year_form': YearForm})
 
 
 def academic_calendar(request, id):
@@ -85,14 +82,14 @@ def academic_calendar(request, id):
     return render(request, 'academic_calendar/academic_calendar.html', {'year': year, 'create_term_form': create_term_form})
 
 
-def create_term(request):
-    if request.method == 'POST':
-        create_term_form = TermForm(request.POST)
-        if create_term_form.is_valid():
-            term_obj = create_term_form.save()
-            return redirect('academic_calendar', term_obj.id)
-        else:
-            pass
+def create_term(request, year_id):
+    create_term_form = TermForm(request.POST)
+    year = Year.objects.get(pk=year_id)
+    calendar_manager = CalendarManager()
+    term_obj = calendar_manager.create_term(year, create_term_form)
+    messages.success(
+        request, "Term created successfully", extra_tags="alert-success")
+    return redirect('academic_calendar', year_id)
 
 
 def edit_term(request, id):
@@ -101,11 +98,11 @@ def edit_term(request, id):
 
 def delete_term(request, id):
     term = Term.objects.get(pk=id)
-    year = Year.objects.get(pk=term.id)
-    term.delete()
+    calendar_manager = CalendarManager()
+    calendar_manager.delete_term(term)
     messages.success(
         request, "Term deleted successfully", extra_tags="alert-success")
-    return redirect('academic_calendar', year)
+    return redirect('academic_calendar', term.year.id)
 
 
 def edit_year(request, id):

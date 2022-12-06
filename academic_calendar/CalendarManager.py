@@ -9,6 +9,24 @@ class CalendarManager():
     """Also Responsible for starting the new term protocol and the new year protocol"""
     """these protocols start the process of graduating students and invoicing them"""
 
+    def create_year(self, create_year_form):
+        year = create_year_form.save()
+        return year
+
+    def delete_year(self, year):
+        year.delete()
+        return True
+
+    def create_term(self, year, create_term_form):
+        term_obj = create_term_form.save(commit=False)
+        term_obj.year = year
+        term_obj.save()
+        return term_obj
+
+    def delete_term(self, term):
+        term.delete()
+        return True
+
     def date_range(self, start, end):
         """This method returns a list of datetime instances  of days between 'start' day and 'end' day """
         delta = end - start

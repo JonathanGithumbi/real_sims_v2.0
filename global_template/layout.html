@@ -42,117 +42,22 @@
             <!-- Heading -->
             <div class="sidebar-heading">Petty Cash</div>
             <li class="nav-item">
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-toggle="collapse"
-                   data-target="#collapseBills"
-                   aria-expanded="true"
-                   aria-controls="collapseBills">
+                <a class="nav-link " href="{% url 'bills' %}">
                     <i class="fas fa-fw fa-money-bill"></i>
                     <span>Petty Cash</span>
                 </a>
-                <div id="collapseBills"
-                     class="collapse"
-                     aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        {% if perms.bill.can_create_a_bill %}
-                            <a class="collapse-item" href="{% url 'create_bill' %}">Record New Bill</a>
-                        {% endif %}
-                        {% if perms.bill.can_topup_pettycash %}
-                            <a class="collapse-item" href="{% url 'topup' %}">Top Up</a>
-                        {% endif %}
-                        <a class="collapse-item" href="{% url 'bills' %}">View Usage</a>
-                        {% if perms.bill.can_view_summaries %}
-                            <a class="collapse-item" href="{% url 'bill_summaries' %}">View Summaries</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-            <!-- Heading -->
-            <div class="sidebar-heading">Fees Payments</div>
-            <li class="nav-item">
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-toggle="collapse"
-                   data-target="#collapsePayments"
-                   aria-expanded="true"
-                   aria-controls="collapsePayments">
-                    <i class="fas fa-fw fa-receipt"></i>
-                    <span>Fees Payments</span>
-                </a>
-                <div id="collapsePayments"
-                     class="collapse"
-                     aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        {% if perms.payment.can_add_fees_payments %}
-                            <a class="collapse-item" href="{% url 'create_payment' %}">Record Fees Payment</a>
-                        {% endif %}
-                        <a class="collapse-item" href="{% url 'payments' %}">View Fees Payments</a>
-                        {% if perms.payment.can_view_summaries %}
-                            <a class="collapse-item" href="{% url 'payment_summaries' %}">View Summaries</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-            <!-- Heading -->
-            <div class="sidebar-heading">School Expenses</div>
-            <li class="nav-item">
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-toggle="collapse"
-                   data-target="#collapseExpenses"
-                   aria-expanded="true"
-                   aria-controls="collapseExpenses">
-                    <i class="fas fa-fw fa-money-bill"></i>
-                    <span>School Expenses</span>
-                </a>
-                <div id="collapseExpenses"
-                     class="collapse"
-                     aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        {% if perms.expenses.can_create_an_expense %}
-                            <a class="collapse-item" href="{% url 'add_expense' %}">Record Expense</a>
-                        {% endif %}
-                        {% if perms.expenses.can_view_expenses %}
-                            <a class="collapse-item" href="{% url 'expenses' %}">View Expenses</a>
-                        {% endif %}
-                        {% if perms.expenses.can_view_summaries %}
-                            <a class="collapse-item" href="{% url 'expense_summaries' %}">View Summaries</a>
-                        {% endif %}
-                    </div>
-                </div>
             </li>
             <!-- Divider -->
             <hr class="sidebar-divider">
             <div class="sidebar-heading">Academic Calendar</div>
             <li class="nav-item">
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-toggle="collapse"
-                   data-target="#collapseAcademicCalendar"
-                   aria-expanded="true"
-                   aria-controls="collapseAcademicCalendar">
+                <a class="nav-link " href="{% url 'academic_calendars' %}">
                     <i class="fas fa-calendar"></i>
                     <span>Academic Calendar</span>
                 </a>
-                <div id="collapseAcademicCalendar"
-                     class="collapse"
-                     aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'academic_calendars' %}">Academic Calendars</a>
-                    </div>
-                </div>
             </li>
-            <!-- Divider -->
             <hr class="sidebar-divider">
+            <!-- Heading -->
             <div class="sidebar-heading">Fees Structure</div>
             <li class="nav-item">
                 <a class="nav-link collapsed"
@@ -169,10 +74,8 @@
                      aria-labelledby="headingUtilities"
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        {% if perms.fees_structure.can_create_the_fees_structure %}
-                            <a class="collapse-item" href="{% url 'create_fees_structure' %}">Add Billing Item</a>
-                            <a class="collapse-item" href="{% url 'view_fees_structure' %}">View Billing Items</a>
-                        {% endif %}
+                        <a class="collapse-item" href="{% url 'view_fees_structure' %}">Billing Items</a>
+                        <a class="collapse-item" href="{% url 'view_sales_items' %}">Sales Items</a>
                     </div>
                 </div>
             </li>
@@ -201,9 +104,7 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Account
-            </div>
+            <div class="sidebar-heading">Account</div>
             <li class="nav-item">
                 <a class="nav-link collapsed"
                    href="#"
@@ -259,9 +160,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
-                        Ready to Leave?
-                    </h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">�</span>
                     </button>
