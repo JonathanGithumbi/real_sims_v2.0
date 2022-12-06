@@ -48,7 +48,7 @@
                                     <form action="{% url 'create_term' year.id %}" method="post">
                                         {% csrf_token %}
                                         {{ create_term_form.as_p }}
-                                        <input type="submit" value="submit" class="btn btn-sm btn-success">
+                                        <input type="submit" value="Submit" class="btn btn-sm btn-success">
                                         <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                     </form>
                                 </div>

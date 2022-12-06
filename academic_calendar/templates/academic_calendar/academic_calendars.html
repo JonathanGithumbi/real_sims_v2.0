@@ -46,7 +46,7 @@
                                     <form action="{% url 'create_year' %}" method="post">
                                         {% csrf_token %}
                                         {{ create_year_form.as_p }}
-                                        <input type="submit" value="submit" class="btn btn-sm btn-success">
+                                        <input type="submit" value="Submit" class="btn btn-sm btn-success">
                                         <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                     </form>
                                 </div>
@@ -99,7 +99,8 @@
                                             <!-- Modal Body -->
                                             <div class="modal-body">
                                                 <form action="{% url 'edit_year' year.id %}" method="post">
-                                                    <input type="submit" value="submit"  class="btn btn-secondary btn-sm"/>
+                                                    <input type="submit" value="Submit" class="btn btn-sm btn-success">
+                                        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -114,9 +115,10 @@
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
-                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                                
                                                 <a class="btn btn-danger btn-sm" href="{% url 'delete_year' year.id %}">
                                                     <span class="text">Delete</span></a>
+                                                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                                             </div>
                                         </div>
                                     </div>
