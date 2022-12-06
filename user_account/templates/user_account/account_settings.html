@@ -18,7 +18,10 @@
         <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class"m-0">Quickbooks Settings</h5>
+                <h5 class"m-0">Account Settings</h5>
+            </div>
+            <div class="card-body">
+                <h6>Quickbooks Settings</h6>
                 <small class"m-0">
                     Quickbooks Connection Status:
                     {% if connection_status == 'online' %}
@@ -27,18 +30,65 @@
                         <span class="badge badge-danger">offline</span>
                     {% endif %}
                 </small>
-            </div>
-            <div class="card-body">
-                <h5>Quickbooks Connector File:</h5>
+                <hr>
+                <h6>Refresh Connection:</h6>
+                <a class="btn btn-primary btn-sm"
+                   href="{% url 'check_quickbooks_connection' %}">Refresh</a>
+                <br>
+                <h6>Quickbooks Web Connector(QWC) File:</h6>
                 <a class="btn btn-primary btn-sm"
                    href="{% url 'download_qwc' user.id %}">Download QWC File</a>
-                <br/>
-                <hr>
-                <h5>Import/Export Data:</h5>
+                <br>
+                <h6>Import/Export Data:</h6>
                 <a class="btn btn-primary btn-sm"
                    href="{% url 'download_qwc' user.id %}">Export Data to Quickbooks</a>
                 <a class="btn btn-primary btn-sm"
                    href="{% url 'download_qwc' user.id %}">Import Data from Quickbooks</a>
+                <hr>
+                <h6>Account Settings</h6>
+                <hr>
+                <a class="btn btn-primary  btn-sm "
+                   href="#"
+                   data-toggle="modal"
+                   data-target="#change_password_modal">Change Password</a>
+                <a class="btn btn-danger  btn-sm "
+                   href="#"
+                   data-toggle="modal"
+                   data-target="#logout_modal">Logout</a>
+                <div class="modal  fade" id="change_password_modal">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="card-header py-3">
+                                <h5 class="m-0 font-weight-bold ">Change Password Form</h5>
+                            </div>
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+                                <form class="user" action="{% url 'password_change' %}" method="post">
+                                    {% csrf_token %}
+                                    {{ password_change_form.as_p }}
+                                    <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal  fade" id="logout_modal">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="card-header py-3">
+                                <h5 class="m-0 font-weight-bold ">You are about to logout of the system.</h5>
+                            </div>
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+                                <a class="btn btn-success btn-sm"href="{% url 'logout_user' %}">Logout</a>
+                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

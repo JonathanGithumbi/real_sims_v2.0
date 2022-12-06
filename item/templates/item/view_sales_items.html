@@ -3,7 +3,16 @@
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
-        <br>
+        <div class='row'>
+            <div class='col'>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'view_fees_structure' %}">.../fees-structure-billing-items</a>
+                    </li>
+                    <li class="breadcrumb-item active">sales-items</li>
+                </ul>
+            </div>
+        </div>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -18,7 +27,7 @@
         <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class="m-0 font-weight-bold ">Fees Structure Sales Items</h5>
+                <h5 class="m-0 font-weight-bold ">Fees Structure :Sales Items</h5>
                 <hr >
                 <button class="btn btn-primary  btn-sm "
                         href="#"

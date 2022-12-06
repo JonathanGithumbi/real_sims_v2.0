@@ -1,10 +1,5 @@
 from django.shortcuts import redirect, render
-from django.urls import reverse
-from user_account.views import refresh
-from user_account.models import Token
-from django.core.exceptions import ObjectDoesNotExist
-from intuitlib.client import AuthClient
-from django.conf import settings
+
 from student.models import Student
 from bill.models import BillItem
 from django.db.models import Sum

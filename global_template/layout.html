@@ -60,24 +60,10 @@
             <!-- Heading -->
             <div class="sidebar-heading">Fees Structure</div>
             <li class="nav-item">
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-toggle="collapse"
-                   data-target="#collapseFeesStructure"
-                   aria-expanded="true"
-                   aria-controls="collapseFeesStructure">
+                <a class="nav-link collapsed" href="{% url 'view_fees_structure' %}">
                     <i class="fas fa-money-bill"></i>
                     <span>Fees Structure</span>
                 </a>
-                <div id="collapseFeesStructure"
-                     class="collapse"
-                     aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'view_fees_structure' %}">Billing Items</a>
-                        <a class="collapse-item" href="{% url 'view_sales_items' %}">Sales Items</a>
-                    </div>
-                </div>
             </li>
             <!--{% if perms.report.view_report %}
                 <hr class="sidebar-divider">
@@ -106,25 +92,10 @@
             <!-- Heading -->
             <div class="sidebar-heading">Account</div>
             <li class="nav-item">
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-toggle="collapse"
-                   data-target="#collapseAccount"
-                   aria-expanded="true"
-                   aria-controls="collapseAccount">
+                <a class="nav-link collapsed" href="{% url 'account_settings' %}">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Account</span>
                 </a>
-                <div id="collapseAccount"
-                     class="collapse"
-                     aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'quickbooks_settings' %}">QuickBooks Settings</a>
-                        <a class="collapse-item" href="{% url 'password_change' %}">Change Password</a>
-                        <a class="collapse-item" href="{% url 'logout_user' %}">Logout</a>
-                    </div>
-                </div>
             </li>
             <!--
             <hr class="sidebar-divider">
@@ -165,13 +136,9 @@
                         <span aria-hidden="true">�</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    Select "Logout" below if you are ready to end your current session.
-                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">
-                        Cancel
-                    </button>
+                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-danger btn-sm" href="{% url 'logout_user' %}">Logout</a>
                 </div>
             </div>

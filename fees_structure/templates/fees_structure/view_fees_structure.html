@@ -3,7 +3,13 @@
 {% block page %}
     <!-- Begin Page Content -->
     <div class="container-fluid">
-        <br>
+        <div class='row'>
+            <div class='col'>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item active">.../fees-structure-billing-items/</li>
+                </ul>
+            </div>
+        </div>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -18,7 +24,7 @@
         <!-- DataTables Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class="m-0 font-weight-bold ">Fees Structure Billing Items</h5>
+                <h5 class="m-0 font-weight-bold ">Fees Structure: Billing Items</h5>
                 <hr >
                 <button class="btn btn-primary  btn-sm "
                         href="#"
@@ -26,12 +32,7 @@
                         data-target="#add_billingitem_modal">
                     Add Billing Item
                 </button>
-                <button class="btn btn-primary  btn-sm "
-                        href="#"
-                        data-toggle="modal"
-                        data-target="#add_salesitem_modal">
-                    Add Sales Item
-                </button>
+                <a class="btn btn-primary  btn-sm " href="{% url 'view_sales_items' %}">Sales Items</a>
             </div>
             <div class="modal  fade" id="add_salesitem_modal">
                 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -158,7 +159,9 @@
                                 <th>ocurrence</th>
                                 <th>period</th>
                                 <th>terms</th>
-                                <th>year</th>
+                                <th>
+                                    year
+                                </th>
                                 <th>
                                     term
                                 </th>

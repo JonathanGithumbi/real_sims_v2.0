@@ -5,17 +5,18 @@ from .forms import AuthFormWithBootstrapSpecifics, PasswordResetFormWithBootstra
 from . import views
 
 urlpatterns = [
-    path('quickbooks-settings/', views.quickbooks_settings,
-         name='quickbooks_settings'),
+    path('check-quickbooks-connection/', views.check_quickbooks_connection,
+         name='check_quickbooks_connection'),
+    path('account-settings/', views.account_settings,
+         name='account_settings'),
     path('download-qwc/<int:id>/', views.download_qwc, name='download_qwc'),
     path('', views.login_user, name='login'),
     path('logout/', views.logout_view, name='logout_user'),
 
     # Passowrd Change lets the user to change their password by themselves
     path('password_change/', auth_views.PasswordChangeView.as_view(
-        form_class=PasswordChangeFormBS), name='password_change'),
-    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(),
-         name='password_change_done'),
+        form_class=PasswordChangeFormBS, success_url="{% url 'account_settings'%}"), name='password_change'),
+
 
     # Password reset enables a user to change their password if they are locked out of their account
     path('password_reset/', auth_views.PasswordResetView.as_view(form_class=PasswordResetFormWithBootstrapSpecifics),
@@ -26,15 +27,5 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
-
-    # Quickbooks related urls
-    # url(r'^$', views.index, name='index'),
-    url(r'^oauth/?$', views.oauth, name='oauth'),
-    url(r'^callback/?$', views.callback, name='callback'),
-    url(r'^connected/?$', views.connected, name='connected'),
-    url(r'^qbo_request/?$', views.qbo_request, name='qbo_request'),
-    url(r'^revoke/?$', views.revoke, name='revoke'),
-    url(r'^refresh/?$', views.refresh, name='refresh'),
-    url(r'^user_info/?$', views.user_info, name='user_info'),
 
 ]
