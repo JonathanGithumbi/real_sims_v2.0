@@ -10,3 +10,12 @@ class CreateSalesItemForm(ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control form-control-sm'})
         }
+
+
+class EditSalesItemForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control form-control-sm'})
+        }

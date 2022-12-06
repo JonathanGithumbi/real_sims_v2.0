@@ -239,6 +239,7 @@ def login_user(request):
 
 @login_required()
 def logout_view(request):
+    
     messages.success(request, "Logged out", extra_tags="alert-danger")
     logout(request)
 

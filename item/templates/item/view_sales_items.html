@@ -56,11 +56,10 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class=" table table-bordered table-sm text-gray-900"
-                           id="SalesItemsTables"
+                           id="SalesItemTable"
                            style="width:100%">
                         <thead class="thead-light">
                             <tr>
-                                <th></th>
                                 <th>Item</th>
                                 <th>Actions</th>
                             </tr>
@@ -68,17 +67,30 @@
                         <tbody>
                             {% for item  in items %}
                                 <tr>
-                                    <td></td>
                                     <td>{{ item.name }}</td>
                                     <td class="">
-                                        <a class="btn btn-primary  btn-sm "
-                                           href="{% url 'edit_salesitem' item.id %}">Edit</a>
+                                        <a class="btn btn-primary  btn-sm edit-modal-button"
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target=" #edit_salesitem_modal{{ forloop.counter }} ">Edit</a>
                                         <a class="btn btn-danger  btn-sm "
                                            href="#"
                                            data-toggle="modal"
                                            data-target=" #delete_salesitem_modal{{ forloop.counter }} ">Delete</a>
                                     </td>
                                 </tr>
+                                <div class="modal  fade" id="edit_salesitem_modal{{ forloop.counter }}">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="card-header py-3">
+                                                <h5 class="m-0 font-weight-bold ">Edit Sales Item Form</h5>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">{{ item.name }}</div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="modal fade" id="delete_salesitem_modal{{ forloop.counter }}">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
@@ -106,66 +118,61 @@
     <!-- /.container-fluid -->
     {% block script %}
         <script>
-    var table = $('#SalesItemsTables').DataTable({
-        
-        fixedHeader: true,
-        order: [[1, 'asc']],
-        dom: 'Bfrtip',
-        lengthMenu: [
-        10, 25, 50, -1
-        ],
-        buttons: [
-        
-        {
-            extend: 'searchBuilder',
-            config: {
-                depthLimit: 2
-            }
-        },
-        
-        {
-            extend: 'excel',
-            messageBottom: "Kings Educational Center Information Management System",
-            title: "Fees Structure Report",
-           
-            exportOptions: {
-                    columns: ':visible'
-                }
-        },
-        {
-            extend: 'pdf',
-            messageBottom: "Kings Educational Center Information Management System",
-            download:'open',
-            title: "Fees Structure Report",
-            messageTop: function(){
-                var curr_date = new Date();
-                txt_curr_date = curr_date.toString();
-                return txt_curr_date;
-            },
-            exportOptions: {
-                    columns: ':visible'
-                }
-        },
-        
-        'pageLength',
-        'colvis'
-        ],
-        columnDefs: [{
-        orderable: false,
-        className: 'select-checkbox',
-        targets: 0
-        }],
-        select: {
-        style: 'multi',
-        selector: 'td:first-child'
-        },
-        order: [[1, 'asc']]
-    });
+            $(function(){
+                
+                //I need to make an ajax call to fetch object data that populates the edit form
+                $('.edit-modal-button').click(function(){
+                    $.ajax({
+                        'type':'GET',
+                        url: "{% url 'get_salesitem_editform' 19 %} ",
+                        success:function(response){
+                            alert("Ajax Call Successfull");
+                        },
+                        error: function(response){
+                            alert("Ajax Call Failed");
+                        }
+                    });
+                });
+
+                var table = $('#SalesItemTable').DataTable({
+                
+                fixedHeader: true,
+                order: [[1, 'asc']],
+                dom: 'Bfrtip',
+                lengthMenu: [
+                10, 25, 50, -1
+                ],
+                buttons: [
+                {
+                    extend: 'pdf',
+                    messageTop: "~Kings Educational Center Information Management System~",
+                    download:'open',
+                    title: "Sales Items",
+                    messageBottom: function(){
+                        var curr_date = new Date();
+                        txt_curr_date = curr_date.toString();
+                        return txt_curr_date;
+                    },
+                    exportOptions: {
+                            columns: ':visible'
+                        }
+                },
+
+                'pageLength',
+                'colvis'
+                ],
+                columnDefs: [{
+                orderable: false,
+                
+                targets: 0
+                }],
+            
+            });     
 
     //Add Styling to the buttons
     table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
 
-});
+            });
         </script>
     {% endblock script %}
 {% endblock %}

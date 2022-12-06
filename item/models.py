@@ -1,16 +1,14 @@
 from django.db import models
-from user_account.models import Token
-from intuitlib.client import AuthClient
-from django.conf import settings, ENVIRONMENT_VARIABLE
-from quickbooks import QuickBooks
-from quickbooks.objects import Item as qb_item
-from account.models import Account
-
+from user_account.models import User
 
 class Item(models.Model):
     """These are the items being charged to the students"""
     # this item
     name = models.CharField(max_length=255, null=True, default=None)
+    created = models.DateField(auto_now_add = True, null=True)
+    modified = models.DateField(auto_now= True,null=True)
+    #created_by = models.ForeignKey(User)
+    #modified_by = models.ForeignKey(User)
 
 
     def __str__(self):
