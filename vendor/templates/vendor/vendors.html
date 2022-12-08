@@ -1,30 +1,195 @@
-{% extends 'dashboard/../../../global_template/../../../dashboard/templates/dashboard/layout.html' %}
+{% extends 'layout.html' %}
 {% load static %}
-{% block content_area %}
-<a href="{% url 'create_vendor'%}" class='btn btn-primary'>New Vendor <img src="{% static 'bootstrap_icons/plus-circle.svg'%}" alt="Bootstrap" width="30" height="30"></a>
-<hr>
-<h1>All Vendors</h1>
-<table id="all_vendors" class="display table table-bordered table-hover">
-    <thead class="thead-light">
-        <tr>
-            <th>Name</th>
-            <th>qbo vendor id</th>
-            <th>Operations</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for vendor in vendors %}
-        <tr>
-            <td>{{vendor.given_name}} {{vendor.middle_name}} {{vendor.last_name}}</td>
-            <td>{{vendor.qb_vendor_id}}</td>
-            <td><a href="{% url 'delete_vendor' vendor.id %}" class='btn btn-primary'>Delete</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<script>
-    $(document).ready( function () {
-        $('#all_vendors').DataTable();
-    } );
-</script>
-{% endblock content_area %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible small fade show">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <br>
+        <!-- DataTables Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold ">Vendors</h5>
+                <hr >
+                <button class="btn btn-primary  btn-sm "
+                        href="#"
+                        data-toggle="modal"
+                        data-target="#add_salesitem_modal">
+                    New Vendor
+                </button>
+            </div>
+            <div class="modal  fade" id="add_salesitem_modal">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold ">New Vendor Form</h5>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <form action="{% url 'add_vendor' %}" method="post">
+                                {% csrf_token %}
+                                <div class="row" id='item-name-row'>
+                                    <div class="col">
+                                        {{ add_vendor_form.name.errors }}
+                                        <label for="{{ add_vendor_form.name.id_for_label }}">Name:</label>
+                                        {{ add_vendor_form.name }}
+                                    </div>
+                                </div>
+                                <br>
+                                <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class=" table table-bordered table-sm text-gray-900"
+                           id="VendorTable"
+                           style="width:100%">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Item</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vendor  in vendors %}
+                                <tr>
+                                    <td>{{ vendor.name }}</td>
+                                    <td class="">
+                                        <div class="{{ vendor.id }}loop_number_indicator" id="{{ forloop.counter }}"></div>
+                                        <a class="btn btn-primary  btn-sm edit-modal-button"
+                                           id="{{ vendor.id }}"
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target=" #edit_vendor_modal{{ forloop.counter }}">Edit</a>
+                                        <a class="btn btn-danger  btn-sm "
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target=" #delete_vendor_modal{{ forloop.counter }} ">Delete</a>
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="delete_vendor_modal{{ forloop.counter }}">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="card-header py-3">
+                                                <h5 class="m-0 font-weight-bold ">Delete Vendor: {{ vendor.name }}</h5>
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <a class="btn btn-danger btn-sm"
+                                                   href="{% url 'delete_vendor' vendor.id %}">
+                                                    <span class="text">Delete</span></a>
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal  fade" id="edit_vendor_modal{{ forloop.counter }}">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="card-header py-3">
+                                                <h5 class="m-0 font-weight-bold ">Edit Vendor Form</h5>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <form action="{% url 'edit_vendor' vendor.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <div id="edit_vendor_form_prop{{ forloop.counter }}"></div>
+                                                    <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    {% block script %}
+        <script>
+            $(function(){
+                
+                //I need to make an ajax call to fetch object data that populates the edit form
+                $('.edit-modal-button').click(function(){
+                    var vendor_id = $(this).attr('id');
+                    var loop_number_indicator = "."+String(vendor_id)+"loop_number_indicator";
+                    var loop_number = $(loop_number_indicator).attr('id');
+                    var prop_id = "#edit_vendor_form_prop"+String(loop_number);
+                    $.ajax(
+                        {
+                            type:'GET',
+                            url: "{% url 'get_vendor_editform' %}",
+                            data:{
+                                vendor_id:vendor_id
+                            },
+                            success:function(response){
+                            $(prop_id).html(response);
+                            },
+                            error: function(response){
+                            alert("Ajax Call Failed");
+                            }
+                    }
+                    )
+                });
+
+                var table = $('#VendorTable').DataTable({
+                
+                fixedHeader: true,
+                order: [[1, 'asc']],
+                dom: 'Bfrtip',
+                lengthMenu: [
+                10, 25, 50, -1
+                ],
+                buttons: [
+                {
+                    extend: 'pdf',
+                    messageTop: "~Kings Educational Center Information Management System~",
+                    download:'open',
+                    title: "Sales Items",
+                    messageBottom: function(){
+                        var curr_date = new Date();
+                        txt_curr_date = curr_date.toString();
+                        return txt_curr_date;
+                    },
+                    exportOptions: {
+                            columns: ':visible'
+                        }
+                },
+
+                'pageLength',
+                'colvis'
+                ],
+                columnDefs: [{
+                orderable: false,
+                
+                targets: 0
+                }],
+            
+            });     
+
+    //Add Styling to the buttons
+    table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
+
+            });
+        </script>
+    {% endblock script %}
+{% endblock %}

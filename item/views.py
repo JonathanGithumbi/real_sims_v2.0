@@ -26,12 +26,11 @@ def edit_salesitem(request, id):
     pass
 
 
-def get_salesitem_editform(request, id):
+def get_salesitem_editform(request):
     """Gets a sales item form populated with insytance data for the edit modal"""
-    pk = request.GET.get('pk', None)
-    print(pk)
-    print('hsfvhsdfv')
-    item = Item.objects.get(pk=pk)
+    item_id = request.GET['item_id']
+
+    item = Item.objects.get(pk=item_id)
     item_form = EditSalesItemForm(instance=item)
     return HttpResponse(item_form.as_p())
 

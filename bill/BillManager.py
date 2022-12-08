@@ -4,9 +4,19 @@ from .PettyCashManager import PettyCashManager
 
 class BillManager():
     def delete_bill(self, bill_obj):
+        if bill_obj.category == "Deposit":
+            self.delete_deposit_bill(bill_obj)
+            return True
+        else:
+            petty_cash_manager = PettyCashManager()
+            petty_cash_manager.increase_petty_cash_balance(bill_obj.total)
+
+            bill_obj.delete()
+            return True
+
+    def delete_deposit_bill(self, bill_obj):
         petty_cash_manager = PettyCashManager()
         petty_cash_manager.decrease_petty_cash_balance(bill_obj.total)
-
         bill_obj.delete()
         return True
 

@@ -110,24 +110,28 @@
                                             </div>
                                         </div>
                                         <hr class="sidebar-divider">
-                                        <div class="row">
-                                            <div class="student_registration_form-check">
-                                                {{ student_registration_form.lunch.errors }}
-                                                <label class="student_registration_form-check-label"
-                                                       for="{{ student_registration_form.lunch.id_for_label }}">
-                                                    {{ student_registration_form.lunch }}Subscribe to Lunch
-                                                    :
-                                                </label>
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="student_registration_form-check">
+                                                    {{ student_registration_form.lunch.errors }}
+                                                    <label class="student_registration_form-check-label"
+                                                           for="{{ student_registration_form.lunch.id_for_label }}">
+                                                        {{ student_registration_form.lunch }}Subscribe to Lunch
+                                                        :
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="student_registration_form-check">
-                                                {{ student_registration_form.transport.errors }}
-                                                <label class="student_registration_form-check-label"
-                                                       for="{{ student_registration_form.transport.id_for_label }}"
-                                                       class="student_registration_form-check-label">
-                                                    {{ student_registration_form.transport }}Subscribe to Transport:
-                                                </label>
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="student_registration_form-check">
+                                                    {{ student_registration_form.transport.errors }}
+                                                    <label class="student_registration_form-check-label"
+                                                           for="{{ student_registration_form.transport.id_for_label }}"
+                                                           class="student_registration_form-check-label">
+                                                        {{ student_registration_form.transport }}Subscribe to Transport:
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

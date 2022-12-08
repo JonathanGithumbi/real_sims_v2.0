@@ -142,7 +142,6 @@
                                 <th>no. of units</th>
                                 <th>Price per unit</th>
                                 <th>Total Amount</th>
-                                <th>Petty Cash Balance Snapshot</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -150,9 +149,7 @@
                             {% for bill in bills %}
                                 <tr>
                                     <td></td>
-                                    <td>
-                                        {{ bill.created }}
-                                    </td>
+                                    <td>{{ bill.created }}</td>
                                     <td>
                                         {{ bill.description }}
                                     </td>
@@ -170,9 +167,6 @@
                                     </td>
                                     <td>
                                         {{ bill.total }}
-                                    </td>
-                                    <td>
-                                        {{ bill.balance }}
                                     </td>
                                     <td class="">
                                         <a class="btn btn-primary  btn-sm "
@@ -263,7 +257,7 @@
                                            href="#"
                                            data-toggle="modal"
                                            data-target="#delete_bill_modal{{ forloop.counter }}">
-                                            Delete
+                                            Cancel
                                         </a>
                                         <div class="modal  fade" id="delete_bill_modal{{ forloop.counter }}">
                                             <div class="modal-dialog modal-lg modal-dialog-centered">

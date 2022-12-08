@@ -15,18 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.urls import re_path as url
 
-from spyne.protocol.soap import Soap11
-from spyne.server.django import DjangoView
 
 #from QBWEBSERVICE.views import qb_web_service, app, QBWEBSERVICE
 
 
 urlpatterns = [
+    path('', include('user_account.urls')),
     path('admin/', admin.site.urls),
     path('calendar/', include('academic_calendar.urls')),
-    path('', include('user_account.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('student/', include('student.urls')),
     path('bill/', include('bill.urls')),
@@ -36,6 +33,7 @@ urlpatterns = [
     path('invoice/', include('invoice.urls')),
     path('payments/', include('payment.urls')),
     path('fees-structure/', include('fees_structure.urls')),
+    path('vendors/', include('vendor.urls')),
     path('expenses/', include('expenses.urls')),
     path('qwc/', include('QBWEBSERVICE.urls'))
 ]

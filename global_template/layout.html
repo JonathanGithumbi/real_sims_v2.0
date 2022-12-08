@@ -21,31 +21,33 @@
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
-            {% if perms.student.add_student and perms.student.view_student %}
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-                <!-- Heading -->
-                <div class="sidebar-heading">Students</div>
-                <li class="nav-item">
-                    <a class="nav-link " href="{% url 'students' %}">
-                        <i class="fas fa-fw fa-male"></i>
-                        <span>Students</span>
-                    </a>
-                </li>
-            {% endif %}
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link " href="{% url 'students' %}">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Students</span>
+                </a>
+            </li>
             <!-- Divider -->
             <hr class="sidebar-divider">
             <!-- Heading -->
-            <div class="sidebar-heading">Petty Cash</div>
             <li class="nav-item">
                 <a class="nav-link " href="{% url 'bills' %}">
                     <i class="fas fa-fw fa-money-bill"></i>
                     <span>Petty Cash</span>
                 </a>
             </li>
+            <hr class="sidebar-divider">
+            <!-- Heading -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'view_vendors' %}">
+                    <i class=" fas fa-industry"></i>
+                    <span>Vendors</span>
+                </a>
+            </li>
             <!-- Divider -->
             <hr class="sidebar-divider">
-            <div class="sidebar-heading">Academic Calendar</div>
             <li class="nav-item">
                 <a class="nav-link " href="{% url 'academic_calendars' %}">
                     <i class="fas fa-calendar"></i>
@@ -54,11 +56,10 @@
             </li>
             <hr class="sidebar-divider">
             <!-- Heading -->
-            <div class="sidebar-heading">Fees Structure</div>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{% url 'view_fees_structure' %}">
-                    <i class="fas fa-money-bill"></i>
-                    <span>Fees Structure</span>
+                    <i class="fas fa-money-check"></i>
+                    <span>Billing Items</span>
                 </a>
             </li>
             <!--{% if perms.report.view_report %}
@@ -85,8 +86,14 @@
             <!-- Divider -->
             <!-- Divider -->
             <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'view_sales_items' %}">
+                    <i class='fas fa-boxes'></i>
+                    <span>Sales Items</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
             <!-- Heading -->
-            <div class="sidebar-heading">Account</div>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{% url 'account_settings' %}">
                     <i class="fas fa-fw fa-user"></i>

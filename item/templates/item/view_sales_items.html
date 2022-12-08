@@ -79,33 +79,22 @@
                                     <td>{{ item.name }}</td>
                                     <td class="">
                                         <a class="btn btn-primary  btn-sm edit-modal-button"
+                                           id="{{ item.id }}"
                                            href="#"
                                            data-toggle="modal"
-                                           data-target=" #edit_salesitem_modal{{ forloop.counter }} ">Edit</a>
+                                           data-target=" #edit_salesitem_modal ">Edit</a>
                                         <a class="btn btn-danger  btn-sm "
                                            href="#"
                                            data-toggle="modal"
                                            data-target=" #delete_salesitem_modal{{ forloop.counter }} ">Delete</a>
                                     </td>
                                 </tr>
-                                <div class="modal  fade" id="edit_salesitem_modal{{ forloop.counter }}">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                        <div class="modal-content">
-                                            <!-- Modal Header -->
-                                            <div class="card-header py-3">
-                                                <h5 class="m-0 font-weight-bold ">Edit Sales Item Form</h5>
-                                            </div>
-                                            <!-- Modal Body -->
-                                            <div class="modal-body">{{ item.name }}</div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="modal fade" id="delete_salesitem_modal{{ forloop.counter }}">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <!-- Modal Header -->
                                             <div class="card-header py-3">
-                                                <h5 class="m-0 font-weight-bold ">Delete Sales Item ?</h5>
+                                                <h5 class="m-0 font-weight-bold ">Delete Sales Item: {{ item.name }}</h5>
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
@@ -118,6 +107,23 @@
                                     </div>
                                 </div>
                             {% endfor %}
+                            <div class="modal  fade" id="edit_salesitem_modal">
+                                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <!-- Modal Header -->
+                                        <div class="card-header py-3">
+                                            <h5 class="m-0 font-weight-bold ">Edit Sales Item Form</h5>
+                                        </div>
+                                        <!-- Modal Body -->
+                                        <div class="modal-body">
+                                            <div id="edit_salesitem_form_prop"></div>
+                                            <br>
+                                            <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </tbody>
                     </table>
                 </div>
@@ -131,16 +137,23 @@
                 
                 //I need to make an ajax call to fetch object data that populates the edit form
                 $('.edit-modal-button').click(function(){
-                    $.ajax({
-                        'type':'GET',
-                        url: "{% url 'get_salesitem_editform' 19 %} ",
-                        success:function(response){
-                            alert("Ajax Call Successfull");
-                        },
-                        error: function(response){
+                    var item_id = $(this).attr('id');
+            
+                    $.ajax(
+                        {
+                            type:'GET',
+                            url: "/item/get-salesitem-editform/",
+                            data:{
+                                item_id:item_id
+                            },
+                            success:function(response){
+                            $("#edit_salesitem_form_prop").html(response);
+                            },
+                            error: function(response){
                             alert("Ajax Call Failed");
-                        }
-                    });
+                            }
+                    }
+                    )
                 });
 
                 var table = $('#SalesItemTable').DataTable({
