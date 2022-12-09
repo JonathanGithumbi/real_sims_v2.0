@@ -1,0 +1,162 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold ">Vendors</h5>
+                <hr >
+                <!-- Create vendor button -->
+                <button id="create-vendor"
+                        class="btn btn-sm btn-primary"
+                        type="button"
+                        name="button">Create vendor</button>
+            </div>
+            <!--This is the modal window where the form for creating a vendor is placed-->
+            <div class="modal fade" tabindex="-1" role="dialog" id="create-vendor-modal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content"></div>
+                </div>
+            </div>
+
+            <!--Table Body-->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class=" table table-bordered table-sm text-gray-900"
+                           id="VendorTable"
+                           style="width:100%">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Item</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vendor  in vendor_list %}
+                                <tr>
+                                    <td>{{ vendor.name }}</td>
+                                    <td class="">
+                                        <div class="{{ vendor.id }}loop_number_indicator"
+                                             id="{{ forloop.counter }}"></div>
+                                        <a class="btn btn-primary  btn-sm edit-modal-button"
+                                           id="{{ vendor.id }}"
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target=" #edit_vendor_modal{{ forloop.counter }}">Edit</a>
+                                        <a class="btn btn-danger  btn-sm "
+                                           href="#"
+                                           data-toggle="modal"
+                                           data-target=" #delete_vendor_modal{{ forloop.counter }} ">Delete</a>
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="delete_vendor_modal{{ forloop.counter }}">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="card-header py-3">
+                                                <h5 class="m-0 font-weight-bold ">Delete Vendor: {{ vendor.name }}</h5>
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <a class="btn btn-danger btn-sm"
+                                                   href="{% url 'delete_vendor' vendor.id %}">
+                                                    <span class="text">Delete</span></a>
+                                                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal  fade" id="edit_vendor_modal{{ forloop.counter }}">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="card-header py-3">
+                                                <h5 class="m-0 font-weight-bold ">Edit Vendor Form</h5>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <form action="{% url 'edit_vendor' vendor.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <div id="edit_vendor_form_prop{{ forloop.counter }}"></div>
+                                                    <input class="btn btn-success btn-sm " type="submit" value="Submit">
+                                                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    {% block script %}
+        <script>
+            $(function(){
+                var asyncSuccessMessage = [
+                        "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+                        "Success: Vendor was created.",
+                        "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+                        "<span aria-hidden='true'>&times;</span>",
+                        "</button>",
+                        "</div>",
+                        "<script>",
+                        "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+                        "<\/script>"
+                    ].join();
+                $("#create-vendor").modalForm({
+                    formURL: "{% url 'create_vendor' %}",
+                    modalID: 'create-vendor-modal',
+                    asyncUpdate : true,
+                    asyncSettings:{
+                        closeOnSubmit: true,
+                        successMessage: asyncSuccessMessage,
+                    }
+                });
+
+                var table = $('#VendorTable').DataTable({
+                
+                fixedHeader: true,
+                order: [[1, 'asc']],
+                dom: 'Bfrtip',
+                lengthMenu: [
+                10, 25, 50, -1
+                ],
+                buttons: [
+                {
+                    extend: 'pdf',
+                    messageTop: "~Kings Educational Center Information Management System~",
+                    download:'open',
+                    title: "Sales Items",
+                    messageBottom: function(){
+                        var curr_date = new Date();
+                        txt_curr_date = curr_date.toString();
+                        return txt_curr_date;
+                    },
+                    exportOptions: {
+                            columns: ':visible'
+                        }
+                },
+
+                'pageLength',
+                'colvis'
+                ],
+                columnDefs: [{
+                orderable: false,
+                
+                targets: 0
+                }],
+            
+            });     
+
+    //Add Styling to the buttons
+    table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
+
+            });
+</script>
+{% endblock script %}
+{% endblock %}

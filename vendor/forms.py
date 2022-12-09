@@ -1,26 +1,9 @@
-from django import forms
-from django.forms import modelformset_factory
-from django import forms
 from .models import Vendor
 
+from bootstrap_modal_forms.forms import BSModalModelForm
 
-class CreateVendorForm(forms.ModelForm):
+
+class VendorModelForm(BSModalModelForm):
     class Meta:
         model = Vendor
         fields = ['name']
-        widgets = {
-
-            'name': forms.TextInput(attrs={'class': 'form-control form-control-sm'})
-
-        }
-
-
-class EditVendorForm(forms.ModelForm):
-    class Meta:
-        model = Vendor
-        fields = ['name']
-        widgets = {
-
-            'name': forms.TextInput(attrs={'class': 'form-control form-control-sm'})
-
-        }

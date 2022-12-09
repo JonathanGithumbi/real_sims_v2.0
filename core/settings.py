@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'account',
     'item',
     'bill_payment',
-
+    'bootstrap_modal_forms',
     'django.contrib.admin',
     'QBWEBSERVICE',
     'core',

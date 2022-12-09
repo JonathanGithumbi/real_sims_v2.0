@@ -1,13 +1,22 @@
-{% extends 'dashboard/../../../global_template/../../../dashboard/templates/dashboard/layout.html' %}
-{% block content_area %}
-<h1>Create Vendor</h1>
-<hr>
-{% for error in form.errors %}
-<p>{{error}}</p>
-{% endfor %}
-    <form method="post" action="{% url 'create_vendor'%}">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" class="btn btn-primary" value="Submit">
-    </form>    
-{% endblock content_area %}
+<form method="post" action="">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title">Create new Vendor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        {% for field in form %}
+            <div class="form-group{% if field.errors %} invalid{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>

@@ -1,9 +1,25 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Vendor
-from .forms import CreateVendorForm, EditVendorForm
+from .forms import VendorModelForm
 from .VendorManager import VendorManager
 from django.http import HttpResponse
+from bootstrap_modal_forms.generic import BSModalCreateView
+from django.urls import reverse_lazy
+from django.views.generic import ListView
+
+
+class VendorListView(ListView):
+    model = Vendor
+    template_name = 'vendor/vendor_list.html'
+    context_object_name = 'vendor_list'
+
+
+class VendorCreateView(BSModalCreateView):
+    template_name = 'vendor/create_vendor.html'
+    form_class = VendorModelForm
+    success_message = 'Success: Vendor was created.'
+    success_url = reverse_lazy('vendor_list')
 
 
 def view_vendors(request):
