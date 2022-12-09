@@ -31,22 +31,22 @@
                   href="{% static 'vendor/datatables/FixedHeader-3.2.3/css/fixedHeader.dataTables.min.css' %}">
             <link rel="stylesheet"
                   href="{% static 'select2-4.0.13/dist/css/select2.css' %}">
+            <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
             {% block style %}
             {% endblock style %}
             {{ form.media.css }}
             <title>SIMS</title>
-            <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-            <script src='{% static "vendor/chart.js/Chart.js" %}'></script>
       </head>
       <body class="bg-gray-300" id="page-top">
             <!--The layout goes in the base_template-->
             <!--The base template for importing dependacy files-->
             {% block content %}
             {% endblock content %}
-            <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+            <script src="{% static 'popper.min.js' %}"></script>
+            <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+            <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
             <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
             <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-            <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
             <script src='{% static "js/sb-admin-2.min.js" %}'></script>
             <!-- Page level plugins -->
             <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>

@@ -18,13 +18,6 @@ from django.contrib.messages import constants as messages
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-MESSAGE_TAGS = {
-    messages.DEBUG: 'alert-secondary',
-    messages.INFO: 'alert-info',
-    messages.SUCCESS: 'alert-success',
-    messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-danger',
-}
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -45,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.admin',
+    'bootstrap_modal_forms',
+    'widget_tweaks',
     'user_account',
     'dashboard',
     'grade',
@@ -59,11 +55,11 @@ INSTALLED_APPS = [
     'account',
     'item',
     'bill_payment',
-    'bootstrap_modal_forms',
-    'django.contrib.admin',
+    
     'QBWEBSERVICE',
     'core',
-    'expenses'
+    'expenses',
+
 
 
 ]
@@ -86,7 +82,8 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR, 'global_template/'),
                  os.path.join(
                      BASE_DIR, 'user_account/templates/user_account/'),
-                 os.path.join(BASE_DIR, 'user_account/templates/user_account/registration')],
+                 os.path.join(BASE_DIR, 'user_account/templates/user_account/registration'),
+                 os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -153,6 +150,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
+]
+STATICFILES_FINDERS = [
+    # searches in STATICFILES_DIRS
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    # searches in STATIC subfolder of each app
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 AUTH_USER_MODEL = 'user_account.User'
 LOGOUT_REDIRECT_URL = '/'

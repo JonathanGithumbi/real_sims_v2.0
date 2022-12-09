@@ -1,17 +1,19 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
 from .models import Vendor
+from django.template.loader import render_to_string
 from .forms import VendorModelForm
-from .VendorManager import VendorManager
-from django.http import HttpResponse
-from bootstrap_modal_forms.generic import BSModalCreateView
+from django.http import JsonResponse
+from bootstrap_modal_forms.generic import (
+    BSModalCreateView,
+    BSModalUpdateView,
+    BSModalReadView,
+    BSModalDeleteView)
 from django.urls import reverse_lazy
-from django.views.generic import ListView
+from django.views import generic
 
 
-class VendorListView(ListView):
+class VendorListView(generic.ListView):
     model = Vendor
-    template_name = 'vendor/vendor_list.html'
+    template_name = 'vendor_list.html'
     context_object_name = 'vendor_list'
 
 
@@ -22,51 +24,33 @@ class VendorCreateView(BSModalCreateView):
     success_url = reverse_lazy('vendor_list')
 
 
-def view_vendors(request):
-    vendors = Vendor.objects.all()
-    add_vendor_form = CreateVendorForm()
-    return render(request, 'vendor/vendors.html', {'vendors': vendors, 'add_vendor_form': add_vendor_form})
+class VendorUpdateView(BSModalUpdateView):
+    model = Vendor
+    template_name = "vendor/update_vendor.html"
+    form_class = VendorModelForm
+    success_message = 'Success: Book was updated.'
+    success_url = reverse_lazy('vendor_list')
 
 
-def add_vendor(request):
-    add_vendor_form = CreateVendorForm(request.POST)
-    vendor_manager = VendorManager()
-    vendor_obj = vendor_manager.create_vendor(add_vendor_form)
-    messages.success(request, "Successfully Created Vendor :{0}".format(vendor_obj.name),
-                     extra_tags="alert-success")
-    return redirect('view_vendors')
+class VendorReadView(BSModalReadView):
+    model = Vendor
+    template_name = "vendor/read_vendor.html"
 
 
-def get_vendor_editform(request):
-    vendor_id = request.GET['vendor_id']
-    vendor = Vendor.objects.get(pk=vendor_id)
-    vendor_form = EditVendorForm(instance=vendor)
-    return HttpResponse(vendor_form.as_p())
+class VendorDeleteView(BSModalDeleteView):
+    model = Vendor
+    template_name = "vendor/delete_vendor.html"
+    success_message = "Success: Vendor was deleted"
+    success_url = reverse_lazy('vendor_list')
 
 
-def delete_vendor(request, id):
-    vendor = Vendor.objects.get(pk=id)
-    vendor_manager = VendorManager()
-    vendor_manager.delete_vendor(vendor)
-    messages.success(request, "Successfully Deleted Vendor:{0}".format(vendor.name),
-                     extra_tags="alert-success")
-    return redirect('view_vendors')
-
-
-def edit_vendor(request, id):
-    post_data = request.POST
-    vendor = Vendor.objects.get(pk=id)
-    data = {
-        'name': vendor.name
-    }
-    edit_vendor_form = EditVendorForm(request.POST, initial=data)
-    if edit_vendor_form.has_changed():
-        vendor_manager = VendorManager()
-        vendor_manager.edit_vendor(edit_vendor_form)
-        messages.success(request, "Successfully Edited Vendor :{0}".format(vendor.name),
-                         extra_tags="alert-success")
-        return redirect('view_vendors')
-    else:
-        messages.success(request, "No Data Changed in :{0}".format(vendor.name),
-                         extra_tags="alert-success")
-        return redirect('view_vendors')
+def vendors(request):
+    data = dict()
+    if request.method == 'GET':
+        vendor_list = Vendor.objects.all()
+        data['table'] = render_to_string(
+            '_vendors_table.html',
+            {'vendor_list': vendor_list},
+            request=request
+        )
+        return JsonResponse(data)
