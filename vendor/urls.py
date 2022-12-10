@@ -7,5 +7,5 @@ urlpatterns = [
     path('update/<int:pk>/', views.VendorUpdateView.as_view(), name="update_vendor"),
     path('read/<int:pk>/', views.VendorReadView.as_view(), name="read_vendor"),
     path('delete/<int:pk>/', views.VendorDeleteView.as_view(), name='delete_vendor'),
-    path('vendors/', views.vendors, name='vendors')
+    path('list/vendors/', views.vendors, name='vendors')
 ]

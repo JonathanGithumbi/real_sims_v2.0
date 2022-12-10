@@ -1,8 +1,8 @@
 {% load widget_tweaks %}
 <form method="post" action="">
   {% csrf_token %}
-  <div class="modal-header">
-    <h3 class="modal-title">Update Vendor</h3>
+  <div class="modal-header bg-light">
+    <h5 class="modal-title">Update Vendor</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -22,7 +22,7 @@
     {% endfor %}
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-success">Update</button>
+    <button type="submit" class="btn btn-sm btn-success">Update</button>
     <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
   </div>
 </form>

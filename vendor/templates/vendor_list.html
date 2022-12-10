@@ -80,9 +80,9 @@
                 formURL: $(this).data("form-url"),
                 asyncUpdate: true,
                 asyncSettings: {
-                  closeOnSubmit: false,
+                  closeOnSubmit: true,
                   successMessage: asyncSuccessMessageUpdate,
-                  dataUrl: "vendors/",
+                  dataUrl: "{% url 'vendors'%}",
                   dataElementId: "#vendors-table",
                   dataKey: "table",
                   addModalFormFunction: reinstantiateModalForms
@@ -115,10 +115,50 @@
             deleteVendorModalForm();
           }
 
+         
+
           // Hide message
           $(".alert").fadeTo(2000, 500).slideUp(500, function () {
               $(".alert").slideUp(500);
           });
+
+
+          //Vendors DataTable Configuration
+          var table = $('#vendors-table').DataTable({
+          fixedHeader: true,
+          order: [[1, 'asc']],
+          dom: 'Bfrtip',
+          lengthMenu: [
+          10, 25, 50, -1
+          ],
+          buttons: [
+          {
+              extend: 'pdf',
+              
+              download:'open',
+              title: "Vendors List",
+              messageBottom: function(){
+                  var curr_date = new Date();
+                  txt_curr_date = curr_date.toString();
+                  return txt_curr_date+"\n ~School Information Management System~";
+              },
+              exportOptions: {
+                      columns: ':visible'
+                  }
+          },
+          'pageLength',
+          'colvis'
+          ],
+          columnDefs: [{
+          orderable: false,
+          
+          targets: 0
+          }],
+          
+          });     
+    //Add Styling to the buttons
+    table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
+
       });
 </script>
 {% endblock script %}

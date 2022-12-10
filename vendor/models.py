@@ -5,6 +5,7 @@ from user_account.models import User
 
 class Vendor(models.Model):
     name = models.CharField(max_length=100)
+    phone_number = models.IntegerField(null=True)
     created_by = models.ForeignKey(
         User, on_delete=models.DO_NOTHING, null=True)
 
