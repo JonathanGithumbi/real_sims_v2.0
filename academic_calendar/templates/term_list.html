@@ -13,10 +13,10 @@
                 </ul>
             </div>
         </div>
-    <br/>
+    
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <h5 class="m-0 font-weight-bold">Term</h5>
+        <h5 class="m-0 font-weight-bold"> Year: {{year}} Terms</h5>
         <hr />
         <!--Modal-->
         {% include "_modal.html" %}
@@ -54,13 +54,13 @@
           // modal form
           function createTermAsyncModalForm() {
             $("#create-term").modalForm({
-                formURL: "{% url 'create_term' %}",
+                formURL: "{% url 'create_term' year.pk %}",
                 modalID: "#create-modal",
                 asyncUpdate: true,
                 asyncSettings: {
                   closeOnSubmit: true,
                   successMessage: asyncSuccessMessageCreate,
-                  dataUrl: "terms/",
+                  dataUrl: "{% url 'terms'%}",
                   dataElementId: "#terms-table",
                   dataKey: "table",
                   addModalFormFunction: reinstantiateModalForms

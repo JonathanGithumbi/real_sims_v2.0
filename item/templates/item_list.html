@@ -50,7 +50,7 @@
                 asyncSettings: {
                   closeOnSubmit: true,
                   successMessage: asyncSuccessMessageCreate,
-                  dataUrl: "items/",
+                  dataUrl: "{% url 'items'%}",
                   dataElementId: "#items-table",
                   dataKey: "table",
                   addModalFormFunction: reinstantiateModalForms

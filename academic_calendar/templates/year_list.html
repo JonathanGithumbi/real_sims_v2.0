@@ -10,15 +10,15 @@
                 </ul>
             </div>
         </div>
-    <br/>
+  
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <h5 class="m-0 font-weight-bold">Years</h5>
+        <h5 class="m-0 font-weight-bold">Academic Years</h5>
         <hr />
         <!--Modal-->
         {% include "_modal.html" %}
         <!-- Create vendor button -->
-        <button id="create-item"
+        <button id="create-year"
                 class="btn btn-primary btn-sm"
                 type="button"
                 name="button">Create Year</button>
@@ -57,7 +57,7 @@
                 asyncSettings: {
                   closeOnSubmit: true,
                   successMessage: asyncSuccessMessageCreate,
-                  dataUrl: "years/",
+                  dataUrl: "{% url 'years'%}",
                   dataElementId: "#years-table",
                   dataKey: "table",
                   addModalFormFunction: reinstantiateModalForms

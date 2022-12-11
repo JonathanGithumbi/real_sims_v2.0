@@ -19,8 +19,9 @@
                     <td >{{ year.start }}</td>
                     <td >{{ year.end }}</td>
                     <td >{% for term in year.term_set.all %}Term {{ term.term }},{% endfor %}</td>
+
                     <td >
-                        <a class="btn btn-primary  btn-sm " href="{% url 'term_list' %}">Terms</a>
+                        <a class="btn btn-primary  btn-sm " href="{% url 'term_list' year.pk %}">Terms</a>
                         <!-- Read vendor buttons -->
                         <button type="button"
                                 class="read-year btn btn-sm btn-primary"
