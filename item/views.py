@@ -1,44 +1,54 @@
-from django.shortcuts import render
-from .forms import CreateSalesItemForm, EditSalesItemForm
-from .ItemManager import ItemManager
-from django.contrib import messages
-from django.shortcuts import redirect
 from .models import Item
-from django.http import HttpResponse
+from django.template.loader import render_to_string
+from .forms import ItemModelForm
+
+from django.http import JsonResponse
+from bootstrap_modal_forms.generic import (
+    BSModalCreateView,
+    BSModalUpdateView,
+    BSModalReadView,
+    BSModalDeleteView
+)
+from django.urls import reverse_lazy
+from django.views import generic
+
+class ItemListView(generic.ListView):
+    model = Item
+    template_name = 'item_list.html'
+    context_object_name = 'item_list'
+
+class ItemCreateView(BSModalCreateView):
+    template_name = 'item/create_item.html'
+    form_class = ItemModelForm
+    success_message = 'Success: Item was created'
+    success_url = reverse_lazy('item_list')
+
+class ItemUpdateView(BSModalUpdateView):
+    model = Item
+    template_name = 'item/update_item.html'
+    form_class = ItemModelForm
+    success_message = 'Success: Item was updated'
+    success_url = reverse_lazy('item_list')
 
 
-def create_salesitem(request):
-    add_salesitem_form = CreateSalesItemForm(request.POST)
-    item_manager = ItemManager()
-    item_obj = item_manager.create_salesitem(add_salesitem_form)
-    messages.success(request, "Successfully Created Sales Item :{0}".format(item_obj.name),
-                     extra_tags="alert-success")
-    return redirect('view_sales_items')
+class ItemReadView(BSModalReadView):
+    model = Item
+    template_name = 'item/read_item.html'
+
+class ItemDeleteView(BSModalDeleteView):
+    model = Item
+    template_name = 'item/delete_item.html'
+    success_message = 'Success: Item was created'
+    success_url = reverse_lazy('item_list')
 
 
-def view_sales_item(request):
-    items = Item.objects.all()
-    add_salesitem_form = CreateSalesItemForm()
-    return render(request, 'item/view_sales_items.html', {'items': items, 'add_salesitem_form': add_salesitem_form})
-
-
-def edit_salesitem(request, id):
-    pass
-
-
-def get_salesitem_editform(request):
-    """Gets a sales item form populated with insytance data for the edit modal"""
-    item_id = request.GET['item_id']
-
-    item = Item.objects.get(pk=item_id)
-    item_form = EditSalesItemForm(instance=item)
-    return HttpResponse(item_form.as_p())
-
-
-def delete_salesitem(request, id):
-    item = Item.objects.get(pk=id)
-    item_manager = ItemManager()
-    item_manager.delete_salesitem(item)
-    messages.success(request, "Successfully Deleted Sales Item :{0}".format(item.name),
-                     extra_tags="alert-success")
-    return redirect('view_sales_items')
+def items(request):
+    data = dict()
+    if request.method == 'GET':
+        item_list = Item.objects.all()
+        data['table'] = render_to_string(
+            '_items_table.html',
+            {'item_list': item_list},
+            request=request
+        )
+        return JsonResponse(data)

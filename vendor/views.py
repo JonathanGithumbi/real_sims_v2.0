@@ -28,7 +28,7 @@ class VendorUpdateView(BSModalUpdateView):
     model = Vendor
     template_name = "vendor/update_vendor.html"
     form_class = VendorModelForm
-    success_message = 'Success: Book was updated.'
+    success_message = 'Success: Vendor was updated.'
     success_url = reverse_lazy('vendor_list')
 
 

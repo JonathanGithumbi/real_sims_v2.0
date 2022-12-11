@@ -1,5 +1,4 @@
 from django.urls import path
-from django.conf.urls import url
 from . import views
 urlpatterns = [
     path('list/', views.VendorListView.as_view(), name='vendor_list'),

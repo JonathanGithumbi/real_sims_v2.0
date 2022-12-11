@@ -1,6 +1,6 @@
 from invoice.models import Invoice, Item, BalanceTable
 from fees_structure.models import FeesStructureBatch
-from item.ItemManager import ItemManager
+#from item.ItemManager import ItemManager
 
 
 class InvoiceManager():
