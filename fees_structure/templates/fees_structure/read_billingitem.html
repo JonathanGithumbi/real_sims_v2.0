@@ -10,7 +10,7 @@
   <div class="">Charging on Registration: {{ billingitem.charge_on_registration }}</div>
   <div class="">Applied to grades:{% for grade in billingitem.grades.all %}{{grade.title}}{% endfor %}</div>
   <div class="">Amount: {{ billingitem.amount }}</div>
-  <div class="">Occurrence: {{ billingitem.occurrence }}</div>
+  <div class="">Occurrence: {{ billingitem.ocurrence }}</div>
   <div class="">Period: {{ billingitem.period }}</div>
   <div class="">Applied to grades:{% for term in billingitem.terms.all %}{{term.term}}{% endfor %}</div>
   <div class="">Year: {{ billingitem.year }}</div>

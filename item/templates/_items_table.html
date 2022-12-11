@@ -1,0 +1,41 @@
+<div class="table-responsive">
+    <table id="items-table"
+           class="table table-bordered table-sm text-gray-900"
+           style="width:100%">
+        <thead class='thead-light'>
+            <tr>
+                <th scope="col">Sales Item</th>
+            
+                <th scope="col">Read / Update / Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in item_list %}
+                <tr>
+                    <td >{{ item.name }}</td>
+                    
+                    <td >
+                        <!-- Read vendor buttons -->
+                        <button type="button"
+                                class="read-item btn btn-sm btn-primary"
+                                data-form-url="{% url 'read_item' item.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                        <!-- Update vendor buttons -->
+                        <button type="button"
+                                class="update-item btn btn-sm btn-primary"
+                                data-form-url="{% url 'update_item' item.pk %}">
+                            <span class="fas fa-pen"></span>
+                        </button>
+                        <!-- Delete vendor buttons -->
+                        <button type="button"
+                                class="delete-item btn btn-sm btn-danger"
+                                data-form-url="{% url 'delete_item' item.pk %}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

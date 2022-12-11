@@ -29,9 +29,9 @@
                 <tr>
                     <td >{{ billingitem.item }}</td>
                     <td >{{ billingitem.charge_on_registration }}</td>
-                    <td >{{ billingitem.grades_list }}</td>
+                    <td >{{ billingitem.grades_list }} {% for grade in billingitem.grades.all %}Grade {{grade.id}},{% endfor %}</td>
                     <td >{{ billingitem.amount }}</td>
-                    <td >{{ billingitem.occurrence }}</td>
+                    <td >{{ billingitem.ocurrence }}</td>
                     <td >{{ billingitem.period }}</td>
                     <td >{{ billingitem.terms_list }}</td>
                     <td >{{ billingitem.year }}</td>
