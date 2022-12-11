@@ -1,5 +1,5 @@
 from django.db import models
-from user_account.models import User
+
 from django.shortcuts import reverse
 
 

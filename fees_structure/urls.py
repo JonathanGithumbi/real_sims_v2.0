@@ -1,10 +1,10 @@
 from django.urls import path
 from . import views
-
 urlpatterns = [
-    path('create/', views.create_fees_structure, name='create_fees_structure'),
-    path('view/', views.view_fees_structure, name='view_fees_structure'),
-    path('edit/<int:id>', views.edit_fees_structure, name='edit_fees_structure'),
-    path('delete/<int:id>/', views.delete_fees_structure,
-         name='delete_fees_structure')
+    path('list/', views.BillingItemListView.as_view(), name='billingitem_list'),
+    path('create/', views.BillingItemCreateView.as_view(), name='create_billingitem'),
+    path('update/<int:pk>/', views.BillingItemUpdateView.as_view(), name="update_billingitem"),
+    path('read/<int:pk>/', views.BillingItemReadView.as_view(), name="read_billingitem"),
+    path('delete/<int:pk>/', views.BillingItemDeleteView.as_view(), name='delete_billingitem'),
+    path('list/billingitems/', views.billingitems, name='billingitems')
 ]

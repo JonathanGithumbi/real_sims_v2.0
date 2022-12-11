@@ -6,19 +6,19 @@
         <br/>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class="m-0 font-weight-bold"> Sales Items</h5>
+                <h5 class="m-0 font-weight-bold"> Billing Items</h5>
                 <hr />
                 <!--Modal-->
                 {% include "_modal.html" %}
-                <!-- Create vendor button -->
-                <button id="create-item"
+                <!-- Create billing item button -->
+                <button id="create-billingitem"
                         class="btn btn-primary btn-sm"
                         type="button"
-                        name="button">Create Item</button>
+                        name="button">Create Billing Item</button>
             </div>
             <!--Table Body-->
             <div class="card-body">
-                <div class="table-responsive">{% include "_items_table.html" %}</div>
+                <div class="table-responsive">{% include "_billingitems_table.html" %}</div>
             </div>
         </div>
     </div>
@@ -27,11 +27,11 @@
         <script type="text/javascript">
       $(function () {
           
-          // Create vendor asynchronous button
+          // Create billing item asynchronous button
           // message
           var asyncSuccessMessageCreate = [
             "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-            "Success: Item was created.",
+            "Success: Billing Item was created.",
             "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
             "<span aria-hidden='true'>&times;</span>",
             "</button>",
@@ -42,28 +42,28 @@
           ].join("");
 
           // modal form
-          function createItemAsyncModalForm() {
-            $("#create-item").modalForm({
-                formURL: "{% url 'create_item' %}",
+          function createBillingItemAsyncModalForm() {
+            $("#create-billingitem").modalForm({
+                formURL: "{% url 'create_billingitem' %}",
                 modalID: "#create-modal",
                 asyncUpdate: true,
                 asyncSettings: {
                   closeOnSubmit: true,
                   successMessage: asyncSuccessMessageCreate,
-                  dataUrl: "items/",
-                  dataElementId: "#items-table",
+                  dataUrl: "billingitems/",
+                  dataElementId: "#billingitems-table",
                   dataKey: "table",
                   addModalFormFunction: reinstantiateModalForms
                 }
             });
           }
-          createItemAsyncModalForm();
+          createBillingItemAsyncModalForm();
 
           // Update item asynchronous button
           // message
           var asyncSuccessMessageUpdate = [
             "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-success alert-sm alert-dismissible fade show mb-0' role='alert'>",
-            "Success: Item was updated.",
+            "Success: Billing Item was updated.",
             "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
             "<span aria-hidden='true'>&times;</span>",
             "</button>",
@@ -74,45 +74,45 @@
           ].join("");
 
           // modal form
-          function updateItemModalForm() {
-            $(".update-item").each(function () {
+          function updateBillingItemModalForm() {
+            $(".update-billingitem").each(function () {
               $(this).modalForm({
                 formURL: $(this).data("form-url"),
                 asyncUpdate: true,
                 asyncSettings: {
                   closeOnSubmit: true,
                   successMessage: asyncSuccessMessageUpdate,
-                  dataUrl: "{% url 'items'%}",
-                  dataElementId: "#items-table",
+                  dataUrl: "{% url 'billingitems'%}",
+                  dataElementId: "#billingitems-table",
                   dataKey: "table",
                   addModalFormFunction: reinstantiateModalForms
                 }
               });
             });
           }
-          updateItemModalForm();
+          updateBillingItemModalForm();
 
           // Delete item buttons - formURL is retrieved from the data of the element
-          function deleteItemModalForm() {
-            $(".delete-item").each(function () {
+          function deleteBillingItemModalForm() {
+            $(".delete-billingitem").each(function () {
                 $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
             });
           }
-          deleteItemModalForm();
+          deleteBillingItemModalForm();
 
           // Read item buttons
-          function readItemModalForm() {
-            $(".read-item").each(function () {
+          function readBillingItemModalForm() {
+            $(".read-billingitem").each(function () {
                 $(this).modalForm({formURL: $(this).data("form-url")});
             });
           }
-          readItemModalForm();
+          readBillingItemModalForm();
 
           function reinstantiateModalForms() {
-            createItemAsyncModalForm();
-            readItemModalForm();
-            updateItemModalForm();
-            deleteItemModalForm();
+            createBillingItemAsyncModalForm();
+            readBillingItemModalForm();
+            updateBillingItemModalForm();
+            deleteBillingItemModalForm();
           }
 
          
@@ -124,7 +124,7 @@
 
 
           // Sales Items DataTable Configuration
-          var table = $('#items-table').DataTable({
+          var table = $('#billingitems-table').DataTable({
           fixedHeader: true,
           order: [[1, 'asc']],
           dom: 'Bfrtip',
@@ -136,7 +136,7 @@
               extend: 'pdf',
               
               download:'open',
-              title: "Sales Items List",
+              title: "Billing Items List",
               messageBottom: function(){
                   var curr_date = new Date();
                   txt_curr_date = curr_date.toString();

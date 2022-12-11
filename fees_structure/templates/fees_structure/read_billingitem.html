@@ -1,0 +1,21 @@
+{% load widget_tweaks %}
+<div class="modal-header bg-light">
+  <h5 class="modal-title">Billing Item details</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="">Item: {{ billingitem.item }}</div>
+  <div class="">Charging on Registration: {{ billingitem.charge_on_registration }}</div>
+  <div class="">Applied to grades:{% for grade in billingitem.grades.all %}{{grade.title}}{% endfor %}</div>
+  <div class="">Amount: {{ billingitem.amount }}</div>
+  <div class="">Occurrence: {{ billingitem.occurrence }}</div>
+  <div class="">Period: {{ billingitem.period }}</div>
+  <div class="">Applied to grades:{% for term in billingitem.terms.all %}{{term.term}}{% endfor %}</div>
+  <div class="">Year: {{ billingitem.year }}</div>
+  <div class="">Term: {{ billingitem.term }}</div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+</div>

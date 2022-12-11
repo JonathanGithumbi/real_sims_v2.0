@@ -1,0 +1,65 @@
+<div class="table-responsive">
+    <table id="billingitems-table"
+           class="table table-bordered table-sm text-gray-900"
+           style="width:100%">
+        <thead class='thead-light'>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">
+                    Charge on Registration
+                </th>
+                <th scope="col">Grades Applied To</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Ocurrence</th>
+                <th scope="col">Period</th>
+                <th scope="col">Terms applied to</th>
+                <th scope="col">
+                    year
+                </th>
+                <th scope="col">
+                    term
+                </th>
+                
+               
+                <th scope="col">Read / Update / Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for billingitem in billingitem_list %}
+                <tr>
+                    <td >{{ billingitem.item }}</td>
+                    <td >{{ billingitem.charge_on_registration }}</td>
+                    <td >{{ billingitem.grades_list }}</td>
+                    <td >{{ billingitem.amount }}</td>
+                    <td >{{ billingitem.occurrence }}</td>
+                    <td >{{ billingitem.period }}</td>
+                    <td >{{ billingitem.terms_list }}</td>
+                    <td >{{ billingitem.year }}</td>
+                    <td >{{ billingitem.term }}</td>
+                    
+                    
+                    <td >
+                        <!-- Read item buttons -->
+                        <button type="button"
+                                class="read-billingitem btn btn-sm btn-primary"
+                                data-form-url="{% url 'read_billingitem' billingitem.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                        <!-- Update item buttons -->
+                        <button type="button"
+                                class="update-billingitem btn btn-sm btn-primary"
+                                data-form-url="{% url 'update_billingitem' billingitem.pk %}">
+                            <span class="fas fa-pen"></span>
+                        </button>
+                        <!-- Delete item buttons -->
+                        <button type="button"
+                                class="delete-billingitem btn btn-sm btn-danger"
+                                data-form-url="{% url 'delete_billingitem' billingitem.pk %}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
