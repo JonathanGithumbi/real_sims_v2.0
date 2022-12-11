@@ -2,7 +2,7 @@
 <form method="post" action="">
   {% csrf_token %}
   <div class="modal-header bg-light">
-    <h5 class="modal-title">Create Year</h5>
+    <h5 class="modal-title">Update Term</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -14,7 +14,7 @@
     {% for field in form %}
       <div class="form-group">
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% render_field field class="form-control form-control-sm"  %}
+        {% render_field field class="form-control" placeholder=field.label %}
         <div class="{% if field.errors %} invalid{% endif %}">
           {% for error in field.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
         </div>
@@ -22,7 +22,7 @@
     {% endfor %}
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-sm btn-success">Create</button>
+    <button type="submit" class="btn btn-sm btn-success">Update</button>
     <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
   </div>
 </form>

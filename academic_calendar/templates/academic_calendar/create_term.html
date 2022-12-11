@@ -1,19 +1,28 @@
-{% extends 'layout.html' %}
-{% block page %}
-    <!-- Begin Page Content -->
-    <div class="container-fluid">
-        <br>
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <div class="alert {{ message.tags }} alert-dismissible small fade show">
-                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        {{ form.as_p }}
+{% load widget_tweaks %}
+<form method="post" action="">
+  {% csrf_token %}
+  <div class="modal-header bg-light">
+    <h5 class="modal-title">Create Term</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+      {% for error in form.non_field_errors %}{{ error }}{% endfor %}
     </div>
-    <!-- /.container-fluid -->
-{% endblock %}
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {% render_field field class="form-control form-control-sm"  %}
+        <div class="{% if field.errors %} invalid{% endif %}">
+          {% for error in field.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-sm btn-success">Create</button>
+    <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
+  </div>
+</form>

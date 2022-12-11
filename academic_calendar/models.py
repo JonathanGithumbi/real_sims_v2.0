@@ -2,6 +2,7 @@ from django.db import models
 from datetime import timedelta
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import reverse
 
 
 class Year(models.Model):
@@ -12,6 +13,9 @@ class Year(models.Model):
 
     def __str__(self):
         return str(self.year)
+
+    def get_absolute_url(self):
+        return reverse('year_detail', kwargs={'pk': self.pk})
 
 
 class Term(models.Model):
@@ -27,6 +31,9 @@ class Term(models.Model):
 
     def __str__(self):
         return str(self.term)
+
+    def get_absolute_url(self):
+        return reverse('term_detail', kwargs={'pk': self.pk})
 
 
 # obsolete: delete when possible
