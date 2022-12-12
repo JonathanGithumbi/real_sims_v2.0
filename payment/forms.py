@@ -1,17 +1,11 @@
-from django import forms
-from django.forms import modelformset_factory, Select
-from django import forms
 from .models import Payment
 
+from bootstrap_modal_forms.forms import BSModalModelForm
 
 
-class PaymentCreationForm(forms.ModelForm):
+class PaymentModelForm(BSModalModelForm):
     class Meta:
         model = Payment
-        fields = ['date_paid','amount']
-        widgets = {
-            'date_paid': forms.DateInput(attrs={'class': 'form-control form-control-sm', 'id': 'floatingInput', 'type': 'date'}),
-            'amount': forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'id': 'quantity', 'min': 1}),
-        }
+        fields = ['amount']
 
     # You have to validate that the amount is greatter than 1

@@ -1,0 +1,45 @@
+<div class="table-responsive">
+    <table id="payments-table"
+           class="table table-bordered table-sm text-gray-900"
+           style="width:100%">
+        <thead class='thead-light'>
+            <tr>
+                <th scope="col">Payment Date</th>
+                <th scope="col">Payment type</th>
+                <th scope="col">Student</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Read / Update / Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payment_list %}
+                <tr>
+                    <td>{{ payment.date_paid }}</td>
+                    <td>{{ payment.note }}</td>
+                    <td>{{ payment.student }}</td>
+                    <td>{{ payment.amount }}</td>
+                    <td >
+                        <!-- Read payment buttons -->
+                        <button type="button"
+                                class="read-payment btn btn-sm btn-primary"
+                                data-form-url="{% url 'read_payment' payment.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                        <!-- Update payment buttons -->
+                        <button type="button"
+                                class="update-payment btn btn-sm btn-primary"
+                                data-form-url="{% url 'update_payment' payment.pk %}">
+                            <span class="fas fa-pen"></span>
+                        </button>
+                        <!-- Delete payment buttons -->
+                        <button type="button"
+                                class="delete-payment btn btn-sm btn-danger"
+                                data-form-url="{% url 'delete_payment' payment.pk %}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

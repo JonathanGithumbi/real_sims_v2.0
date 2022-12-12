@@ -49,16 +49,16 @@ INSTALLED_APPS = [
     'fees_structure',
     'invoice',
     'academic_calendar',
-    'report',
+
     'payment',
     'vendor',
     'account',
     'item',
-    'bill_payment',
+
     
     'QBWEBSERVICE',
     'core',
-    'expenses',
+    
 
 
 

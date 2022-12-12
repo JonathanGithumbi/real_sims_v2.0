@@ -1,12 +1,15 @@
-from django.urls import path, re_path, include
+from django.urls import path
 from . import views
-
 urlpatterns = [
 
-    path('record/payment/', views.make_payment, name='create_payment'),
-    path('make-payment/<int:id>/', views.make_payment, name='make_payment'),
-    path('search-payments/', views.payments, name='payments'),
-    path('payment-summaries/', views.payment_summaries, name='payment_summaries'),
-    path('payment-summaries/payment-trend-api',
-         views.chart_data, name='chart data')
+    path('list/<int:student_pk>/', views.PaymentListView.as_view(),
+         name='payment_list'),  # Capture a single group
+    path('create/<int:student_pk>/',
+         views.PaymentCreateView.as_view(), name='create_payment'),
+    path('update/<int:pk>/<int:student_pk>/', views.PaymentUpdateView.as_view(),
+         name="update_payment"),
+    path('read/<int:pk>/', views.PaymentReadView.as_view(), name="read_payment"),
+    path('delete/<int:pk>/<int:student_pk>', views.PaymentDeleteView.as_view(),
+         name='delete_payment'),
+    path('list/payments/', views.payments, name='payments')
 ]
