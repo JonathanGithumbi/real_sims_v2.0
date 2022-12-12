@@ -28,12 +28,12 @@ urlpatterns = [
     path('student/', include('student.urls')),
     path('bill/', include('bill.urls')),
     path('item/', include('item.urls')),
- 
+    path('grade/', include('grade.urls')),
     path('user_account/', include('user_account.urls')),
     path('invoice/', include('invoice.urls')),
     path('payments/', include('payment.urls')),
     path('fees-structure/', include('fees_structure.urls')),
     path('vendors/', include('vendor.urls')),
-   
-    
+
+
 ]

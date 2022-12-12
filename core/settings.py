@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'fees_structure',
     'invoice',
     'academic_calendar',
-
     'payment',
     'vendor',
     'item',

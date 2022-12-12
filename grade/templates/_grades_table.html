@@ -1,0 +1,39 @@
+<div class="table-responsive">
+    <table id="grades-table"
+           class="table table-bordered table-sm text-gray-900"
+           style="width:100%">
+        <thead class='thead-light'>
+            <tr>
+                <th scope="col">Grade</th>
+                <th scope="col">Read / Update / Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grade_list %}
+                <tr>
+                    <td >{{ grade.title }}</td>
+                    <td >
+                        <!-- Read vendor buttons -->
+                        <button type="button"
+                                class="read-grade btn btn-sm btn-primary"
+                                data-form-url="{% url 'read_grade' grade.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                        <!-- Update vendor buttons -->
+                        <button type="button"
+                                class="update-grade btn btn-sm btn-primary"
+                                data-form-url="{% url 'update_grade' grade.pk %}">
+                            <span class="fas fa-pen"></span>
+                        </button>
+                        <!-- Delete vendor buttons -->
+                        <button type="button"
+                                class="delete-grade btn btn-sm btn-danger"
+                                data-form-url="{% url 'delete_grade' grade.pk %}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
