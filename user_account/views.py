@@ -1,28 +1,47 @@
 from __future__ import absolute_import
 from django.urls import reverse
-
-from requests import HTTPError
-import json
-
-from intuitlib.client import AuthClient
-from intuitlib.migration import migrate
-from intuitlib.enums import Scopes
-from intuitlib.exceptions import AuthClientError
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
-from django.conf import settings
-from django.core import serializers
 from django.contrib import messages
-from user_account.services import qbo_api_call
-from user_account.models import Token
-
-from django.contrib.auth import authenticate, login
-
+from django.contrib.auth import login
 from .backends import AuthBackend
-from .forms import AuthFormWithBootstrapSpecifics
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+
+from django.contrib.auth.views import LoginView
+from .forms import CustomLoginForm
+from django.urls import reverse_lazy
+from .forms import CustomLoginForm
+
+
+class CustomLoginView(LoginView):
+    template_name = 'user_account/login.html'
+    form_class = CustomLoginForm
+    next_page = reverse_lazy('dashboard')
+    authentication_form = CustomLoginForm
+
+class CustomLogoutView():
+    pass
+
+
+class CustomPasswordChangeView():
+    pass
+
+class CustomPasswordChangeDoneView():
+    pass
+
+class CustomPasswordResetView():
+    pass
+
+class CustomPasswordResetDoneView():
+    pass
+
+class CustomPasswordResetConfirmView():
+    pass
+
+class CustomPasswordResetCompleteView():
+    pass
 
 
 def login_user(request):

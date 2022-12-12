@@ -33,17 +33,17 @@
                 <hr>
                 <h6>Refresh Connection:</h6>
                 <a class="btn btn-primary btn-sm"
-                   href="{% url 'check_quickbooks_connection' %}">Refresh</a>
+                   href="#">Refresh</a>
                 <br>
                 <h6>Quickbooks Web Connector(QWC) File:</h6>
                 <a class="btn btn-primary btn-sm"
-                   href="{% url 'download_qwc' user.id %}">Download QWC File</a>
+                   href="#">Download QWC File</a>
                 <br>
                 <h6>Import/Export Data:</h6>
                 <a class="btn btn-primary btn-sm"
-                   href="{% url 'download_qwc' user.id %}">Export Data to Quickbooks</a>
+                   href="#">Export Data to Quickbooks</a>
                 <a class="btn btn-primary btn-sm"
-                   href="{% url 'download_qwc' user.id %}">Import Data from Quickbooks</a>
+                   href="#">Import Data from Quickbooks</a>
                 <hr>
                 <h6>Account Settings:</h6>
                 <hr>
@@ -64,7 +64,7 @@
                             </div>
                             <!-- Modal Body -->
                             <div class="modal-body">
-                                <form class="user" action="{% url 'password_change' %}" method="post">
+                                <form class="user" action="#" method="post">
                                     {% csrf_token %}
                                     {{ password_change_form.as_p }}
                                     <input class="btn btn-success btn-sm " type="submit" value="Submit">
@@ -83,7 +83,7 @@
                             </div>
                             <!-- Modal Body -->
                             <div class="modal-body">
-                                <a class="btn btn-success btn-sm"href="{% url 'logout_user' %}">Logout</a>
+                                <a class="btn btn-success btn-sm"href="#">Logout</a>
                                 <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
@@ -108,13 +108,7 @@
         10, 25, 50, -1
         ],
         buttons: [
-        {
-                text: 'New Expense',
-                action: function ( e, dt, node, config ) {
-                     window.location.href = "{% url 'add_expense' %}"
-
-                }
-            },
+        
         
         {
             extend: 'searchBuilder',
