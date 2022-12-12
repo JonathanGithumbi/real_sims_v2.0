@@ -1,0 +1,14 @@
+{% load widget_tweaks %}
+<div class="modal-header bg-light">
+  <h5 class="modal-title">Invoice Item details</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div>Sales Item:{{ invoiceitem.sales_item }}</div>
+  <div>Amount: {{ invoiceitem.amount }}</div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+</div>

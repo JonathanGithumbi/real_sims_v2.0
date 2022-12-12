@@ -1,12 +1,4 @@
-
-from payment.PaymentManager import PaymentManager
-from django.contrib.auth.decorators import login_required
-
-from django.contrib import messages
-
-from invoice.models import BalanceTable, Invoice
-from .forms import PaymentCreationForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .models import Payment
 from django.template.loader import render_to_string
 from .forms import PaymentModelForm
@@ -18,9 +10,9 @@ from bootstrap_modal_forms.generic import (
     BSModalDeleteView)
 from django.urls import reverse_lazy
 from django.views import generic
-from student.models import Student
+from invoice.models import Student
 from django.shortcuts import get_object_or_404
-# lists of payments are visible on a per student basis
+# lists of payments are visible on a per invoice basis
 
 
 class PaymentListView(generic.ListView):
@@ -28,13 +20,13 @@ class PaymentListView(generic.ListView):
     context_object_name = 'payment_list'
 
     def get_queryset(self):
-        self.student = get_object_or_404(Student, pk=self.kwargs['student_pk'])
-        return Payment.objects.filter(student=self.student)
+        self.invoice = get_object_or_404(Student, pk=self.kwargs['invoice_pk'])
+        return Payment.objects.filter(invoice=self.invoice)
 
-    # Add the student to the context so that the templates can use it
+    # Add the invoice to the context so that the templates can use it
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['student'] = self.student
+        context['invoice'] = self.invoice
 
 
 class PaymentCreateView(BSModalCreateView):
@@ -43,7 +35,7 @@ class PaymentCreateView(BSModalCreateView):
     success_message = 'Success: Payment was created.'
 
     def get_success_url(self):
-        return reverse_lazy('payment_list', kwargs={'student_pk': self.kwargs['student_pk']})
+        return reverse_lazy('payment_list', kwargs={'invoice_pk': self.kwargs['invoice_pk']})
 
 
 class PaymentUpdateView(BSModalUpdateView):
@@ -53,7 +45,7 @@ class PaymentUpdateView(BSModalUpdateView):
     success_message = 'Success: Payment was updated.'
 
     def get_success_url(self):
-        return reverse_lazy('payment_list', kwargs={'student_pk': self.kwargs['student_pk']})
+        return reverse_lazy('payment_list', kwargs={'invoice_pk': self.kwargs['invoice_pk']})
 
 
 class PaymentReadView(BSModalReadView):
@@ -67,7 +59,7 @@ class PaymentDeleteView(BSModalDeleteView):
     success_message = "Success: Payment was deleted"
     
     def get_success_url(self):
-        return reverse_lazy('payment_list', kwargs={'student_pk': self.kwargs['student_pk']})
+        return reverse_lazy('payment_list', kwargs={'invoice_pk': self.kwargs['invoice_pk']})
 
 
 def payments(request):
@@ -81,9 +73,4 @@ def payments(request):
         )
         return JsonResponse(data)
 
-
-@login_required()
-def payments(request):
-    all_payments = Payment.objects.all()
-    return render(request, 'payment/payments.html', {'payments': all_payments})
 

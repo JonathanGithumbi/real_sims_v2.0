@@ -1,0 +1,165 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block page %}
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+    <br/>
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h5 class="m-0 font-weight-bold">InvoiceItems</h5>
+        <hr />
+        <!--Modal-->
+        {% include "_modal.html" %}
+        <!-- Create invoiceitem button -->
+        <button id="create-invoiceitem"
+                class="btn btn-primary btn-sm"
+                type="button"
+                name="button">Create InvoiceItem</button>
+      </div>
+      <!--Table Body-->
+      <div class="card-body">
+        <div class="table-responsive">{% include "_invoiceitems_table.html" %}</div>
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid -->
+  {% block script %}
+    <script type="text/javascript">
+      $(function () {
+          
+          // Create invoiceitem asynchronous button
+          // message
+          var asyncSuccessMessageCreate = [
+            "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-sm alert-success alert-dismissible fade show mb-0' role='alert'>",
+            "Success: InvoiceItem was created.",
+            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+            "<span aria-hidden='true'>&times;</span>",
+            "</button>",
+            "</div>",
+            "<script>",
+            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+            "<\/script>"
+          ].join("");
+
+          // modal form
+          function createInvoiceItemAsyncModalForm() {
+            $("#create-invoiceitem").modalForm({
+                formURL: "{% url 'create_invoiceitem' %}",
+                modalID: "#create-modal",
+                asyncUpdate: true,
+                asyncSettings: {
+                  closeOnSubmit: true,
+                  successMessage: asyncSuccessMessageCreate,
+                  dataUrl: "{% url 'invoiceitems'%}",
+                  dataElementId: "#invoiceitems-table",
+                  dataKey: "table",
+                  addModalFormFunction: reinstantiateModalForms
+                }
+            });
+          }
+          createInvoiceItemAsyncModalForm();
+
+          // Update invoiceitem asynchronous button
+          // message
+          var asyncSuccessMessageUpdate = [
+            "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-stringformat alert-success alert-dismissible fade show mb-0' role='alert'>",
+            "Success: InvoiceItem was updated.",
+            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+            "<span aria-hidden='true'>&times;</span>",
+            "</button>",
+            "</div>",
+            "<script>",
+            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+            "<\/script>"
+          ].join("");
+
+          // modal form
+          function updateInvoiceItemModalForm() {
+            $(".update-invoiceitem").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url"),
+                asyncUpdate: true,
+                asyncSettings: {
+                  closeOnSubmit: true,
+                  successMessage: asyncSuccessMessageUpdate,
+                  dataUrl: "{% url 'invoiceitems'%}",
+                  dataElementId: "#invoiceitems-table",
+                  dataKey: "table",
+                  addModalFormFunction: reinstantiateModalForms
+                }
+              });
+            });
+          }
+          updateInvoiceItemModalForm();
+
+          // Delete invoiceitem buttons - formURL is retrieved from the data of the element
+          function deleteInvoiceItemModalForm() {
+            $(".delete-invoiceitem").each(function () {
+                $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
+            });
+          }
+          deleteInvoiceItemModalForm();
+
+          // Read invoiceitem buttons
+          function readInvoiceItemModalForm() {
+            $(".read-invoiceitem").each(function () {
+                $(this).modalForm({formURL: $(this).data("form-url")});
+            });
+          }
+          readInvoiceItemModalForm();
+
+          function reinstantiateModalForms() {
+            createInvoiceItemAsyncModalForm();
+            readInvoiceItemModalForm();
+            updateInvoiceItemModalForm();
+            deleteInvoiceItemModalForm();
+          }
+
+         
+
+          // Hide message
+          $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+              $(".alert").slideUp(500);
+          });
+
+
+          //InvoiceItems DataTable Configuration
+          var table = $('#invoiceitems-table').DataTable({
+          fixedHeader: true,
+          order: [[1, 'asc']],
+          dom: 'Bfrtip',
+          lengthMenu: [
+          10, 25, 50, -1
+          ],
+          buttons: [
+          {
+              extend: 'pdf',
+              
+              download:'open',
+              title: "InvoiceItems List",
+              messageBottom: function(){
+                  var curr_date = new Date();
+                  txt_curr_date = curr_date.toString();
+                  return txt_curr_date+"\n ~School Information Management System~";
+              },
+              exportOptions: {
+                      columns: ':visible'
+                  }
+          },
+          'pageLength',
+          'colvis'
+          ],
+          columnDefs: [{
+          orderable: false,
+          
+          targets: 0
+          }],
+          
+          });     
+    //Add Styling to the buttons
+    table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
+
+      });
+</script>
+{% endblock script %}
+{% endblock %}

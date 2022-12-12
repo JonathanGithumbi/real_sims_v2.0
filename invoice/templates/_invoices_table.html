@@ -1,0 +1,45 @@
+<div class="table-responsive">
+    <table id="invoices-table"
+           class="table table-bordered table-sm text-gray-900"
+           style="width:100%">
+        <thead class='thead-light'>
+            <tr>
+                <th scope="col">Student</th>
+                <th scope="col">Grade</th>
+                <th scope="col">Year</th>
+                <th scope="col">Term</th>
+                <th scope="col">Read / Update / Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoice_list %}
+                <tr>
+                    <td>{{ invoice.student }}</td>
+                    <td>{{ invoice.grade }}</td>
+                    <td>{{ invoice.year }}</td>
+                    <td>{{ invoice.term }}</td>
+                    <td >
+                        <!-- Read invoice buttons -->
+                        <button type="button"
+                                class="read-invoice btn btn-sm btn-primary"
+                                data-form-url="{% url 'read_invoice' invoice.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                        <!-- Update invoice buttons -->
+                        <button type="button"
+                                class="update-invoice btn btn-sm btn-primary"
+                                data-form-url="{% url 'update_invoice' invoice.pk %}">
+                            <span class="fas fa-pen"></span>
+                        </button>
+                        <!-- Delete invoice buttons -->
+                        <button type="button"
+                                class="delete-invoice btn btn-sm btn-danger"
+                                data-form-url="{% url 'delete_invoice' invoice.pk %}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
