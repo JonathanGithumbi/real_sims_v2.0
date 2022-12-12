@@ -1,6 +1,7 @@
 from invoice.models import Invoice, Item, BalanceTable
-from fees_structure.models import FeesStructureBatch
-#from item.ItemManager import ItemManager
+from fees_structure.models import BillingItem
+from item.ItemManager import ItemManager
+
 
 
 class InvoiceManager():
@@ -21,7 +22,7 @@ class InvoiceManager():
         )
 
         # Get items to charge assuming that the user checked the charge_on_registration input
-        items_charged_at_registration = FeesStructureBatch.objects.filter(
+        items_charged_at_registration = BillingItem.objects.filter(
             charge_on_registration=True, grades__in=[student.grade_admitted_to])
         # add those items to the invoice
         for fees_structure in items_charged_at_registration:
@@ -36,7 +37,7 @@ class InvoiceManager():
             # Create an invoice item for the lunch item
             item_manager = ItemManager()
             lunch_sales_item = item_manager.get_lunch_item()
-            lunch_item_amount = FeesStructureBatch.objects.get(
+            lunch_item_amount = BillingItem.objects.get(
                 item=lunch_sales_item, grades__in=[student.current_grade]).amount
             lunch_item = Item.objects.create(
                 sales_item=lunch_sales_item,
@@ -47,7 +48,7 @@ class InvoiceManager():
             # Create an invoice item for the transport item
             item_manager = ItemManager()
             transport_sales_item = item_manager.get_transport_item()
-            transport_item_amount = FeesStructureBatch.objects.get(
+            transport_item_amount = BillingItem.objects.get(
                 item=transport_sales_item, grades__in=[student.current_grade]).amount
             transport_item = Item.objects.create(
                 sales_item=transport_sales_item,
@@ -79,7 +80,7 @@ class InvoiceManager():
         # the current specific term, and those one time charges that happen to fall on this particular term and year
 
         # get items that recurr yearly throughout all the terms
-        rec_yr_thr = FeesStructureBatch.objects.filter(
+        rec_yr_thr = BillingItem.objects.filter(
             grades__in=[student.current_grade], ocurrence='recurring', period='year-round')
         if rec_yr_thr:
             # add those items to the invoice
@@ -91,7 +92,7 @@ class InvoiceManager():
                 )
 
         # get items that recurr yearly at specific terms
-        rec_yr_spc = FeesStructureBatch.objects.filter(
+        rec_yr_spc = BillingItem.objects.filter(
             grades__in=[student.current_grade], ocurrence='recurring', period='specific-terms', terms__in=[student.current_term])
         if rec_yr_spc:
             # add those items to the invoice
@@ -105,7 +106,7 @@ class InvoiceManager():
             pass
 
         # get onetime items if any
-        one_time = FeesStructureBatch.objects.filter(
+        one_time = BillingItem.objects.filter(
             grades__in=[student.current_grade], ocurrence='one-time', term=student.current_term, year=student.current_year)
         if one_time:
             # add those items to the invoice
@@ -137,7 +138,7 @@ class InvoiceManager():
         # Create an invoice item for the lunch item
         item_manager = ItemManager()
         lunch_sales_item = item_manager.get_lunch_item()
-        lunch_item_amount = FeesStructureBatch.objects.get(
+        lunch_item_amount = BillingItem.objects.get(
             item=lunch_sales_item, grades__in=[student.current_grade]).amount
         lunch_item = Item.objects.create(
             sales_item=lunch_sales_item,
@@ -183,7 +184,7 @@ class InvoiceManager():
         # Create an invoice item for the transport item
         item_manager = ItemManager()
         transport_sales_item = item_manager.get_transport_item()
-        transport_item_amount = FeesStructureBatch.objects.get(
+        transport_item_amount = BillingItem.objects.get(
             item=transport_sales_item, grades__in=[student.current_grade]).amount
         transport_item = Item.objects.create(
             sales_item=transport_sales_item,

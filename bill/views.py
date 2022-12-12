@@ -4,7 +4,7 @@ from user_account.models import User
 from .models import Bill, BillItem, PettyCash
 from .forms import CreateBillItemForm
 from django.urls import reverse
-from bill_payment.models import BillPayment
+
 from .forms import EditBillItemForm, TopUpForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required

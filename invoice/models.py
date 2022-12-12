@@ -1,21 +1,11 @@
-from QBWEBSERVICE.models import QBDModelMixin
-from calendar import calendar
+
 from django.db import models
-from fees_structure.models import TERM_CHOICES
+
 from grade.models import Grade
 
 
-from quickbooks.objects import Account as QB_Account
-from quickbooks.objects import Invoice as QB_Invoice
-from quickbooks.objects.detailline import SalesItemLine, SalesItemLineDetail
-from quickbooks.objects import Item as QB_Item
-from quickbooks.objects import Customer
-from user_account.models import Token
-from intuitlib.client import AuthClient
-from django.conf import ENVIRONMENT_VARIABLE, settings
-from quickbooks import QuickBooks
 from item.models import Item as sales_item
-from fees_structure.models import FeesStructureBatch
+
 from academic_calendar.models import Year, Term
 from student.models import Student
 

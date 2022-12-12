@@ -1,0 +1,51 @@
+<div class="table-responsive">
+    <table id="students-table"
+           class="table table-bordered table-sm text-gray-900"
+           style="width:100%">
+        <thead class='thead-light'>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Current Grade</th>
+                <th scope="col">Status</th>
+                <th scope="col">Read/Update/Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in student_list %}
+                <tr>
+                    <td>{{ student }}</td>
+                    <td>{{ student.current_grade }}</td>
+                    <td>
+                        {% if student.active == True %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-danger">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td >
+                        <a class="btn btn-sm btn-primary"
+                           href="{% url 'invoice_list' student.pk %}">Invoices</a>
+                        <!-- Read vendor buttons -->
+                        <button type="button"
+                                class="read-student btn btn-sm btn-primary"
+                                data-form-url="{% url 'read_student' student.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                        <!-- Update vendor buttons -->
+                        <button type="button"
+                                class="update-student btn btn-sm btn-primary"
+                                data-form-url="{% url 'update_student' student.pk %}">
+                            <span class="fas fa-pen"></span>
+                        </button>
+                        <!-- Delete vendor buttons -->
+                        <button type="button"
+                                class="delete-student btn btn-sm btn-danger"
+                                data-form-url="{% url 'delete_student' student.pk %}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

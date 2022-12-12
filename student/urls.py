@@ -1,12 +1,10 @@
 from django.urls import path
 from . import views
-
 urlpatterns = [
-    path('', views.students, name='students'),
-    path('register/', views.register_student, name='register_student'),
-    path('profile/<int:student_id>', views.student_profile, name='student_profile'),
-    path('edit/<int:id>', views.edit_student_details, name='edit_student_details'),
-    path('delete/student<int:id>/', views.delete_student, name='delete_student'),
-    path('inactivate/<int:id>/', views.inactivate_student,
-         name='inactivate_student')
+    path('list/', views.StudentListView.as_view(), name='student_list'),
+    path('create/', views.StudentCreateView.as_view(), name='create_student'),
+    path('update/<int:pk>/', views.StudentUpdateView.as_view(), name="update_student"),
+    path('read/<int:pk>/', views.StudentReadView.as_view(), name="read_student"),
+    path('delete/<int:pk>/', views.StudentDeleteView.as_view(), name='delete_student'),
+    path('list/students/', views.students, name='students')
 ]

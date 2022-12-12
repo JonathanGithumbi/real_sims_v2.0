@@ -64,5 +64,7 @@ class FeesStructureBatch(models.Model):
     """A FeeStructureBatch cannot be associated with grades before it is saved"""
 
     pass
+
+
 class FeesStructure(models.Model):
     pass

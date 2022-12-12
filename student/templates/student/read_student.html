@@ -1,0 +1,20 @@
+{% load widget_tweaks %}
+<div class="modal-header bg-light">
+  <h5 class="modal-title">Student details</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="">Name: {{ student.first_name }} {{ student.middle_name }} {{ student.last_name }}</div>
+  <div class="">Grade: {{ student.current_grade }}</div>
+  <div class="">Primary contact name: {{ student.primary_contact_name }}</div>
+  <div class="">Primary contact phone number:{{ student.primary_contact_phone_number }}</div>
+  <div class="">Secondary contact name:{{ student.secondary_contact_name }}</div>
+  <div class="">Secondary contact phone number:{{ student.secondary_contact_phone_number }}</div>
+  <div class="">Subscribes to Lunch:{{ student.lunch }}</div>
+  <div class="">Subscribes to Transport:{{ student.transport }}</div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+</div>

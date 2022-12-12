@@ -20,7 +20,6 @@ from user_account.models import Token
 from quickbooks.exceptions import QuickbooksException
 from quickbooks.objects import Vendor as qb_vendor
 from quickbooks.objects import Account as qb_account
-from account.models import Account
 from user_account.models import User
 
 
@@ -84,7 +83,6 @@ class BillItem(models.Model):
     recipient = models.CharField(max_length=255, null=True, default="")
 
     created = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return self.description

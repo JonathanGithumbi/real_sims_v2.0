@@ -44,7 +44,7 @@
           // modal form
           function createPaymentAsyncModalForm() {
             $("#create-payment").modalForm({
-                formURL: "{% url 'create_payment' %}",
+                formURL: "{% url 'create_payment' invoice.pk %}",
                 modalID: "#create-modal",
                 asyncUpdate: true,
                 asyncSettings: {

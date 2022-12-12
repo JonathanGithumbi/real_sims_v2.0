@@ -6,7 +6,6 @@
             <tr>
                 <th scope="col">Sales Item</th>
                 <th scope="col">Amount</th>
-                
                 <th scope="col">Read / Update / Delete</th>
             </tr>
         </thead>
@@ -25,13 +24,13 @@
                         <!-- Update invoiceitem buttons -->
                         <button type="button"
                                 class="update-invoiceitem btn btn-sm btn-primary"
-                                data-form-url="{% url 'update_invoiceitem' invoiceitem.pk %}">
+                                data-form-url="{% url 'update_invoiceitem' invoiceitem.pk invoice.pk %}">
                             <span class="fas fa-pen"></span>
                         </button>
                         <!-- Delete invoiceitem buttons -->
                         <button type="button"
                                 class="delete-invoiceitem btn btn-sm btn-danger"
-                                data-form-url="{% url 'delete_invoiceitem' invoiceitem.pk %}">
+                                data-form-url="{% url 'delete_invoiceitem' invoiceitem.pk invoice.pk %}">
                             <span class="fa fa-trash"></span>
                         </button>
                     </td>

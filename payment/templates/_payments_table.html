@@ -28,13 +28,13 @@
                         <!-- Update payment buttons -->
                         <button type="button"
                                 class="update-payment btn btn-sm btn-primary"
-                                data-form-url="{% url 'update_payment' payment.pk %}">
+                                data-form-url="{% url 'update_payment' payment.pk invoice.pk %}">
                             <span class="fas fa-pen"></span>
                         </button>
                         <!-- Delete payment buttons -->
                         <button type="button"
                                 class="delete-payment btn btn-sm btn-danger"
-                                data-form-url="{% url 'delete_payment' payment.pk %}">
+                                data-form-url="{% url 'delete_payment' payment.pk invoice.pk %}">
                             <span class="fa fa-trash"></span>
                         </button>
                     </td>

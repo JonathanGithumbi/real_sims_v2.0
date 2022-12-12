@@ -52,10 +52,9 @@ INSTALLED_APPS = [
 
     'payment',
     'vendor',
-    'account',
     'item',
     'core',
-    
+
 
 
 
@@ -79,7 +78,8 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR, 'global_template/'),
                  os.path.join(
                      BASE_DIR, 'user_account/templates/user_account/'),
-                 os.path.join(BASE_DIR, 'user_account/templates/user_account/registration'),
+                 os.path.join(
+                     BASE_DIR, 'user_account/templates/user_account/registration'),
                  os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {

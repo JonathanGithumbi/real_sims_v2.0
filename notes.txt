@@ -183,3 +183,8 @@ so that it preserves its functionality awaiting aany edits from the user if at a
  --- reduce padding on student page. too much padding makes it look clunky and unprofessional
  --- in students table should be fetching data via ajax rather than from the backend
  -- fees structure validation logic: a grade should not be charged twice for the same item
+
+
+ 12/12/2022
+ -- Make sure to diable form submitting by pressing the enter key
+ --- since forms are modals make sure to disable submit butto

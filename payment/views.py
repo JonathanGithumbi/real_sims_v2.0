@@ -10,7 +10,7 @@ from bootstrap_modal_forms.generic import (
     BSModalDeleteView)
 from django.urls import reverse_lazy
 from django.views import generic
-from invoice.models import Student
+from invoice.models import Invoice
 from django.shortcuts import get_object_or_404
 # lists of payments are visible on a per invoice basis
 
@@ -20,13 +20,14 @@ class PaymentListView(generic.ListView):
     context_object_name = 'payment_list'
 
     def get_queryset(self):
-        self.invoice = get_object_or_404(Student, pk=self.kwargs['invoice_pk'])
+        self.invoice = get_object_or_404(Invoice, pk=self.kwargs['invoice_pk'])
         return Payment.objects.filter(invoice=self.invoice)
 
     # Add the invoice to the context so that the templates can use it
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['invoice'] = self.invoice
+        return context
 
 
 class PaymentCreateView(BSModalCreateView):
@@ -57,7 +58,7 @@ class PaymentDeleteView(BSModalDeleteView):
     model = Payment
     template_name = "payment/delete_payment.html"
     success_message = "Success: Payment was deleted"
-    
+
     def get_success_url(self):
         return reverse_lazy('payment_list', kwargs={'invoice_pk': self.kwargs['invoice_pk']})
 
@@ -72,5 +73,3 @@ def payments(request):
             request=request
         )
         return JsonResponse(data)
-
-

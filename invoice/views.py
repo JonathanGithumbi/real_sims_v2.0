@@ -28,6 +28,7 @@ class InvoiceListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['student'] = self.student
+        return context
 
 
 class InvoiceCreateView(BSModalCreateView):
@@ -82,13 +83,14 @@ class InvoiceItemListView(generic.ListView):
     context_object_name = 'invoiceitem_list'
 
     def get_queryset(self):
-        self.student = get_object_or_404(Student, pk=self.kwargs['invoice_pk'])
-        return InvoiceItem.objects.filter(student=self.student)
+        self.invoice = get_object_or_404(Invoice, pk=self.kwargs['invoice_pk'])
+        return InvoiceItem.objects.filter(invoice=self.invoice)
 
     # Add the student to the context so that the templates can use it
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['student'] = self.student
+        context['invoice'] = self.invoice
+        return context
 
 
 class InvoiceItemCreateView(BSModalCreateView):

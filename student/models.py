@@ -1,21 +1,9 @@
 
-from datetime import datetime
-from http import client
-from venv import create
 from django.db import models
-from regex import E
-from urllib3 import Retry
+
 from grade.models import Grade
 
-#from quickbooks.objects import Customer
-from quickbooks import QuickBooks
-from user_account.models import Token
-from intuitlib.client import AuthClient
-from django.conf import ENVIRONMENT_VARIABLE, settings
 from academic_calendar.models import Year, Term
-from quickbooks.exceptions import QuickbooksException
-
-from QBWEBSERVICE.models import QBDModelMixin
 
 
 class AdmissionNumber(models.Model):
