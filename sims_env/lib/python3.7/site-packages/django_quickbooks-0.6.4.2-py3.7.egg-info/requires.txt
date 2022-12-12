@@ -1,0 +1,12 @@
+Django>=2.0
+lxml==4.4.2
+spyne==2.13.12b0
+
+[celery]
+celery==4.3.0
+
+[rabbit]
+pika>=1.1.0
+
+[tenant]
+django-tenants==2.2.3

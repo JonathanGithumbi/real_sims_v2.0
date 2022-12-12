@@ -54,9 +54,6 @@ INSTALLED_APPS = [
     'vendor',
     'account',
     'item',
-
-    
-    'QBWEBSERVICE',
     'core',
     
 
