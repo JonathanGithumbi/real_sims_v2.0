@@ -1,0 +1,30 @@
+<!--import the app's layout -->
+{% extends 'layout.html' %}
+{% load static %}
+<!---->
+<!--This is the dashboard page-->
+{% block page %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <br>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show small">
+                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-900">Dashboard</h1>
+        </div>
+        <hr>
+        
+        <hr>
+        
+    </div>
+    
+{% endblock %}

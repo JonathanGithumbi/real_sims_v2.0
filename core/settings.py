@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django_quickbooks',
     'bootstrap_modal_forms',
     'widget_tweaks',
     'user_account',
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'vendor',
     'item',
     'core',
+    'dashboard'
 
 
 

@@ -1,13 +1,11 @@
 """Synchronization primitives."""
-from __future__ import absolute_import, unicode_literals
-
 from .abstract import Thenable
 from .promises import promise
 
 __all__ = ['barrier']
 
 
-class barrier(object):
+class barrier:
     """Barrier.
 
     Synchronization primitive to call a callback after a list
@@ -93,4 +91,6 @@ class barrier(object):
         if not self.cancelled:
             self.p.throw(*args, **kwargs)
     throw1 = throw
+
+
 Thenable.register(barrier)  # noqa: E305

@@ -1,26 +1,18 @@
 """Promise implementation."""
-from __future__ import absolute_import, unicode_literals
-
 import sys
 
 from collections import deque
 import inspect
-from weakref import ref
-
-try:
-    from weakref import WeakMethod
-except ImportError:
-    from vine.backports.weakref_backports import WeakMethod
+from weakref import ref, WeakMethod
 
 from .abstract import Thenable
-from .five import python_2_unicode_compatible, reraise
+from .utils import reraise
 
 __all__ = ['promise']
 
 
 @Thenable.register
-@python_2_unicode_compatible
-class promise(object):
+class promise:
     """Promise of future evaluation.
 
     This is a special implementation of promises in that it can
@@ -32,7 +24,6 @@ class promise(object):
 
     .. code-block:: python
 
-        >>> from __future__ import print_statement  # noqa
         >>> p = promise()
         >>> p.then(promise(print, ('OK',)))  # noqa
         >>> p.on_error = promise(print, ('ERROR',))  # noqa
@@ -52,7 +43,6 @@ class promise(object):
         >>> p(30)
 
     Example:
-
     .. code-block:: python
 
         from vine import promise, wrap
@@ -133,7 +123,7 @@ class promise(object):
 
     def __repr__(self):
         return ('<{0} --> {1!r}>' if self.fun else '<{0}>').format(
-            '{0}@0x{1:x}'.format(type(self).__name__, id(self)), self.fun,
+            f'{type(self).__name__}@0x{id(self):x}', self.fun,
         )
 
     def cancel(self):

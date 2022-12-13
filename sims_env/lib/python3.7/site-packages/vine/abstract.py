@@ -1,15 +1,11 @@
 """Abstract classes."""
-from __future__ import absolute_import, unicode_literals
-
 import abc
-
-from .five import with_metaclass, Callable
+from collections.abc import Callable
 
 __all__ = ['Thenable']
 
 
-@with_metaclass(abc.ABCMeta)
-class Thenable(Callable):  # pragma: no cover
+class Thenable(Callable, metaclass=abc.ABCMeta):  # pragma: no cover
     """Object that supports ``.then()``."""
 
     __slots__ = ()
@@ -41,7 +37,7 @@ class Thenable(Callable):  # pragma: no cover
 
 
 @Thenable.register
-class ThenableProxy(object):
+class ThenableProxy:
     """Proxy to object that supports ``.then()``."""
 
     def _set_promise_target(self, p):

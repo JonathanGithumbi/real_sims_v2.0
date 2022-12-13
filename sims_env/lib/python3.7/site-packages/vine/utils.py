@@ -1,6 +1,4 @@
 """Python compatibility utilities."""
-from __future__ import absolute_import, unicode_literals
-
 from functools import (
     WRAPPER_ASSIGNMENTS, WRAPPER_UPDATES,
     update_wrapper as _update_wrapper,
@@ -23,3 +21,10 @@ def wraps(wrapped,
     """Backport of Python 3.5 wraps that adds .__wrapped__."""
     return partial(update_wrapper, wrapped=wrapped,
                    assigned=assigned, updated=updated)
+
+
+def reraise(tp, value, tb=None):
+    """Reraise exception."""
+    if value.__traceback__ is not tb:
+        raise value.with_traceback(tb)
+    raise value
