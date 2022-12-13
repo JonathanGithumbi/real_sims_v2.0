@@ -1,0 +1,45 @@
+<div class="table-responsive">
+    <table id="bills-table"
+           class="table table-bordered table-sm text-gray-900"
+           style="width:100%">
+        <thead class='thead-light'>
+            <tr>
+                <th scope="col">Billing Date</th>
+                <th scope="col">Vendor</th>
+                <th scope="col">Payment Status</th>
+                <th scope="col">Read / Update / Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bill in bill_list %}
+                <tr>
+                    <td>{{ bill.billing_date }}</td>
+                    <td>{{ bill.vendor }}</td>
+                    <td>{{ bill.payment_status }}</td>
+                    <td >
+                        <a class="btn btn-sm btn-primary"
+                           href="{% url 'billitem_list' bill.pk %}">Bill Items</a>
+                        <!-- Read bill buttons -->
+                        <button type="button"
+                                class="read-bill btn btn-sm btn-primary"
+                                data-form-url="{% url 'read_bill' bill.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                        <!-- Update bill buttons -->
+                        <button type="button"
+                                class="update-bill btn btn-sm btn-primary"
+                                data-form-url="{% url 'update_bill' bill.pk  %}">
+                            <span class="fas fa-pen"></span>
+                        </button>
+                        <!-- Delete bill buttons -->
+                        <button type="button"
+                                class="delete-bill btn btn-sm btn-danger"
+                                data-form-url="{% url 'delete_bill' bill.pk %}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

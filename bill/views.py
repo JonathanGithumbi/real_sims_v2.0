@@ -1,122 +1,124 @@
-from django.shortcuts import redirect, render
+from .models import BillItem
+from .models import Bill
+from django.template.loader import render_to_string
+from .forms import BillItemModelForm, BillModelForm
+from django.http import JsonResponse
+from bootstrap_modal_forms.generic import (
+    BSModalCreateView,
+    BSModalUpdateView,
+    BSModalReadView,
+    BSModalDeleteView)
+from django.urls import reverse_lazy
+from django.views import generic
+from student.models import Student
+from django.shortcuts import get_object_or_404
 
-from user_account.models import User
-from .models import Bill, BillItem, PettyCash
-from .forms import CreateBillItemForm
-from django.urls import reverse
-
-from .forms import EditBillItemForm, TopUpForm
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
-from .BillManager import BillManager
-from .PettyCashManager import PettyCashManager
-from django.http import HttpResponse
+# lists of bills are visible on a per student basis
 
 
-@login_required()
-# @permission_required("can_view_bill")
+class BillListView(generic.ListView):
+    model = Bill
+    template_name = 'bill_list.html'
+    context_object_name = 'bill_list'
+
+
+class BillCreateView(BSModalCreateView):
+    template_name = 'bill/create_bill.html'
+    form_class = BillModelForm
+    success_message = 'Success: Bill was created.'
+    success_url = reverse_lazy('bill_list')
+
+
+class BillUpdateView(BSModalUpdateView):
+    model = Bill
+    template_name = "bill/update_bill.html"
+    form_class = BillModelForm
+    success_message = 'Success: Bill was updated.'
+    success_url = reverse_lazy('bill_list')
+
+
+class BillReadView(BSModalReadView):
+    model = Bill
+    template_name = "bill/read_bill.html"
+
+
+class BillDeleteView(BSModalDeleteView):
+    model = Bill
+    template_name = "bill/delete_bill.html"
+    success_message = "Success: Bill was deleted"
+    success_url = reverse_lazy('bill_list')
+
+
 def bills(request):
-    #!use some kind of limiter to reduce the load on the db server
-    create_bill_form = CreateBillItemForm()
-    edit_bill_form = EditBillItemForm()
-    topup_form = TopUpForm()
-    bills = BillItem.objects.all().order_by('-created')
-    petty_cash = PettyCash.objects.get(pk=1)
-    petty_cash_balance = petty_cash.balance
-    return render(request, 'bill/bills.html', {'bills': bills, 'petty_cash_balance': petty_cash_balance, 'edit_bill_form': edit_bill_form, 'create_bill_form': create_bill_form, 'topup_form': topup_form})
-
-
-login_required()
-# @permission_required("can_create_bill")
-
-
-def create_bill(request):
-    form = CreateBillItemForm(request.POST)
-    bill_manager = BillManager()
-    bill_item_obj = bill_manager.create_bill(form)
-    messages.success(request, "{0} Bill recorded successfully".format(
-        bill_item_obj.description), extra_tags='alert-success')
-    return redirect('bills')
-
-
-@login_required()
-def topup(request):
-    topup_form = TopUpForm(request.POST)
-    bill_manager = BillManager()
-    bill_manager.create_deposit_bill(topup_form)
-    messages.success(request, "Top Up Successfull",
-                     extra_tags='alert-success')
-    return redirect(reverse('bills'))
-
-
-@login_required()
-def delete_bill(request, id):
-    bill_obj = BillItem.objects.get(pk=id)
-    bill_manager = BillManager()
-    bill_manager.delete_bill(bill_obj)
-    messages.success(request, "Bill Deleted Successfully")
-    return redirect(reverse('bills'))
-
-
-login_required()
-# @permission_required("can_edit_bill")
-
-
-def edit_bill(request, id):
-    bill_obj = BillItem.objects.get(pk=id)
-
+    data = dict()
     if request.method == 'GET':
-        bill_edit_form = EditBillItemForm(instance=bill_obj)
-        return HttpResponse(bill_edit_form.as_p())
-    if request.method == 'POST':
-        initial_data = {
-            'recipient': bill_obj.recipient,
-            'description': bill_obj.description,
-            'category': bill_obj.category,
-            'quantity': bill_obj.quantity,
-            'price_per_quantity': bill_obj.price_per_quantity,
-            'total': bill_obj.total,
-            'balance': bill_obj.balance
-        }
-        bill_edit_form = EditBillItemForm(request.POST, initial=initial_data)
-        if bill_edit_form.is_valid():
-            if bill_edit_form.has_changed():
-                bill_obj.recipient = bill_edit_form.cleaned_data['recipient']
-                bill_obj.description = bill_edit_form.cleaned_data['description']
-                bill_obj.category = bill_edit_form.cleaned_data['category']
-                if 'amount' in bill_edit_form.changed_data or 'price_per_quantity' in bill_edit_form.changed_data or 'total' in bill_edit_form.changed_data:
-                    petty_cash = PettyCash.objects.get(pk=1)
-                    petty_cash.balance = (petty_cash.balance +
-                                          initial_data['total']) - bill_edit_form.cleaned_data['total']
-                    petty_cash.save(update_fields=['balance', 'modified'])
-                    bill_obj.balance = (initial_data['balance'] +
-                                        initial_data['total']) - bill_edit_form.cleaned_data['total']
-                    bill_obj.quantity = bill_edit_form.cleaned_data['quantity']
-                    bill_obj.price_per_quantity = bill_edit_form.cleaned_data['price_per_quantity']
-                    bill_obj.total = bill_edit_form.cleaned_data['total']
-
-                bill_obj.save(update_fields=None)
-                try:
-                    qb_bill = bill_obj.edit_qb_bill()
-                except:
-                    pass
-                messages.info(request, "{0} Bill Details changed successfully".format(
-                    bill_obj.description), extra_tags='alert-success')
-                return redirect('bills')
-            else:
-                messages.info(request, "No Data Changed on {0} Bill".format(
-                    bill_obj.description), extra_tags='alert-info')
-                return redirect('bills')
-        else:
-            bill_edit_form = EditBillItemForm(request.POST)
-            return render(request, 'bill/edit_bill.html', {'form': bill_edit_form})
+        bill_list = Bill.objects.all()
+        data['table'] = render_to_string(
+            '_bills_table.html',
+            {'bill_list': bill_list},
+            request=request
+        )
+        return JsonResponse(data)
 
 
-@login_required()
-def view_summaries(request):
-    return render(request, 'bill/bill_summaries.html')
+# lists of billitems are visible on a per bill basis
+
+class BillItemListView(generic.ListView):
+    template_name = 'billitem_list.html'
+    context_object_name = 'billitem_list'
+
+    def get_queryset(self):
+        self.bill = get_object_or_404(Bill, pk=self.kwargs['bill_pk'])
+        return BillItem.objects.filter(bill=self.bill)
+
+    # Add the  to the context so that the templates can use it
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bill'] = self.bill
+        return context
 
 
-# One class view per chart
-def chart_data(request):
-    pass
+class BillItemCreateView(BSModalCreateView):
+    template_name = 'bill/create_billitem.html'
+    form_class = BillItemModelForm
+    success_message = 'Success: BillItem was created.'
+
+    def get_success_url(self):
+        return reverse_lazy('billitem_list', kwargs={'bill_pk': self.kwargs['bill_pk']})
+
+
+class BillItemUpdateView(BSModalUpdateView):
+    model = BillItem
+    template_name = "bill/update_billitem.html"
+    form_class = BillItemModelForm
+    success_message = 'Success: BillItem was updated.'
+
+    def get_success_url(self):
+        return reverse_lazy('billitem_list', kwargs={'bill_pk': self.kwargs['bill_pk']})
+
+
+class BillItemReadView(BSModalReadView):
+    model = BillItem
+    template_name = "bill/read_billitem.html"
+
+
+class BillItemDeleteView(BSModalDeleteView):
+    model = BillItem
+    template_name = "bill/delete_billitem.html"
+    success_message = "Success: BillItem was deleted"
+
+    def get_success_url(self):
+        return reverse_lazy('billitem_list', kwargs={'bill_pk': self.kwargs['bill_pk']})
+
+
+def billitems(request, bill_pk):
+    bill = get_object_or_404(Bill, pk=bill_pk)
+    data = dict()
+    if request.method == 'GET':
+        billitem_list = BillItem.objects.all()
+        data['table'] = render_to_string(
+            '_billitems_table.html',
+            {'billitem_list': billitem_list, 'bill': bill},
+            request=request
+        )
+        return JsonResponse(data)

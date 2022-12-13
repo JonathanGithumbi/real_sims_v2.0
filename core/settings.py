@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'bootstrap_modal_forms',
     'widget_tweaks',
     'user_account',
-    'dashboard',
     'grade',
     'student',
     'bill',

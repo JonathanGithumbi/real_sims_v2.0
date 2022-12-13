@@ -6,19 +6,19 @@
     <br/>
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <h5 class="m-0 font-weight-bold">Students</h5>
+        <h5 class="m-0 font-weight-bold">Bills</h5>
         <hr />
         <!--Modal-->
         {% include "_modal.html" %}
-        <!-- Create vendor button -->
-        <button id="create-student"
+        <!-- Create bill button -->
+        <button id="create-bill"
                 class="btn btn-primary btn-sm"
                 type="button"
-                name="button">Register Student</button>
+                name="button">Create Bill</button>
       </div>
       <!--Table Body-->
       <div class="card-body">
-        <div class="table-responsive">{% include "_students_table.html" %}</div>
+        <div class="table-responsive">{% include "_bills_table.html" %}</div>
       </div>
     </div>
   </div>
@@ -27,22 +27,11 @@
     <script type="text/javascript">
       $(function() {
 
-
-          // modal form
-          function createStudentModalForm() {
-              $("#create-student").modalForm({
-                  formURL: "{% url 'create_student' %}",
-                  modalID: "#create-modal",
-                  
-              });
-          }
-          createStudentModalForm();
-
-          // Update vendor asynchronous button
+          // Create bill asynchronous button
           // message
-          var asyncSuccessMessageUpdate = [
-              "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-stringformat alert-success alert-dismissible fade show mb-0' role='alert'>",
-              "Success: Student was updated.",
+          var asyncSuccessMessageCreate = [
+              "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-sm alert-success alert-dismissible fade show mb-0' role='alert'>",
+              "Success: Bill was created.",
               "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
               "<span aria-hidden='true'>&times;</span>",
               "</button>",
@@ -53,50 +42,82 @@
           ].join("");
 
           // modal form
-          function updateStudentModalForm() {
-              $(".update-student").each(function() {
+          function createBillAsyncModalForm() {
+              $("#create-bill").modalForm({
+                  formURL: "{% url 'create_bill' %}",
+                  modalID: "#create-modal",
+                  asyncUpdate: true,
+                  asyncSettings: {
+                      closeOnSubmit: true,
+                      successMessage: asyncSuccessMessageCreate,
+                      dataUrl: "{% url 'bills' %}",
+                      dataElementId: "#bills-table",
+                      dataKey: "table",
+                      addModalFormFunction: reinstantiateModalForms
+                  }
+              });
+          }
+          createBillAsyncModalForm();
+
+          // Update bill asynchronous button
+          // message
+          var asyncSuccessMessageUpdate = [
+              "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-stringformat alert-success alert-dismissible fade show mb-0' role='alert'>",
+              "Success: Bill was updated.",
+              "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+              "<span aria-hidden='true'>&times;</span>",
+              "</button>",
+              "</div>",
+              "<script>",
+              "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+              "<\/script>"
+          ].join("");
+
+          // modal form
+          function updateBillModalForm() {
+              $(".update-bill").each(function() {
                   $(this).modalForm({
                       formURL: $(this).data("form-url"),
                       asyncUpdate: true,
                       asyncSettings: {
                           closeOnSubmit: true,
                           successMessage: asyncSuccessMessageUpdate,
-                          dataUrl: "{% url 'students'%}",
-                          dataElementId: "#students-table",
+                          dataUrl: "{% url 'bills'%}",
+                          dataElementId: "#bills-table",
                           dataKey: "table",
                           addModalFormFunction: reinstantiateModalForms
                       }
                   });
               });
           }
-          updateStudentModalForm();
+          updateBillModalForm();
 
-          // Delete vendor buttons - formURL is retrieved from the data of the element
-          function deleteStudentModalForm() {
-              $(".delete-student").each(function() {
+          // Delete bill buttons - formURL is retrieved from the data of the element
+          function deleteBillModalForm() {
+              $(".delete-bill").each(function() {
                   $(this).modalForm({
                       formURL: $(this).data("form-url"),
                       isDeleteForm: true
                   });
               });
           }
-          deleteStudentModalForm();
+          deleteBillModalForm();
 
-          // Read vendor buttons
-          function readStudentModalForm() {
-              $(".read-student").each(function() {
+          // Read bill buttons
+          function readBillModalForm() {
+              $(".read-bill").each(function() {
                   $(this).modalForm({
                       formURL: $(this).data("form-url")
                   });
               });
           }
-          readStudentModalForm();
+          readBillModalForm();
 
           function reinstantiateModalForms() {
-              createStudentModalForm();
-              readStudentModalForm();
-              updateStudentModalForm();
-              deleteStudentModalForm();
+              createBillAsyncModalForm();
+              readBillModalForm();
+              updateBillModalForm();
+              deleteBillModalForm();
           }
 
 
@@ -107,8 +128,8 @@
           });
 
 
-          //Vendors DataTable Configuration
-          var table = $('#students-table').DataTable({
+          //Bills DataTable Configuration
+          var table = $('#bills-table').DataTable({
               fixedHeader: true,
               order: [
                   [1, 'asc']
@@ -121,7 +142,7 @@
                       extend: 'pdf',
 
                       download: 'open',
-                      title: "Sales Student List",
+                      title: "Bills List",
                       messageBottom: function() {
                           var curr_date = new Date();
                           txt_curr_date = curr_date.toString();
