@@ -1,5 +1,7 @@
 from invoice.InvoiceManager import InvoiceManager
 from academic_calendar.CalendarManager import CalendarManager
+from invoice.models import BalanceTable
+from django.shortcuts import get_object_or_404
 
 
 class StudentManager():
@@ -60,7 +62,7 @@ class StudentManager():
             return False
 
     def delete_student(self, student):
-        #What happends when you delete a student who has overpaid an invoice
+        # What happends when you delete a student who has overpaid an invoice
         student.visible = False
         student.active = False
         student.save(update_fields=['visible', 'active'])
@@ -68,3 +70,11 @@ class StudentManager():
 
     def retrieve_student(self, id):
         pass
+
+    def get_fees_balance(self, student):
+        try:
+            bal_rec = BalanceTable.objects.get(student=student)
+        except:
+            return None
+        else:
+            return bal_rec.balance

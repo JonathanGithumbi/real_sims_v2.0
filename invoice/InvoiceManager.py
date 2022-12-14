@@ -3,7 +3,6 @@ from fees_structure.models import BillingItem
 from item.ItemManager import ItemManager
 
 
-
 class InvoiceManager():
     """This invoice manager is in charge of invoicing one student at registration and all active students at the beginning of the term"""
 
@@ -60,9 +59,10 @@ class InvoiceManager():
         invoice.balance = invoice.get_total_amount()
         invoice.save(update_fields=['balance'])
 
-        # create and update the balancetable
-        bal_record = BalanceTable.objects.create(student=invoice.student)
-        bal_record.increase_balance(invoice.get_total_amount())
+        # update the balance table, balance table created on student post save
+        bal_rec = BalanceTable.objects.get(student=invoice.student)
+        bal_rec.increase_balance(invoice.get_total_amount())
+
         # return the charge
         return invoice
 

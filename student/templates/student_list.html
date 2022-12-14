@@ -9,7 +9,7 @@
                 <nav aria-label="breadcrumb breadcrumb-sm">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page">
-                            <strong>All Students</strong>
+                            <a href="{% url 'student_list' %}">All Students/</a>
                         </li>
                     </ol>
                 </nav>
@@ -33,16 +33,38 @@
         <script type="text/javascript">
             $(function() {
 
+                $("#create-student-from").submit(function(){
+                    
+                });
+                var asyncSuccessMessageCreate = [
+                    "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-sm alert-success alert-dismissible fade show mb-0' role='alert'>",
+                    "Success: Student was created.",
+                    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+                    "<span aria-hidden='true'>&times;</span>",
+                    "</button>",
+                    "</div>",
+                    "<script>",
+                    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+                    "<\/script>"
+                ].join("");
 
                 // modal form
-                function createStudentModalForm() {
+                function createStudentAsyncModalForm() {
                     $("#create-student").modalForm({
                         formURL: "{% url 'create_student' %}",
                         modalID: "#create-modal",
-
+                        asyncUpdate: true,
+                        asyncSettings: {
+                            closeOnSubmit: true,
+                            successMessage: asyncSuccessMessageCreate,
+                            dataUrl: "{% url 'students'%}",
+                            dataElementId: "#students-table",
+                            dataKey: "table",
+                            addModalFormFunction: reinstantiateModalForms
+                        }
                     });
                 }
-                createStudentModalForm();
+                createStudentAsyncModalForm();
 
                 // Update vendor asynchronous button
                 // message
@@ -57,7 +79,6 @@
                     "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
                     "<\/script>"
                 ].join("");
-
                 // modal form
                 function updateStudentModalForm() {
                     $(".update-student").each(function() {
@@ -99,7 +120,7 @@
                 readStudentModalForm();
 
                 function reinstantiateModalForms() {
-                    createStudentModalForm();
+                    createStudentAsyncModalForm();
                     readStudentModalForm();
                     updateStudentModalForm();
                     deleteStudentModalForm();
@@ -115,19 +136,25 @@
 
                 //Vendors DataTable Configuration
                 var table = $('#students-table').DataTable({
+
+                    dom: 'Bfrtip',
                     fixedHeader: true,
                     order: [
-                        [1, 'asc']
+                        [0, 'desc']
                     ],
-                    dom: 'Bfrtip',
+
                     lengthMenu: [
                         10, 25, 50, -1
                     ],
                     buttons: [{
+                            extend: 'searchBuilder',
+                            config: {
+                                depthLimit: 2
+                            }
+                        }, {
                             extend: 'pdf',
-
                             download: 'open',
-                            title: "Sales Student List",
+                            title: "Students List",
                             messageBottom: function() {
                                 var curr_date = new Date();
                                 txt_curr_date = curr_date.toString();

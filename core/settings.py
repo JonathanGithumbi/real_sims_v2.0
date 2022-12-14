@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'user_account',
     'grade',
-    'student',
+    'student.apps.StudentConfig',
     'bill',
     'fees_structure',
     'invoice',

@@ -36,10 +36,10 @@ class Student(models.Model):
     current_year = models.ForeignKey(
         Year, on_delete=models.CASCADE, related_name='current_year', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True, blank=True)
-    primary_contact_name = models.CharField(max_length=255, blank=True)
-    primary_contact_phone_number = models.CharField(max_length=255, blank=True)
-    secondary_contact_name = models.CharField(max_length=255, blank=True)
-    secondary_contact_phone_number = models.CharField(
+    contact1_name = models.CharField(max_length=255, blank=True)
+    contact1_number = models.CharField(max_length=255, blank=True)
+    contact2_name = models.CharField(max_length=255, blank=True)
+    contact2_number = models.CharField(
         max_length=255, blank=True)
 
     # This active flag defines whether or not the student gets  invoiced
@@ -54,6 +54,11 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.middle_name} {self.last_name}"
+
+    def get_fees_balance(self):
+        from student.StudentManager import StudentManager
+        man = StudentManager()
+        return man.get_fees_balance(self)
 
     def get_absolute_url(self):
         from django.urls import reverse
@@ -75,31 +80,3 @@ class Student(models.Model):
             return False
         else:
             return True
-
-       # implement thee 2 methods: to_qbd_obj() and from_qbd_obj
-
-    @classmethod
-    def to_qbd_obj(self, **fields):
-        from QBWEBSERVICE.objects import Customer as QBCustomer
-        # map your fields to the qbd_obj fields
-        return QBCustomer(
-            Name=self.__str__(),
-            Phone=self.primary_contact_phone_number,
-            AltPhone=self.secondary_contact_phone_number,
-            Contact=self.primary_contact_name,
-            AltContact=self.secondary_contact_name,
-
-        )
-
-    @classmethod
-    def from_qbd_obj(cls, qbd_obj):
-        # map qbd_obj fields to your model fields
-        return cls(
-            name=qbd_obj.Name,
-            primary_contact_phone=qbd_obj.Phone,
-            secondary_contact_phone=qbd_obj.AltPhone,
-            primary_contact_name=qbd_obj.Contact,
-            secondar_contact_name=qbd_obj.AltContact,
-            qbd_object_id=qbd_obj.ListID,
-            qbd_object_version=qbd_obj.EditSequence
-        )

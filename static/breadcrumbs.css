@@ -1,4 +1,3 @@
-
 .btn-primary,
 .breadcrumb-primary {
     background-color: #337ab7;
@@ -8,3 +7,11 @@
     background-color: #286090;
 }
 
+table.dataTable tbody th,
+table.dataTable tbody td {
+    padding: 2px
+}
+
+thead {
+    .bg-dark
+}

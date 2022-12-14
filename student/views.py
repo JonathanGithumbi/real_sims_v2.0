@@ -28,22 +28,7 @@ class StudentCreateView(BSModalCreateView):
     success_message = 'Success: Student was created'
     success_url = reverse_lazy('student_list')
 
-    def form_valid(self, form):
-        self.object = form.save()
-        # Populate rows and invoice
-        self.object.current_grade = self.object.grade_admitted_to
-        cal = CalendarManager()
-        self.object.year_admitted = cal.get_year()
-        self.object.term_admitted = cal.get_term()
-        self.object.current_term = cal.get_term()
-        self.object.current_year = cal.get_year()
-        self.object.save()
-
-        # Invoice
-        inv_man = InvoiceManager()
-        inv_man.invoice_new_student(self.object)
-        
-        return HttpResponseRedirect(self.get_success_url())
+    
 
 
 class StudentUpdateView(BSModalUpdateView):

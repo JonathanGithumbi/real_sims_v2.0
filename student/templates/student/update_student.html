@@ -11,15 +11,113 @@
     <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
       {% for error in form.non_field_errors %}{{ error }}{% endfor %}
     </div>
-    {% for field in form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% render_field field class="form-control form-control-sm" placeholder=field.label %}
-        <div class="{% if field.errors %} invalid{% endif %}">
-          {% for error in field.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+    <!--Name Row-->
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+          {% render_field form.first_name class="form-control form-control-sm"  %}
+          <div class="{% if form.first_name.errors %} invalid{% endif %}">
+            {% for error in form.first_name.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
         </div>
       </div>
-    {% endfor %}
+      <div class="col">
+        <div class="form-group">
+          <label for="{{ form.middle_name.id_for_label }}">{{ form.middle_name.label }}</label>
+          {% render_field form.middle_name class="form-control form-control-sm"  %}
+          <div class="{% if form.middle_name.errors %} invalid{% endif %}">
+            {% for error in form.middle_name.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+          {% render_field form.last_name class="form-control form-control-sm"  %}
+          <div class="{% if form.last_name.errors %} invalid{% endif %}">
+            {% for error in form.last_name.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Grade admitted to-->
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="{{ form.grade_admitted_to.id_for_label }}">{{ form.grade_admitted_to.label }}</label>
+          {% render_field form.grade_admitted_to class="form-control form-control-sm"  %}
+          <div class="{% if form.grade_admitted_to.errors %} invalid{% endif %}">
+            {% for error in form.grade_admitted_to.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--contact1-->
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="{{ form.contact1_name.id_for_label }}">{{ form.contact1_name.label }}</label>
+          {% render_field form.contact1_name class="form-control form-control-sm"  %}
+          <div class="{% if form.contact1_name.errors %} invalid{% endif %}">
+            {% for error in form.contact1_name.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="{{ form.contact1_number.id_for_label }}">{{ form.contact1_number.label }}</label>
+          {% render_field form.contact1_number class="form-control form-control-sm"  %}
+          <div class="{% if form.contact1_number.errors %} invalid{% endif %}">
+            {% for error in form.contact1_number.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--contact2-->
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="{{ form.contact2_name.id_for_label }}">{{ form.contact2_name.label }}</label>
+          {% render_field form.contact2_name class="form-control form-control-sm"  %}
+          <div class="{% if form.contact2_name.errors %} invalid{% endif %}">
+            {% for error in form.contact2_name.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="{{ form.contact2_number.id_for_label }}">{{ form.contact2_number.label }}</label>
+          {% render_field form.contact2_number class="form-control form-control-sm"  %}
+          <div class="{% if form.contact2_number.errors %} invalid{% endif %}">
+            {% for error in form.contact2_number.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--optionals-->
+    <div class="row">
+      <div class="col">
+        <div class="form-group form-check-inline">
+          <label for="{{ form.lunch.id_for_label }}" class="form-check-label">
+            {{ form.lunch.label }}: {% render_field form.lunch class="form-check-input" type="checkbox"  %}
+          </label>
+          <div class="{% if form.lunch.errors %} invalid{% endif %}">
+            {% for error in form.lunch.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group form-check-inline">
+          <label for="{{ form.transport.id_for_label }}" class="form-check-label">
+            {{ form.transport.label }}: {% render_field form.transport class="form-check-input" type="checkbox"  %}
+          </label>
+          <div class="{% if form.transport.errors %} invalid{% endif %}">
+            {% for error in form.transport.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-sm btn-success">Update</button>

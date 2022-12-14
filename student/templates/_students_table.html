@@ -2,17 +2,22 @@
     <table id="students-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class="thead-dark">
             <tr>
+                <th scope="col">Date Admitted</th>
                 <th scope="col">Name</th>
                 <th scope="col">Current Grade</th>
                 <th scope="col">Status</th>
+                <th col="col">Fees Balance</th>
+                <th scope="col">Lunch</th>
+                <th scope="col">Transport</th>
                 <th scope="col">Read/Update/Delete</th>
             </tr>
         </thead>
         <tbody>
             {% for student in student_list %}
                 <tr>
+                    <td>{{ student.date_of_admission }}</td>
                     <td>{{ student }}</td>
                     <td>{{ student.current_grade }}</td>
                     <td>
@@ -22,6 +27,9 @@
                             <span class="badge badge-danger">Inactive</span>
                         {% endif %}
                     </td>
+                    <td>{{ student.get_fees_balance }}</td>
+                    <td>{{ student.lunch }}</td>
+                    <td>{{ student.transport }}</td>
                     <td >
                         <a class="btn btn-sm btn-primary"
                            href="{% url 'invoice_list' student.pk %}">Invoices</a>
