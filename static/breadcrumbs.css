@@ -1,0 +1,10 @@
+
+.btn-primary,
+.breadcrumb-primary {
+    background-color: #337ab7;
+}
+
+.btn-primary:hover {
+    background-color: #286090;
+}
+

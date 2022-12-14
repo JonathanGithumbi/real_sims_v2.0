@@ -20,7 +20,7 @@
                     <td>{{ invoice.term }}</td>
                     <td >
                         <a class="btn btn-sm btn-primary"
-                           href="{% url 'payment_list' invoice.pk %}">Payments</a>
+                           href="{% url 'payment_list' invoice.pk student.pk %}">Payments</a>
                         <a class="btn btn-sm btn-primary"
                            href="{% url 'invoiceitem_list' invoice.pk %}">Invoice Items</a>
                         <!-- Read invoice buttons -->

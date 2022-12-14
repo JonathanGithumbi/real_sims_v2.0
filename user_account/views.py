@@ -18,8 +18,11 @@ from .forms import CustomLoginForm
 class CustomLoginView(LoginView):
     template_name = 'user_account/login.html'
     form_class = CustomLoginForm
-    next_page = reverse_lazy('dashboard')
     authentication_form = CustomLoginForm
+
+    def get_default_redirect_url():
+        return reverse_lazy('dashboard')
+
 
 class CustomLogoutView():
     pass
@@ -28,17 +31,22 @@ class CustomLogoutView():
 class CustomPasswordChangeView():
     pass
 
+
 class CustomPasswordChangeDoneView():
     pass
+
 
 class CustomPasswordResetView():
     pass
 
+
 class CustomPasswordResetDoneView():
     pass
 
+
 class CustomPasswordResetConfirmView():
     pass
+
 
 class CustomPasswordResetCompleteView():
     pass

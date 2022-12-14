@@ -6,7 +6,19 @@
     <br/>
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <h5 class="m-0 font-weight-bold">Payments</h5>
+        <nav aria-label="breadcrumb breadcrumb-sm">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item ">
+              <a href="{% url 'student_list' %}">All Students</a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">
+              <a href="{% url 'invoice_list' student.pk %}">{{ student.first_name }} {{ student.last_name }} Invoices</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {{ student.first_name }} {{ student.last_name }} Payments for Invoice:{{ invoice.year }} Term:{{ invoice.term }}
+            </li>
+          </ol>
+        </nav>
         <hr />
         <!--Modal-->
         {% include "_modal.html" %}
@@ -25,141 +37,147 @@
   <!-- /.container-fluid -->
   {% block script %}
     <script type="text/javascript">
-      $(function () {
-          
+      $(function() {
+
           // Create payment asynchronous button
           // message
           var asyncSuccessMessageCreate = [
-            "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-sm alert-success alert-dismissible fade show mb-0' role='alert'>",
-            "Success: Payment was created.",
-            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-            "<span aria-hidden='true'>&times;</span>",
-            "</button>",
-            "</div>",
-            "<script>",
-            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-            "<\/script>"
+              "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-sm alert-success alert-dismissible fade show mb-0' role='alert'>",
+              "Success: Payment was created.",
+              "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+              "<span aria-hidden='true'>&times;</span>",
+              "</button>",
+              "</div>",
+              "<script>",
+              "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+              "<\/script>"
           ].join("");
 
           // modal form
           function createPaymentAsyncModalForm() {
-            $("#create-payment").modalForm({
-                formURL: "{% url 'create_payment' invoice.pk %}",
-                modalID: "#create-modal",
-                asyncUpdate: true,
-                asyncSettings: {
-                  closeOnSubmit: true,
-                  successMessage: asyncSuccessMessageCreate,
-                  dataUrl: "{% url 'payments'%}",
-                  dataElementId: "#payments-table",
-                  dataKey: "table",
-                  addModalFormFunction: reinstantiateModalForms
-                }
-            });
+              $("#create-payment").modalForm({
+                  formURL: "{% url 'create_payment' invoice.pk student.pk%}",
+                  modalID: "#create-modal",
+                  asyncUpdate: true,
+                  asyncSettings: {
+                      closeOnSubmit: true,
+                      successMessage: asyncSuccessMessageCreate,
+                      dataUrl: "{% url 'payments' invoice.pk%}",
+                      dataElementId: "#payments-table",
+                      dataKey: "table",
+                      addModalFormFunction: reinstantiateModalForms
+                  }
+              });
           }
           createPaymentAsyncModalForm();
 
           // Update payment asynchronous button
           // message
           var asyncSuccessMessageUpdate = [
-            "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-stringformat alert-success alert-dismissible fade show mb-0' role='alert'>",
-            "Success: Payment was updated.",
-            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-            "<span aria-hidden='true'>&times;</span>",
-            "</button>",
-            "</div>",
-            "<script>",
-            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-            "<\/script>"
+              "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-stringformat alert-success alert-dismissible fade show mb-0' role='alert'>",
+              "Success: Payment was updated.",
+              "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+              "<span aria-hidden='true'>&times;</span>",
+              "</button>",
+              "</div>",
+              "<script>",
+              "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+              "<\/script>"
           ].join("");
 
           // modal form
           function updatePaymentModalForm() {
-            $(".update-payment").each(function () {
-              $(this).modalForm({
-                formURL: $(this).data("form-url"),
-                asyncUpdate: true,
-                asyncSettings: {
-                  closeOnSubmit: true,
-                  successMessage: asyncSuccessMessageUpdate,
-                  dataUrl: "{% url 'payments'%}",
-                  dataElementId: "#payments-table",
-                  dataKey: "table",
-                  addModalFormFunction: reinstantiateModalForms
-                }
+              $(".update-payment").each(function() {
+                  $(this).modalForm({
+                      formURL: $(this).data("form-url"),
+                      asyncUpdate: true,
+                      asyncSettings: {
+                          closeOnSubmit: true,
+                          successMessage: asyncSuccessMessageUpdate,
+                          dataUrl: "{% url 'payments' invoice.pk %}",
+                          dataElementId: "#payments-table",
+                          dataKey: "table",
+                          addModalFormFunction: reinstantiateModalForms
+                      }
+                  });
               });
-            });
           }
           updatePaymentModalForm();
 
           // Delete payment buttons - formURL is retrieved from the data of the element
           function deletePaymentModalForm() {
-            $(".delete-payment").each(function () {
-                $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
-            });
+              $(".delete-payment").each(function() {
+                  $(this).modalForm({
+                      formURL: $(this).data("form-url"),
+                      isDeleteForm: true
+                  });
+              });
           }
           deletePaymentModalForm();
 
           // Read payment buttons
           function readPaymentModalForm() {
-            $(".read-payment").each(function () {
-                $(this).modalForm({formURL: $(this).data("form-url")});
-            });
+              $(".read-payment").each(function() {
+                  $(this).modalForm({
+                      formURL: $(this).data("form-url")
+                  });
+              });
           }
           readPaymentModalForm();
 
           function reinstantiateModalForms() {
-            createPaymentAsyncModalForm();
-            readPaymentModalForm();
-            updatePaymentModalForm();
-            deletePaymentModalForm();
+              createPaymentAsyncModalForm();
+              readPaymentModalForm();
+              updatePaymentModalForm();
+              deletePaymentModalForm();
           }
 
-         
+
 
           // Hide message
-          $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+          $(".alert").fadeTo(2000, 500).slideUp(500, function() {
               $(".alert").slideUp(500);
           });
 
 
           //Payments DataTable Configuration
           var table = $('#payments-table').DataTable({
-          fixedHeader: true,
-          order: [[1, 'asc']],
-          dom: 'Bfrtip',
-          lengthMenu: [
-          10, 25, 50, -1
-          ],
-          buttons: [
-          {
-              extend: 'pdf',
-              
-              download:'open',
-              title: "Payments List",
-              messageBottom: function(){
-                  var curr_date = new Date();
-                  txt_curr_date = curr_date.toString();
-                  return txt_curr_date+"\n ~School Information Management System~";
-              },
-              exportOptions: {
-                      columns: ':visible'
-                  }
-          },
-          'pageLength',
-          'colvis'
-          ],
-          columnDefs: [{
-          orderable: false,
-          
-          targets: 0
-          }],
-          
-          });     
-    //Add Styling to the buttons
-    table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
+              fixedHeader: true,
+              order: [
+                  [1, 'asc']
+              ],
+              dom: 'Bfrtip',
+              lengthMenu: [
+                  10, 25, 50, -1
+              ],
+              buttons: [{
+                      extend: 'pdf',
+
+                      download: 'open',
+                      title: "Payments List",
+                      messageBottom: function() {
+                          var curr_date = new Date();
+                          txt_curr_date = curr_date.toString();
+                          return txt_curr_date + "\n ~School Information Management System~";
+                      },
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },
+                  'pageLength',
+                  'colvis'
+              ],
+              columnDefs: [{
+                  orderable: false,
+
+                  targets: 0
+              }],
+
+          });
+          //Add Styling to the buttons
+          table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)')
 
       });
-</script>
+    </script>
 {% endblock script %}
 {% endblock %}

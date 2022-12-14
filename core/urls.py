@@ -34,5 +34,6 @@ urlpatterns = [
     path('payments/', include('payment.urls')),
     path('fees-structure/', include('fees_structure.urls')),
     path('vendors/', include('vendor.urls')),
+    path(r'^qwc/', include("django_quickbooks.urls"))
 
 ]
