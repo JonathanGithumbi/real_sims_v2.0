@@ -23,42 +23,36 @@ class InvoiceManager():
         # Get items to charge assuming that the user checked the charge_on_registration input
         items_charged_at_registration = BillingItem.objects.filter(
             charge_on_registration=True, grades__in=[student.grade_admitted_to])
+
         # add those items to the invoice
         for fees_structure in items_charged_at_registration:
+            print(fees_structure.item)
             InvoiceItem.objects.create(
-                sales_item=fees_structure.item,
-                amount=fees_structure.amount,
+                billing_item=fees_structure,
                 invoice=invoice
             )
 
         # also invoice for any optionals
         if student.lunch == True:
-            # Create an invoice item for the lunch item
+            # Create a lunch invoice item for the invoice
             item_manager = ItemManager()
             lunch_sales_item = item_manager.get_lunch_item()
-            lunch_item_amount = BillingItem.objects.get(
-                item=lunch_sales_item, grades__in=[student.current_grade]).amount
+            lunch_item = BillingItem.objects.get(
+                item=lunch_sales_item, grades__in=[student.current_grade])
             lunch_item = InvoiceItem.objects.create(
-                sales_item=lunch_sales_item,
-                amount=lunch_item_amount,
+                billing_item=lunch_item,
                 invoice=invoice
             )
         if student.transport == True:
             # Create an invoice item for the transport item
             item_manager = ItemManager()
             transport_sales_item = item_manager.get_transport_item()
-            transport_item_amount = BillingItem.objects.get(
-                item=transport_sales_item, grades__in=[student.current_grade]).amount
+            transport_item = BillingItem.objects.get(
+                item=transport_sales_item, grades__in=[student.current_grade])
             transport_item = InvoiceItem.objects.create(
-                sales_item=transport_sales_item,
-                amount=transport_item_amount,
+                billing_item=transport_item,
                 invoice=invoice
             )
-
-        # set the invoice balance
-        invoice.balance = invoice.get_total_amount()
-        invoice.save(update_fields=['balance'])
-
         # return the charge
         return invoice
 

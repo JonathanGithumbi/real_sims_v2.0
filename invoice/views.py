@@ -84,12 +84,14 @@ class InvoiceItemListView(generic.ListView):
 
     def get_queryset(self):
         self.invoice = get_object_or_404(Invoice, pk=self.kwargs['invoice_pk'])
+        self.student = get_object_or_404(Student, pk=self.kwargs['student_pk'])
         return InvoiceItem.objects.filter(invoice=self.invoice)
 
     # Add the student to the context so that the templates can use it
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['invoice'] = self.invoice
+        context['student'] = self.student
         return context
 
 
@@ -98,8 +100,20 @@ class InvoiceItemCreateView(BSModalCreateView):
     form_class = InvoiceItemModelForm
     success_message = 'Success: InvoiceItem was created.'
 
+    def get_queryset(self):
+        self.invoice = get_object_or_404(Invoice, pk=self.kwargs['invoice_pk'])
+        self.student = get_object_or_404(Student, pk=self.kwargs['student_pk'])
+        return InvoiceItem.objects.filter(invoice=self.invoice)
+
+    # Add the student to the context so that the templates can use it
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['invoice'] = self.invoice
+        context['student'] = self.student
+        return context
+
     def get_success_url(self):
-        return reverse_lazy('invoiceitem_list', kwargs={'invoice_pk': self.kwargs['invoice_pk']})
+        return reverse_lazy('invoiceitem_list', kwargs={'invoice_pk': self.kwargs['invoice_pk'], 'student_pk': self.kwargs['student_pk']})
 
 
 class InvoiceItemUpdateView(BSModalUpdateView):
@@ -108,8 +122,20 @@ class InvoiceItemUpdateView(BSModalUpdateView):
     form_class = InvoiceItemModelForm
     success_message = 'Success: InvoiceItem was updated.'
 
+    def get_queryset(self):
+        self.invoice = get_object_or_404(Invoice, pk=self.kwargs['invoice_pk'])
+        self.student = get_object_or_404(Student, pk=self.kwargs['student_pk'])
+        return InvoiceItem.objects.filter(invoice=self.invoice)
+
+    # Add the student to the context so that the templates can use it
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['invoice'] = self.invoice
+        context['student'] = self.student
+        return context
+
     def get_success_url(self):
-        return reverse_lazy('invoiceitem_list', kwargs={'invoice_pk': self.kwargs['invoice_pk']})
+        return reverse_lazy('invoiceitem_list', kwargs={'invoice_pk': self.kwargs['invoice_pk'], 'student_pk': self.kwargs['student_pk']})
 
 
 class InvoiceItemReadView(BSModalReadView):
@@ -136,4 +162,3 @@ def invoiceitems(request):
             request=request
         )
         return JsonResponse(data)
-

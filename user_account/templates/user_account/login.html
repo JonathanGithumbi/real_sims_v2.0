@@ -8,16 +8,7 @@
 {% block content %}
     <div class="container text-gray-900 center">
         <br>
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <div class="alert {{ message.tags }} alert-dismissible fade show small strong">
-                        <button type="button" class="close btn-close" data-dismiss="alert">&times;</button>
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        
         <div class="row justify-content-center">
             <div class="card o-hidden shadow-sm my-5">
                 <div class="card-body p-0">

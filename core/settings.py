@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = '/dashboard'
+LOGIN_REDIRECT_URL = '/student/list'
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'student.apps.StudentConfig',
     'bill',
     'fees_structure',
-    'invoice',
+    'invoice.apps.InvoiceConfig',
     'academic_calendar',
     'payment',
     'vendor',

@@ -2,20 +2,18 @@
 from django.db import models
 
 from grade.models import Grade
-
-
-from item.models import Item as sales_item
-
 from academic_calendar.models import Year, Term
 from student.models import Student
+from fees_structure.models import BillingItem
 
 
 class Invoice(models.Model):
     """An Invoice. Charged to the active students at the beginning of every term."""
     class Meta:
         db_table = "Invoice_invoice"
+        get_latest_by = 'created_sys'
 
-    balance = models.IntegerField(null=True)
+    balance = models.IntegerField(default=0)
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE)
     year = models.ForeignKey(Year, on_delete=models.DO_NOTHING, null=True)
@@ -24,6 +22,7 @@ class Invoice(models.Model):
         Grade, on_delete=models.CASCADE, null=True, default=None)
     created = models.DateField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    created_sys = models.DateTimeField(auto_now_add=True, null=True)
 
     def status(self):
         if self.balance is None:
@@ -52,7 +51,7 @@ class Invoice(models.Model):
         amount = 0
         items = Item.objects.filter(invoice=self)
         for item in items:
-            amount = amount+item.amount
+            amount = amount+item.billing_item.amount
 
         return amount
 
@@ -72,17 +71,16 @@ class Invoice(models.Model):
             return self.balance
 
 
-class Item(models.Model):
+class Item(models.Model):  # in instance of this model is a sale of a billing item against an invoice
     """These are invoice items. i.e the items that compose the invoice"""
     """Whenever an invoice item is added to an invoice, the save method modifies the invoice by increasing the amount and balance of the invoice"""
     # item_description = models.CharField(max_length=255,null=True,default=None)
-    sales_item = models.ForeignKey(
-        sales_item, on_delete=models.DO_NOTHING, null=True, default=None)
-    amount = models.IntegerField(null=True, default=None)
+    billing_item = models.OneToOneField(
+        BillingItem, on_delete=models.CASCADE, related_name="sales_item", null=True)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.invoice_item.name
+        return self.billing_item.item.name
 
 
 class BalanceTable(models.Model):

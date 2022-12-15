@@ -8,5 +8,5 @@ class StudentModelForm(BSModalModelForm):
         model = Student
         fields = [
             'first_name', 'middle_name', 'last_name', 'grade_admitted_to',
-            'contact1_name', 'contact1_number', 'contact2_name', 'contact2_number', 'lunch', 'transport'
+            'contact1_name', 'contact1_number', 'contact2_name', 'contact2_number', 'lunch', 'transport', 'active'
         ]

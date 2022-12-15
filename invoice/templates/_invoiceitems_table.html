@@ -4,7 +4,7 @@
            style="width:100%">
         <thead class='thead-light'>
             <tr>
-                <th scope="col">Sales Item</th>
+                <th scope="col">Billing Item</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Read / Update / Delete</th>
             </tr>
@@ -12,8 +12,8 @@
         <tbody>
             {% for invoiceitem in invoiceitem_list %}
                 <tr>
-                    <td>{{ invoiceitem.sales_item }}</td>
-                    <td>{{ invoiceitem.amount }}</td>
+                    <td>{{ invoiceitem.billing_item }}</td>
+                    <td>{{ invoiceitem.billing_item.amount }}</td>
                     <td >
                         <!-- Read invoiceitem buttons -->
                         <button type="button"
@@ -24,7 +24,7 @@
                         <!-- Update invoiceitem buttons -->
                         <button type="button"
                                 class="update-invoiceitem btn btn-sm btn-primary"
-                                data-form-url="{% url 'update_invoiceitem' invoiceitem.pk invoice.pk %}">
+                                data-form-url="{% url 'update_invoiceitem' invoiceitem.pk invoice.pk student.pk %}">
                             <span class="fas fa-pen"></span>
                         </button>
                         <!-- Delete invoiceitem buttons -->

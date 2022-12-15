@@ -2,6 +2,10 @@ from django.db import models
 
 from django.shortcuts import reverse
 
+SALES_TERMS = {
+    'lunch':'Lunch',
+    'transport':'Transport'
+}
 
 class Item(models.Model):
     """These are the items being charged to the students"""

@@ -54,7 +54,7 @@ class BillingItem(models.Model):
                                                  blank=True)
 
     def __str__(self):
-        return self.item
+        return str(self.item)
 
     def get_absolute_url(self):
         return reverse('billingitem_detail', kwargs={'pk': self.pk})

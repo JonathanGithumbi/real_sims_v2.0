@@ -54,11 +54,16 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.middle_name} {self.last_name}"
-
+    
     def get_fees_balance(self):
         from student.StudentManager import StudentManager
         man = StudentManager()
         return man.get_fees_balance(self)
+
+    def get_fees_due(self):
+        from invoice.models import BalanceTable
+        bal_rec = BalanceTable.objects.get(student=self)
+        return bal_rec.balance
 
     def get_absolute_url(self):
         from django.urls import reverse

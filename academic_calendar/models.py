@@ -5,7 +5,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import reverse
 
 
-
 class Year(models.Model):
     # AKA Academic calendar. 1 per year
     year = models.IntegerField()
@@ -31,11 +30,10 @@ class Term(models.Model):
     year = models.ForeignKey(Year, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return "Term:{} {}".format(self.term, self.year)
+        return "{}".format(self.term)
 
     def get_absolute_url(self):
         return reverse('term_detail', kwargs={'pk': self.pk})
-
 
 
 # obsolete: delete when possible

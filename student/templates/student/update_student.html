@@ -95,6 +95,18 @@
         </div>
       </div>
     </div>
+    <!--Active-->
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="{{ form.active.id_for_label }}">{{ form.active.label }}</label>
+          {% render_field form.active class="form-control form-control-sm"  %}
+          <div class="{% if form.active.errors %} invalid{% endif %}">
+            {% for error in form.active.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
     <!--optionals-->
     <div class="row">
       <div class="col">

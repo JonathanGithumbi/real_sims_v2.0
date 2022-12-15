@@ -26,7 +26,7 @@
                         <a class="btn btn-sm btn-primary"
                            href="{% url 'payment_list' invoice.pk student.pk %}">Payments</a>
                         <a class="btn btn-sm btn-primary"
-                           href="{% url 'invoiceitem_list' invoice.pk %}">Invoice Items</a>
+                           href="{% url 'invoiceitem_list' invoice.pk student.pk %}">Invoice Items</a>
                         <!-- Read invoice buttons -->
                         <button type="button"
                                 class="read-invoice btn btn-sm btn-primary"

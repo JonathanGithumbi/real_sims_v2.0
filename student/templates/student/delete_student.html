@@ -9,7 +9,11 @@
   </div>
   <div class="modal-body">
     <p>
-      Are you sure you want to delete student :<strong>{{ student }}</strong>?
+      {% if student.get_fees_due > 0 %}
+        <p>! {{ student }} has a fees balance of {{ student.get_fees_due }}.</p>
+        <p>consider updating the student's status to inactive to stop the system from invoicing the student anymore.</p>
+      {% endif %}
+      {% if student.get_fees_due == 0 %}<p>{{ student }} has no fees balance.</p>{% endif %}
     </p>
   </div>
   <div class="modal-footer">
