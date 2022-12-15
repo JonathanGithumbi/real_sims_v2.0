@@ -18,11 +18,11 @@ class Invoice(models.Model):
     balance = models.IntegerField(null=True)
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE, null=True)
-    term = models.ForeignKey(Term, on_delete=models.CASCADE, null=True)
+    year = models.ForeignKey(Year, on_delete=models.DO_NOTHING, null=True)
+    term = models.ForeignKey(Term, on_delete=models.DO_NOTHING, null=True)
     grade = models.ForeignKey(
         Grade, on_delete=models.CASCADE, null=True, default=None)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
     def status(self):
@@ -107,7 +107,6 @@ class BalanceTable(models.Model):
 
     def get_balance(self):
         return self.balance
-
 
 
 # Obsolete Delete when possible

@@ -21,14 +21,18 @@ class StudentListView(generic.ListView):
     template_name = 'student_list.html'
     context_object_name = 'student_list'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['students_total'] = Student.objects.count()
+        return context
+
 
 class StudentCreateView(BSModalCreateView):
     template_name = 'student/create_student.html'
     form_class = StudentModelForm
     success_message = 'Success: Student was created'
     success_url = reverse_lazy('student_list')
-
-    
 
 
 class StudentUpdateView(BSModalUpdateView):

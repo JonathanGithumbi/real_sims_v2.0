@@ -9,9 +9,11 @@
                 <nav aria-label="breadcrumb breadcrumb-sm">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item ">
-                            <a href="{% url 'student_list' %}">All Students</a>
+                            <a href="{% url 'student_list' %}">All Students ></a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ student.first_name }} {{ student.last_name }} Invoices</li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <a href="{% url 'invoice_list' student.pk %}">{{ student.first_name }} {{ student.last_name }} / Invoices /</a>
+                        </li>
                     </ol>
                 </nav>
                 <hr />
@@ -21,7 +23,7 @@
                 <button id="create-invoice"
                         class="btn btn-primary btn-sm"
                         type="button"
-                        name="button">Create Invoice</button>
+                        name="button">Invoice Student</button>
             </div>
             <!--Table Body-->
             <div class="card-body">
@@ -33,6 +35,8 @@
     {% block script %}
         <script type="text/javascript">
             $(function() {
+
+
 
                 // Create invoice asynchronous button
                 // message
@@ -146,10 +150,15 @@
                         10, 25, 50, -1
                     ],
                     buttons: [{
+                            extend: 'searchBuilder',
+                            config: {
+                                depthLimit: 2
+                            }
+                        }, {
                             extend: 'pdf',
 
                             download: 'open',
-                            title: "Invoices List",
+                            title: "{{student.first_name}} {{student.middle_name}} {{student.last_name}} Invoices List",
                             messageBottom: function() {
                                 var curr_date = new Date();
                                 txt_curr_date = curr_date.toString();

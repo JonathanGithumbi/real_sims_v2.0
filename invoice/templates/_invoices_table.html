@@ -2,22 +2,26 @@
     <table id="invoices-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <tr>
+                <th scope="col">Created</th>
+                <th scope="col">For Year</th>
+                <th scope="col">For Term</th>
+                <th scope="col">Balance</th>
                 <th scope="col">Student</th>
                 <th scope="col">Grade</th>
-                <th scope="col">Year</th>
-                <th scope="col">Term</th>
                 <th scope="col">Read / Update / Delete</th>
             </tr>
         </thead>
         <tbody>
             {% for invoice in invoice_list %}
                 <tr>
-                    <td>{{ invoice.student }}</td>
-                    <td>{{ invoice.grade }}</td>
+                    <td>{{ invoice.created }}</td>
                     <td>{{ invoice.year }}</td>
                     <td>{{ invoice.term }}</td>
+                    <td>{{ invoice.balance }}</td>
+                    <td>{{ invoice.student }}</td>
+                    <td>{{ invoice.grade }}</td>
                     <td >
                         <a class="btn btn-sm btn-primary"
                            href="{% url 'payment_list' invoice.pk student.pk %}">Payments</a>

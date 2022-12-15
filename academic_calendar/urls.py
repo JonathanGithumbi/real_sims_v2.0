@@ -21,5 +21,6 @@ urlpatterns = [
     path('delete/term/<int:pk>/<int:pk2>', views.TermDeleteView.as_view(),
          name='delete_term'),
     path('list/years/years/', views.years, name='years'),
-    path('list/terms/terms/', views.terms, name='terms')
+    path('list/terms/terms/', views.terms, name='terms'),
+     path('load-terms',views.load_terms,name='ajax_load_terms')
 ]

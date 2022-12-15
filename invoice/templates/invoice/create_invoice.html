@@ -1,5 +1,9 @@
 {% load widget_tweaks %}
-<form method="post" action="">
+<form method="post"
+      action=""
+      id="invoiceForm"
+      data-terms-url="{% url 'ajax_load_terms' %}"
+      novalidate>
   {% csrf_token %}
   <div class="modal-header bg-light">
     <h5 class="modal-title">Create Invoice</h5>
@@ -11,18 +15,45 @@
     <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
       {% for error in form.non_field_errors %}{{ error }}{% endfor %}
     </div>
-    {% for field in form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% render_field field class="form-control form-control-sm"  %}
-        <div class="{% if field.errors %} invalid{% endif %}">
-          {% for error in field.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
-        </div>
+    <div class="form-group">
+      <label for="{{ form.year.id_for_label }}">{{ form.year.label }}</label>
+      {% render_field form.year class="form-control form-control-sm" id="year-select" %}
+      <div class="{% if form.year.errors %} invalid{% endif %}">
+        {% for error in form.year.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
-    {% endfor %}
+    </div>
+    <div class="form-group">
+      <label for="{{ form.term.id_for_label }}">{{ form.term.label }}</label>
+      {% render_field form.term class="form-control form-control-sm" id="id_term" %}
+      <div class="{% if form.term.errors %} invalid{% endif %}">
+        {% for error in form.term.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-sm btn-success">Create</button>
-    <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-danger btn-sm"
+            type="button"
+            id="dummy"
+            data-dismiss="modal">Cancel</button>
   </div>
 </form>
+<script>
+  $(function() {
+      $("#year-select").change(function() {
+          var url = $("#invoiceForm").attr("data-terms-url")
+          var yearId = $(this).val();
+
+          $.ajax({
+              url: url,
+              data: {
+                  'year': yearId
+              },
+              success: function(data) {
+                  $("#id_term").html(data);
+              }
+          });
+
+      });
+  });
+</script>

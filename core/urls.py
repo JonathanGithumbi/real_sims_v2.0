@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url
 
 
 #from QBWEBSERVICE.views import qb_web_service, app, QBWEBSERVICE
@@ -34,6 +35,7 @@ urlpatterns = [
     path('payments/', include('payment.urls')),
     path('fees-structure/', include('fees_structure.urls')),
     path('vendors/', include('vendor.urls')),
-    path(r'^qwc/', include("django_quickbooks.urls"))
+
+
 
 ]

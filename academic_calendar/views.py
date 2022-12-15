@@ -120,3 +120,10 @@ def terms(request):
             request=request
         )
         return JsonResponse(data)
+
+
+def load_terms(request):
+    year_id = request.GET.get('year')
+    terms = Term.objects.filter(year_id=year_id).order_by('term')
+    from django.shortcuts import render
+    return render(request, 'academic_calendar/term_dropdown_list_options.html', {'terms': terms})

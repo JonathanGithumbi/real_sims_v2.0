@@ -1,0 +1,8 @@
+<option value="">
+    ---------
+</option>
+{% for term in terms %}
+    <option value="{{ term.pk }}">
+        {{ term.year }}: Term {{ term.term }}
+    </option>
+{% endfor %}

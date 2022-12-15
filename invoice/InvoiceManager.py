@@ -1,4 +1,5 @@
-from invoice.models import Invoice, Item, BalanceTable
+from invoice.models import Invoice, BalanceTable
+from invoice.models import Item as InvoiceItem
 from fees_structure.models import BillingItem
 from item.ItemManager import ItemManager
 
@@ -7,9 +8,8 @@ class InvoiceManager():
     """This invoice manager is in charge of invoicing one student at registration and all active students at the beginning of the term"""
 
     def invoice_new_student(self, student):
-        """This method is applied during registration"""
-        """To charge a student you must have an instance of a student and an instance of an invoice"""
-        """An invoice is charged for a specific year and a specific term, against a number of items"""
+        """this method is called by student model's post_save function"""
+
         # Step 1 build the invoice
 
         invoice = Invoice.objects.create(
@@ -25,7 +25,7 @@ class InvoiceManager():
             charge_on_registration=True, grades__in=[student.grade_admitted_to])
         # add those items to the invoice
         for fees_structure in items_charged_at_registration:
-            Item.objects.create(
+            InvoiceItem.objects.create(
                 sales_item=fees_structure.item,
                 amount=fees_structure.amount,
                 invoice=invoice
@@ -38,7 +38,7 @@ class InvoiceManager():
             lunch_sales_item = item_manager.get_lunch_item()
             lunch_item_amount = BillingItem.objects.get(
                 item=lunch_sales_item, grades__in=[student.current_grade]).amount
-            lunch_item = Item.objects.create(
+            lunch_item = InvoiceItem.objects.create(
                 sales_item=lunch_sales_item,
                 amount=lunch_item_amount,
                 invoice=invoice
@@ -49,7 +49,7 @@ class InvoiceManager():
             transport_sales_item = item_manager.get_transport_item()
             transport_item_amount = BillingItem.objects.get(
                 item=transport_sales_item, grades__in=[student.current_grade]).amount
-            transport_item = Item.objects.create(
+            transport_item = InvoiceItem.objects.create(
                 sales_item=transport_sales_item,
                 amount=transport_item_amount,
                 invoice=invoice
@@ -58,10 +58,6 @@ class InvoiceManager():
         # set the invoice balance
         invoice.balance = invoice.get_total_amount()
         invoice.save(update_fields=['balance'])
-
-        # update the balance table, balance table created on student post save
-        bal_rec = BalanceTable.objects.get(student=invoice.student)
-        bal_rec.increase_balance(invoice.get_total_amount())
 
         # return the charge
         return invoice
@@ -85,7 +81,7 @@ class InvoiceManager():
         if rec_yr_thr:
             # add those items to the invoice
             for fees_structure in rec_yr_thr:
-                Item.objets.create(
+                InvoiceItem.objets.create(
                     sales_item=fees_structure.item,
                     amount=fees_structure.amount,
                     invoice=invoice
@@ -97,7 +93,7 @@ class InvoiceManager():
         if rec_yr_spc:
             # add those items to the invoice
             for fees_structure in rec_yr_spc:
-                Item.objets.create(
+                InvoiceItem.objets.create(
                     sales_item=fees_structure.item,
                     amount=fees_structure.amount,
                     invoice=invoice
@@ -111,7 +107,7 @@ class InvoiceManager():
         if one_time:
             # add those items to the invoice
             for fees_structure in rec_yr_spc:
-                Item.objets.create(
+                InvoiceItem.objets.create(
                     sales_item=fees_structure.item,
                     amount=fees_structure.amount,
                     invoice=invoice
@@ -140,7 +136,7 @@ class InvoiceManager():
         lunch_sales_item = item_manager.get_lunch_item()
         lunch_item_amount = BillingItem.objects.get(
             item=lunch_sales_item, grades__in=[student.current_grade]).amount
-        lunch_item = Item.objects.create(
+        lunch_item = InvoiceItem.objects.create(
             sales_item=lunch_sales_item,
             amount=lunch_item_amount,
             invoice=curr_invoice
@@ -164,7 +160,7 @@ class InvoiceManager():
         item_manager = ItemManager()
         lunch_sales_item = item_manager.get_lunch_item()
         # find and delete the lunch invoice item
-        lunch_item = Item.objects.get(
+        lunch_item = InvoiceItem.objects.get(
             invoice=curr_invoice, sales_item=lunch_sales_item)
         lunch_item.delete()
         # set the invoice balance
@@ -186,7 +182,7 @@ class InvoiceManager():
         transport_sales_item = item_manager.get_transport_item()
         transport_item_amount = BillingItem.objects.get(
             item=transport_sales_item, grades__in=[student.current_grade]).amount
-        transport_item = Item.objects.create(
+        transport_item = InvoiceItem.objects.create(
             sales_item=transport_sales_item,
             amount=transport_item_amount,
             invoice=curr_invoice
@@ -210,7 +206,7 @@ class InvoiceManager():
         item_manager = ItemManager()
         transport_sales_item = item_manager.get_transport_item()
         # find and delete the transport invoice item
-        transport_item = Item.objects.get(
+        transport_item = InvoiceItem.objects.get(
             invoice=curr_invoice, sales_item=transport_sales_item)
         transport_item.delete()
         # set the invoice balance

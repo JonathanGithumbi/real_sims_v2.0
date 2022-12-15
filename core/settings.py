@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = '/dashboard'
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'django.contrib.admin',
     'django_quickbooks',
     'bootstrap_modal_forms',
@@ -53,7 +55,7 @@ INSTALLED_APPS = [
     'vendor',
     'item',
     'core',
-    'dashboard'
+    'dashboard',
 
 
 
@@ -156,7 +158,8 @@ STATICFILES_FINDERS = [
 ]
 AUTH_USER_MODEL = 'user_account.User'
 LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = 'user_account/login/'
+LOGIN_URL = '/user_account/login/'
+
 # OAauth2 config here
 CLIENT_ID = 'ABqj7EU6zlngD2KKw34dy6Z7SzVwF7XcHP7c6EOr2GCZUiSOZI'
 CLIENT_SECRET = 'KgY50RPimjKkz4shvDb2PRrIKADSadw8ysWIuOhA'
