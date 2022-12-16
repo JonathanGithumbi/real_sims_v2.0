@@ -7,13 +7,16 @@ from bootstrap_modal_forms.forms import BSModalModelForm
 class InvoiceModelForm(BSModalModelForm):
     class Meta:
         model = Invoice
-        fields = ['year', 'term']
+        fields = ['year', 'term', 'student']
 
+    # this function is involved with chaining select inputs term and year
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        self.student_obj = kwargs.pop('student')
+        super(InvoiceModelForm, self).__init__(*args, **kwargs)
         from academic_calendar.models import Term
         self.fields['term'].queryset = Term.objects.none()
-
+        self.fields['student'].initial = self.student_obj
+        self.fields['student'].widget.attrs['readonly'] = True
         if 'year' in self.data:
             try:
                 year_id = int(self.data.get('year'))
@@ -24,6 +27,8 @@ class InvoiceModelForm(BSModalModelForm):
         elif self.instance.pk:
             self.fields['term'].queryset = self.instance.year.term_set.order_by(
                 'term')
+
+
 
 
 class InvoiceItemModelForm(BSModalModelForm):

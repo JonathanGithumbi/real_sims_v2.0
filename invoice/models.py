@@ -15,7 +15,7 @@ class Invoice(models.Model):
 
     balance = models.IntegerField(default=0)
     student = models.ForeignKey(
-        Student, on_delete=models.CASCADE)
+        Student, on_delete=models.CASCADE, null=True)
     year = models.ForeignKey(Year, on_delete=models.DO_NOTHING, null=True)
     term = models.ForeignKey(Term, on_delete=models.DO_NOTHING, null=True)
     grade = models.ForeignKey(
@@ -25,14 +25,12 @@ class Invoice(models.Model):
     created_sys = models.DateTimeField(auto_now_add=True, null=True)
 
     def status(self):
-        if self.balance is None:
-            return 'Not Fully Paid'
+        if self.balance == self.get_total_amount():
+            return 'unpaid'
         if self.balance == 0:
-            return 'Fully Paid'
-        if self.balance < 0:
-            return 'Overpaid'
-        if self.balance > 0:
-            return 'Not Fully Paid'
+            return 'paid'
+        if self.balance < self.get_total_amount():
+            return 'partially-paid'
 
     def fully_paid(self):
         balance = self.get_balance()

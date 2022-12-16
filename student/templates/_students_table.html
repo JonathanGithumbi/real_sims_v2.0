@@ -11,8 +11,9 @@
                 <th col="col">Fees Due</th>
                 <th scope="col">Lunch</th>
                 <th scope="col">Transport</th>
-                <th scope="col">Invoices</th>
                 <th scope="col">Read/Update/Unregister</th>
+                <th scope="col">Invoices</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -31,10 +32,7 @@
                     <td>{{ student.get_fees_balance }}</td>
                     <td>{{ student.lunch }}</td>
                     <td>{{ student.transport }}</td>
-                    <td>
-                        <a class="btn btn-sm btn-primary"
-                           href="{% url 'invoice_list' student.pk %}">Invoices</a>
-                    </td>
+                    
                     <td >
                         <!-- Read vendor buttons -->
                         <button type="button"
@@ -54,6 +52,10 @@
                                 data-form-url="{% url 'delete_student' student.pk %}">
                             <span class="fa fa-trash"></span>
                         </button>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-primary"
+                           href="{% url 'invoice_list' student.pk %}">Invoices</a>
                     </td>
                 </tr>
             {% endfor %}

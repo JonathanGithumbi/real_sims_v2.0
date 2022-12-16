@@ -12,7 +12,7 @@
                             <a href="{% url 'student_list' %}">All Students ></a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">
-                            <a href="{% url 'invoice_list' student.pk %}">{{ student.first_name }} {{ student.last_name }} / Invoices </a>
+                            <a href="{% url 'invoice_list' student.pk %}">{{ student.first_name }} {{ student.last_name }} / Invoices</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
                             <a href="{% url 'invoiceitem_list' invoice.pk student.pk %}">Invoice:{{ invoice.year }}:Term:{{ invoice.term }} Invoice Items/</a>
@@ -27,6 +27,7 @@
                         class="btn btn-primary btn-sm"
                         type="button"
                         name="button">Create Invoice Item</button>
+                
             </div>
             <!--Table Body-->
             <div class="card-body">

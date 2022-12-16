@@ -66,9 +66,3 @@ def students(request):
         )
         return JsonResponse(data)
 
-
-def deactivate_student(request, student):
-    student.active = False
-    student.save()
-    from django.shortcuts import redirect
-    return redirect('student_list')

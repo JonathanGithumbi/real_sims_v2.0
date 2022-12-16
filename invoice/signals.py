@@ -31,3 +31,9 @@ def invoiceitem_postdelete_receiver(sender, instance, **kwargs):
     inv = instance.invoice
     inv.balance -= instance.billing_item.amount
     inv.save()
+
+
+@receiver(pre_save, sender=Invoice)
+def invoice_presave_receiver(sender, instance, **kwargs):
+    if instance.id is None:
+        print("invoice presave called")

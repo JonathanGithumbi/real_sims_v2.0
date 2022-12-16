@@ -6,13 +6,14 @@
         <br/>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
+                <h5>Invoices</h5>
                 <nav aria-label="breadcrumb breadcrumb-sm">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item ">
                             <a href="{% url 'student_list' %}">All Students ></a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            <a href="{% url 'invoice_list' student.pk %}">{{ student.first_name }} {{ student.last_name }} / Invoices /</a>
+                            <a href="{% url 'invoice_list' student.pk %}">{{ student.first_name }} {{ student.last_name }} / All Invoices /</a>
                         </li>
                     </ol>
                 </nav>
@@ -24,6 +25,8 @@
                         class="btn btn-primary btn-sm"
                         type="button"
                         name="button">Invoice Student</button>
+                <br>
+                <small>Total amount due: {{ student.get_fees_due }}</small>
             </div>
             <!--Table Body-->
             <div class="card-body">
@@ -61,7 +64,7 @@
                         asyncSettings: {
                             closeOnSubmit: true,
                             successMessage: asyncSuccessMessageCreate,
-                            dataUrl: "{% url 'invoices' %}",
+                            dataUrl: "{% url 'invoices' student.pk %}",
                             dataElementId: "#invoices-table",
                             dataKey: "table",
                             addModalFormFunction: reinstantiateModalForms
@@ -93,7 +96,7 @@
                             asyncSettings: {
                                 closeOnSubmit: true,
                                 successMessage: asyncSuccessMessageUpdate,
-                                dataUrl: "{% url 'invoices'%}",
+                                dataUrl: "{% url 'invoices' student.pk %}",
                                 dataElementId: "#invoices-table",
                                 dataKey: "table",
                                 addModalFormFunction: reinstantiateModalForms

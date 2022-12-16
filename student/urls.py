@@ -9,6 +9,4 @@ urlpatterns = [
     path('delete/<int:pk>/', views.StudentDeleteView.as_view(),
          name='delete_student'),
     path('list/students/', views.students, name='students'),
-    path('deactivate/student/<student.pk>',
-         views.deactivate_student, name="deactivate_student")
 ]

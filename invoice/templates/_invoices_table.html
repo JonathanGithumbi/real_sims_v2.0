@@ -5,28 +5,30 @@
         <thead class='thead-dark'>
             <tr>
                 <th scope="col">Created</th>
-                <th scope="col">For Year</th>
-                <th scope="col">For Term</th>
-                <th scope="col">Balance</th>
-                <th scope="col">Student</th>
+                <th scope="col">Invoice</th>
                 <th scope="col">Grade</th>
+                <th scope="col">Status</th>
+                <th scope="col">Total Amount</th>
+                <th scope="col">Balance</th>
                 <th scope="col">Read / Update / Delete</th>
+                <th scope="col">Inv Items</th>
+                <th scope="col">Inv Payments</th>
             </tr>
         </thead>
         <tbody>
             {% for invoice in invoice_list %}
                 <tr>
                     <td>{{ invoice.created }}</td>
-                    <td>{{ invoice.year }}</td>
-                    <td>{{ invoice.term }}</td>
-                    <td>{{ invoice.balance }}</td>
-                    <td>{{ invoice.student }}</td>
+                    <td>{{ invoice.year }} Term: {{ invoice.term }}</td>
                     <td>{{ invoice.grade }}</td>
+                    <td>
+                        {% if invoice.status == 'paid' %}<span class="badge badge-success">paid</span>{% endif %}
+                        {% if invoice.status == 'unpaid' %}<span class="badge badge-danger">unpaid</span>{% endif %}
+                        {% if invoice.status == 'partially-paid' %}<span class="badge badge-secondary">partially paid</span>{% endif %}
+                    </td>
+                    <td>{{ invoice.get_total_amount }}</td>
+                    <td>{{ invoice.balance }}</td>
                     <td >
-                        <a class="btn btn-sm btn-primary"
-                           href="{% url 'payment_list' invoice.pk student.pk %}">Payments</a>
-                        <a class="btn btn-sm btn-primary"
-                           href="{% url 'invoiceitem_list' invoice.pk student.pk %}">Invoice Items</a>
                         <!-- Read invoice buttons -->
                         <button type="button"
                                 class="read-invoice btn btn-sm btn-primary"
@@ -45,6 +47,14 @@
                                 data-form-url="{% url 'delete_invoice' invoice.pk student.pk %}">
                             <span class="fa fa-trash"></span>
                         </button>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-primary"
+                           href="{% url 'invoiceitem_list' invoice.pk student.pk %}">Invoice Items</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-primary"
+                           href="{% url 'payment_list' invoice.pk student.pk %}">Invoice Payments</a>
                     </td>
                 </tr>
             {% endfor %}

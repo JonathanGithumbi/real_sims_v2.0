@@ -25,6 +25,6 @@ urlpatterns = [
     path('read/<int:pk>/', views.InvoiceReadView.as_view(), name="read_invoice"),
     path('delete/<int:pk>/<int:student_pk>', views.InvoiceDeleteView.as_view(),
          name='delete_invoice'),
-    path('list/invoices/', views.invoices, name='invoices'),
+    path('list/invoices/<int:student_pk>', views.invoices, name='invoices'),
 
 ]

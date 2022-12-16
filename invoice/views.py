@@ -36,7 +36,25 @@ class InvoiceCreateView(BSModalCreateView):
     form_class = InvoiceModelForm
     success_message = 'Success: Invoice was created.'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['student'] = Student.objects.get(pk=self.kwargs['student_pk'])
+        return context
+
+    # overriding the get_form_kwargs to add kwargs to the form before instantiation
+    def get_form_kwargs(self):
+        """returns the kwargs for instantiating the form"""
+        kwargs = super(InvoiceCreateView, self).get_form_kwargs()
+        student = Student.objects.get(pk=self.kwargs['student_pk'])
+        kwargs.update({'student': student})
+        return kwargs
+
     def get_success_url(self):
+        # how to get the invoice that was just created ?
+        # why is my self.object not populated?
+        # answer: bcause i overrided the create form and never returned the object after i was finished with it
+        # reverse to invoice list instead
+        print(self.object)
         return reverse_lazy('invoice_list', kwargs={'student_pk': self.kwargs['student_pk']})
 
 
@@ -45,6 +63,13 @@ class InvoiceUpdateView(BSModalUpdateView):
     template_name = "invoice/update_invoice.html"
     form_class = InvoiceModelForm
     success_message = 'Success: Invoice was updated.'
+
+    # i need to add the student to the form's kwargs so i can prepopulate the student field
+    def get_form_kwargs(self):
+        kwargs = super(InvoiceUpdateView, self).get_form_kwargs()
+        student = Student.objects.get(pk=self.kwargs['student_pk'])
+        kwargs.update({'student': student})
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy('invoice_list', kwargs={'student_pk': self.kwargs['student_pk']})
@@ -64,13 +89,15 @@ class InvoiceDeleteView(BSModalDeleteView):
         return reverse_lazy('invoice_list', kwargs={'student_pk': self.kwargs['student_pk']})
 
 
-def invoices(request):
+def invoices(request, student_pk):
     data = dict()
     if request.method == 'GET':
-        invoice_list = Invoice.objects.all()
+        invoice_list = Invoice.objects.filter(
+            student=Student.objects.get(pk=student_pk))
         data['table'] = render_to_string(
             '_invoices_table.html',
-            {'invoice_list': invoice_list},
+            {'invoice_list': invoice_list,
+                'student': Student.objects.get(pk=student_pk)},
             request=request
         )
         return JsonResponse(data)
