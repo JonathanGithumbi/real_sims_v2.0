@@ -11,15 +11,14 @@
     <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
       {% for error in form.non_field_errors %}{{ error }}{% endfor %}
     </div>
-    {% for field in form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% render_field field class="form-control form-control-sm"  %}
-        <div class="{% if field.errors %} invalid{% endif %}">
-          {% for error in field.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
-        </div>
+    <div class="form-group">
+      <label for="{{ form.billing_item.id_for_label }}">{{ form.billing_item.label }}</label>
+      {% render_field form.billing_item class="form-control form-control-sm" id="id_billing_item" %}
+      <div class="{% if form.billing_item.errors %} invalid{% endif %}">
+        {% for error in form.billing_item.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
-    {% endfor %}
+    </div>
+    <div class="form-group">{% render_field form.invoice class="form-control form-control-sm" hidden=True %}</div>
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-sm btn-success">Create</button>

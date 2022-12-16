@@ -6,16 +6,17 @@
         <br/>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
+                <h5>Invoices Items</h5>
                 <nav aria-label="breadcrumb breadcrumb-sm">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item ">
                             <a href="{% url 'student_list' %}">All Students ></a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">
-                            <a href="{% url 'invoice_list' student.pk %}">{{ student.first_name }} {{ student.last_name }} / Invoices</a>
+                            <a href="{% url 'invoice_list' student.pk %}">{{ student.first_name }} {{ student.last_name }} / All Invoices</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            <a href="{% url 'invoiceitem_list' invoice.pk student.pk %}">Invoice:{{ invoice.year }}:Term:{{ invoice.term }} Invoice Items/</a>
+                            <a href="{% url 'invoiceitem_list' invoice.pk student.pk %}">Invoice:{{ invoice.year }} Term:{{ invoice.term }}/</a>
                         </li>
                     </ol>
                 </nav>
@@ -26,8 +27,9 @@
                 <button id="create-invoiceitem"
                         class="btn btn-primary btn-sm"
                         type="button"
-                        name="button">Create Invoice Item</button>
-                
+                        name="button">Add Billing Item</button>
+                <br>
+                <small>Total Amount: {{ invoice.get_total_amount }}</small>
             </div>
             <!--Table Body-->
             <div class="card-body">
@@ -152,6 +154,11 @@
                         10, 25, 50, -1
                     ],
                     buttons: [{
+                            extend: 'searchBuilder',
+                            config: {
+                                depthLimit: 2
+                            }
+                        }, {
                             extend: 'pdf',
 
                             download: 'open',

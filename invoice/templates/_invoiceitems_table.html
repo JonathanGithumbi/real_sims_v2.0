@@ -2,11 +2,11 @@
     <table id="invoiceitems-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <tr>
                 <th scope="col">Billing Item</th>
                 <th scope="col">Amount</th>
-                <th scope="col">Read / Update / Delete</th>
+                <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -15,22 +15,10 @@
                     <td>{{ invoiceitem.billing_item }}</td>
                     <td>{{ invoiceitem.billing_item.amount }}</td>
                     <td >
-                        <!-- Read invoiceitem buttons -->
-                        <button type="button"
-                                class="read-invoiceitem btn btn-sm btn-primary"
-                                data-form-url="{% url 'read_invoiceitem' invoiceitem.pk %}">
-                            <span class="fa fa-eye"></span>
-                        </button>
-                        <!-- Update invoiceitem buttons -->
-                        <button type="button"
-                                class="update-invoiceitem btn btn-sm btn-primary"
-                                data-form-url="{% url 'update_invoiceitem' invoiceitem.pk invoice.pk student.pk %}">
-                            <span class="fas fa-pen"></span>
-                        </button>
                         <!-- Delete invoiceitem buttons -->
                         <button type="button"
                                 class="delete-invoiceitem btn btn-sm btn-danger"
-                                data-form-url="{% url 'delete_invoiceitem' invoiceitem.pk invoice.pk %}">
+                                data-form-url="{% url 'delete_invoiceitem' invoiceitem.pk invoice.pk student.pk %}">
                             <span class="fa fa-trash"></span>
                         </button>
                     </td>

@@ -117,8 +117,8 @@ class InvoiceItemListView(generic.ListView):
     # Add the student to the context so that the templates can use it
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['invoice'] = self.invoice
-        context['student'] = self.student
+        context['invoice'] = Invoice.objects.get(pk=self.kwargs['invoice_pk'])
+        context['student'] = Student.objects.get(pk=self.kwargs['student_pk'])
         return context
 
 
@@ -135,9 +135,15 @@ class InvoiceItemCreateView(BSModalCreateView):
     # Add the student to the context so that the templates can use it
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['invoice'] = self.invoice
-        context['student'] = self.student
+        context['invoice'] = Invoice.objects.get(pk=self.kwargs['invoice_pk'])
+        context['student'] = Student.objects.get(pk=self.kwargs['student_pk'])
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super(InvoiceItemCreateView, self).get_form_kwargs()
+        invoice = Invoice.objects.get(pk=self.kwargs['invoice_pk'])
+        kwargs.update({'invoice': invoice})
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy('invoiceitem_list', kwargs={'invoice_pk': self.kwargs['invoice_pk'], 'student_pk': self.kwargs['student_pk']})
@@ -176,7 +182,7 @@ class InvoiceItemDeleteView(BSModalDeleteView):
     success_message = "Success: InvoiceItem was deleted"
 
     def get_success_url(self):
-        return reverse_lazy('invoiceitem_list', kwargs={'invoice_pk': self.kwargs['invoice_pk']})
+        return reverse_lazy('invoiceitem_list', kwargs={'invoice_pk': self.kwargs['invoice_pk'], 'student_pk': self.kwargs['student_pk']})
 
 
 def invoiceitems(request):

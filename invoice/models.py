@@ -73,7 +73,7 @@ class Item(models.Model):  # in instance of this model is a sale of a billing it
     """These are invoice items. i.e the items that compose the invoice"""
     """Whenever an invoice item is added to an invoice, the save method modifies the invoice by increasing the amount and balance of the invoice"""
     # item_description = models.CharField(max_length=255,null=True,default=None)
-    billing_item = models.OneToOneField(
+    billing_item = models.ForeignKey(
         BillingItem, on_delete=models.CASCADE, related_name="sales_item", null=True)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
 

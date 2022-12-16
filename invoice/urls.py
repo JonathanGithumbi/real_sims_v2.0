@@ -10,7 +10,7 @@ urlpatterns = [
          name="update_invoiceitem"),
     path('read/invoice-item/<int:pk>/', views.InvoiceItemReadView.as_view(),
          name="read_invoiceitem"),
-    path('delete/invoice-item/<int:pk>/<int:invoice_pk>', views.InvoiceItemDeleteView.as_view(),
+    path('delete/invoice-item/<int:pk>/<int:invoice_pk>/<int:student_pk>', views.InvoiceItemDeleteView.as_view(),
          name='delete_invoiceitem'),
     path('list/invoiceitems/', views.invoiceitems, name='invoiceitems'),
 

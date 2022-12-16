@@ -29,9 +29,12 @@ class InvoiceModelForm(BSModalModelForm):
                 'term')
 
 
-
-
 class InvoiceItemModelForm(BSModalModelForm):
     class Meta:
         model = InvoiceItem
         fields = ['billing_item', 'invoice']
+
+    def __init__(self, *args, **kwargs):
+        self.invoice_obj = kwargs.pop('invoice')
+        super(InvoiceItemModelForm, self).__init__(*args, **kwargs)
+        self.fields['invoice'].initial = self.invoice_obj
