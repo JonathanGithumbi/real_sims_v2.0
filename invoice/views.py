@@ -181,17 +181,26 @@ class InvoiceItemDeleteView(BSModalDeleteView):
     template_name = "invoice/delete_invoiceitem.html"
     success_message = "Success: InvoiceItem was deleted"
 
+    def get_extra_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['student'] = Student.objects.get(pk=self.kwargs['student_pk'])
+        context['invoice'] = Invoice.objects.get(pk=self.kwargs['invoice_pk'])
+        return context
+
     def get_success_url(self):
         return reverse_lazy('invoiceitem_list', kwargs={'invoice_pk': self.kwargs['invoice_pk'], 'student_pk': self.kwargs['student_pk']})
 
 
-def invoiceitems(request):
+def invoiceitems(request, invoice_pk, student_pk):
+    invoice = Invoice.objects.get(pk=invoice_pk)
+    student = Student.objects.get(pk=student_pk)
     data = dict()
     if request.method == 'GET':
-        invoiceitem_list = InvoiceItem.objects.all()
+        invoiceitem_list = InvoiceItem.objects.filter(invoice=invoice)
         data['table'] = render_to_string(
             '_invoiceitems_table.html',
-            {'invoiceitem_list': invoiceitem_list},
+            {'invoiceitem_list': invoiceitem_list,
+                'invoice': invoice, 'student': student},
             request=request
         )
         return JsonResponse(data)

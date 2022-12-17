@@ -7,6 +7,7 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h5>Invoices Items</h5>
+                <hr>
                 <nav aria-label="breadcrumb breadcrumb-sm">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item ">
@@ -65,7 +66,7 @@
                         asyncSettings: {
                             closeOnSubmit: true,
                             successMessage: asyncSuccessMessageCreate,
-                            dataUrl: "{% url 'invoiceitems'%}",
+                            dataUrl: "{% url 'invoiceitems' invoice.pk student.pk%}",
                             dataElementId: "#invoiceitems-table",
                             dataKey: "table",
                             addModalFormFunction: reinstantiateModalForms
@@ -97,7 +98,7 @@
                             asyncSettings: {
                                 closeOnSubmit: true,
                                 successMessage: asyncSuccessMessageUpdate,
-                                dataUrl: "{% url 'invoiceitems'%}",
+                                dataUrl: "{% url 'invoiceitems' invoice.pk student.pk%}",
                                 dataElementId: "#invoiceitems-table",
                                 dataKey: "table",
                                 addModalFormFunction: reinstantiateModalForms
@@ -162,11 +163,11 @@
                             extend: 'pdf',
 
                             download: 'open',
-                            title: "InvoiceItems List",
+                            title: "{{student}} Invoice: {{invoice.year}} Term:{{invoice.term}} InvoiceItems List",
                             messageBottom: function() {
                                 var curr_date = new Date();
                                 txt_curr_date = curr_date.toString();
-                                return txt_curr_date + "\n ~School Information Management System~";
+                                return txt_curr_date;
                             },
                             exportOptions: {
                                 columns: ':visible'
