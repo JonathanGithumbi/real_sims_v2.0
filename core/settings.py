@@ -28,7 +28,7 @@ SECRET_KEY = 'f8y-ks$a%-86&fn&^#kxc_v=u)revm8(dq8*p3oaz98530tbem'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+TIME_ZONE = 'UTC'
 LOGIN_REDIRECT_URL = '/student/list'
 # Application definition
 
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'fees_structure',
     'invoice.apps.InvoiceConfig',
     'academic_calendar',
-    'payment',
+    'payment.apps.PaymentConfig',
     'vendor',
     'item',
     'core',

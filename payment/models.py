@@ -15,6 +15,7 @@ class Payment(models.Model):
     amount = models.DecimalField(
         max_digits=8, decimal_places=2, null=True, default=None)
     date_paid = models.DateField(auto_now_add=True, null=True)
+    payment_date = models.DateField(null=True)
     invoice = models.ForeignKey(
         Invoice, on_delete=models.CASCADE, null=True, default=None)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)

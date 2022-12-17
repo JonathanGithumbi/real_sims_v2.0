@@ -22,15 +22,18 @@ def invoiceitem_postsave_receiver(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=InvoiceItem)
 def invoiceitem_postdelete_receiver(sender, instance, **kwargs):
-    # update the balance record after every invoice item is deleted
-    bal_rec = BalanceTable.objects.get(student=instance.invoice.student)
-    bal_rec.balance -= instance.billing_item.amount
-    bal_rec.save(update_fields=['balance'])
+    try:
+        # update the balance record after every invoice item is deleted
+        bal_rec = BalanceTable.objects.get(student=instance.invoice.student)
+        bal_rec.balance -= instance.billing_item.amount
+        bal_rec.save(update_fields=['balance'])
 
-    # increase the balance on the invoice
-    inv = instance.invoice
-    inv.balance -= instance.billing_item.amount
-    inv.save()
+        # increase the balance on the invoice
+        inv = instance.invoice
+        inv.balance -= instance.billing_item.amount
+        inv.save()
+    except:
+        print("Balance table not available ")
 
 
 @receiver(pre_save, sender=Invoice)

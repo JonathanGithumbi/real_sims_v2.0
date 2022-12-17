@@ -10,19 +10,25 @@
   <div class="modal-body">
     <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
       {% for error in form.non_field_errors %}{{ error }}{% endfor %}
-    </div>
-    {% for field in form %}
       <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% render_field field class="form-control form-control-sm" placeholder=field.label %}
-        <div class="{% if field.errors %} invalid{% endif %}">
-          {% for error in field.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+        <label for="{{ form.amount.id_for_label }}">{{ form.amount.label }}</label>
+        {% render_field form.amount class="form-control form-control-sm"  %}
+        <div class="{% if form.amount.errors %} invalid{% endif %}">
+          {% for error in form.amount.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
         </div>
       </div>
-    {% endfor %}
-  </div>
-  <div class="modal-footer">
-    <button type="submit" class="btn btn-sm btn-success">Update</button>
-    <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
-  </div>
-</form>
+      <div class="form-group">
+        <label for="{{ form.payment_date.id_for_label }}">{{ form.payment_date.label }}</label>
+        {% render_field form.payment_date class="form-control form-control-sm"  %}
+        <div class="{% if form.payment_date.errors %} invalid{% endif %}">
+          {% for error in form.payment_date.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+      <div class="form-group">{% render_field form.student class="form-control form-control-sm" hidden=True %}</div>
+      <div class="form-group">{% render_field form.invoice class="form-control form-control-sm" hidden=True %}</div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-sm btn-success">Update</button>
+      <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
+    </div>
+  </form>

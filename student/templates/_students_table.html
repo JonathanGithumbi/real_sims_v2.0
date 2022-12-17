@@ -13,7 +13,6 @@
                 <th scope="col">Transport</th>
                 <th scope="col">Read/Update/Unregister</th>
                 <th scope="col">Invoices</th>
-                
             </tr>
         </thead>
         <tbody>
@@ -30,9 +29,8 @@
                         {% endif %}
                     </td>
                     <td>{{ student.get_fees_balance }}</td>
-                    <td>{{ student.lunch }}</td>
-                    <td>{{ student.transport }}</td>
-                    
+                    <td>{{ student.get_lunch_status }}</td>
+                    <td>{{ student.get_transport_status }}</td>
                     <td >
                         <!-- Read vendor buttons -->
                         <button type="button"

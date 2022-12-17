@@ -2,12 +2,12 @@
     <table id="payments-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <tr>
                 <th scope="col">Payment Date</th>
-                <th scope="col">Payment type</th>
-                <th scope="col">Student</th>
                 <th scope="col">Amount</th>
+                <th scope="col">Student</th>
+                <th scope="col">invoice</th>
                 <th scope="col">Read / Update / Delete</th>
             </tr>
         </thead>
@@ -15,9 +15,9 @@
             {% for payment in payment_list %}
                 <tr>
                     <td>{{ payment.date_paid }}</td>
-                    <td>{{ payment.note }}</td>
-                    <td>{{ payment.student }}</td>
                     <td>{{ payment.amount }}</td>
+                    <td>{{ payment.student }}</td>
+                    <td>{{ payment.invoice.year }}: Term {{ payment.invoice.term }}</td>
                     <td >
                         <!-- Read payment buttons -->
                         <button type="button"
@@ -28,7 +28,7 @@
                         <!-- Update payment buttons -->
                         <button type="button"
                                 class="update-payment btn btn-sm btn-primary"
-                                data-form-url="{% url 'update_payment' payment.pk invoice.pk %}">
+                                data-form-url="{% url 'update_payment' payment.pk invoice.pk student.pk %}">
                             <span class="fas fa-pen"></span>
                         </button>
                         <!-- Delete payment buttons -->

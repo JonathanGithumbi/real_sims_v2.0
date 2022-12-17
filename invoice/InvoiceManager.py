@@ -7,8 +7,12 @@ from item.ItemManager import ItemManager
 class InvoiceManager():
     """This invoice manager is in charge of invoicing one student at registration and all active students at the beginning of the term"""
 
+    def get_latest_invoice(self, student):
+        latest_invoice = Invoice.objects.filter(student=student).latest()
+        return latest_invoice
+
     def invoice_new_student(self, student):
-        """this method is called by student model's post_save function"""
+        """this method is called by student model's post_save function after registration"""
 
         # Step 1 build the invoice
 
@@ -25,34 +29,13 @@ class InvoiceManager():
             charge_on_registration=True, grades__in=[student.grade_admitted_to])
 
         # add those items to the invoice
-        for fees_structure in items_charged_at_registration:
-            print(fees_structure.item)
+        for bill in items_charged_at_registration:
+
             InvoiceItem.objects.create(
-                billing_item=fees_structure,
+                billing_item=bill,
                 invoice=invoice
             )
 
-        # also invoice for any optionals
-        if student.lunch == True:
-            # Create a lunch invoice item for the invoice
-            item_manager = ItemManager()
-            lunch_sales_item = item_manager.get_lunch_item()
-            lunch_item = BillingItem.objects.get(
-                item=lunch_sales_item, grades__in=[student.current_grade])
-            lunch_item = InvoiceItem.objects.create(
-                billing_item=lunch_item,
-                invoice=invoice
-            )
-        if student.transport == True:
-            # Create an invoice item for the transport item
-            item_manager = ItemManager()
-            transport_sales_item = item_manager.get_transport_item()
-            transport_item = BillingItem.objects.get(
-                item=transport_sales_item, grades__in=[student.current_grade])
-            transport_item = InvoiceItem.objects.create(
-                billing_item=transport_item,
-                invoice=invoice
-            )
         # return the charge
         return invoice
 

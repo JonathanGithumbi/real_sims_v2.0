@@ -5,6 +5,8 @@ from grade.models import Grade
 
 from academic_calendar.models import Year, Term
 
+from fees_structure.BillingItemManager import BillingItemManager
+
 
 class AdmissionNumber(models.Model):
     """Generates the unformatted admission number"""
@@ -48,13 +50,29 @@ class Student(models.Model):
     # This visible flag will determing whether the student is visible; an alternative to deleting data
     visible = models.BooleanField(null=True, default=True, blank=True)
 
-    # optionals
-    lunch = models.BooleanField(default=False, blank=True)
-    transport = models.BooleanField(default=False, blank=True)
-
     def __str__(self):
         return f"{self.first_name} {self.middle_name} {self.last_name}"
-    
+
+    def get_transport_status(self):
+        latest_invoice = self.invoice_set.all().latest()
+        bill_man = BillingItemManager()
+        trans_bill = bill_man.get_trans_bill()
+        if trans_bill in latest_invoice.item_set.all():
+            return True
+        else:
+            return False
+
+    def get_lunch_status(self):
+        # get latest invoice
+
+        latest_invoice = self.invoice_set.all().latest()
+        bill_man = BillingItemManager()
+        lunch_bill = bill_man.get_lunch_bill()
+        if lunch_bill in latest_invoice.item_set.all():
+            return True
+        else:
+            return False
+
     def get_fees_balance(self):
         from student.StudentManager import StudentManager
         man = StudentManager()

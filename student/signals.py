@@ -23,48 +23,49 @@ def student_presave_receiver(sender, instance: Student, **kwargs):
         instance.current_term = cal.get_term()
         instance.current_year = cal.get_year()
     else:
+        pass
         # in case of update invoice/ uninvoice lunch/transport
-        previous = Student.objects.get(id=instance.id)
-        if instance.lunch != previous.lunch:
-            if instance.lunch == True:
-                # student subscribed to lunch
-                # charge student for lunch on the current invoice
-                item_manager = ItemManager()
-                lunch_sales_item = item_manager.get_lunch_item()
-                lunch_billing_item = BillingItem.objects.get(
-                    item=lunch_sales_item, grades__in=[instance.current_grade])
-                InvoiceItem.objects.create(
-                    billing_item=lunch_billing_item,
-                    invoice=Invoice.objects.filter(student=instance).latest()
-                )
-            else:
-                item_manager = ItemManager()
-                lunch_sales_item = item_manager.get_lunch_item()
-                lunch_item = BillingItem.objects.get(
-                    item=lunch_sales_item, grades__in=[instance.current_grade])
-                invoice = Invoice.objects.filter(student=instance).latest()
-                lunch_inv_item = InvoiceItem.objects.get(
-                    invoice=invoice, billing_item=lunch_item)
-                lunch_inv_item.delete()
-        if instance.transport != previous.transport:
-            if instance.transport == True:
-                item_manager = ItemManager()
-                transport_sales_item = item_manager.get_transport_item()
-                transport_item = BillingItem.objects.get(
-                    item=transport_sales_item, grades__in=[instance.current_grade])
-                InvoiceItem.objects.create(
-                    billing_item=transport_item,
-                    invoice=Invoice.objects.filter(student=instance).latest()
-                )
-            else:
-                item_manager = ItemManager()
-                transport_sales_item = item_manager.get_transport_item()
-                transport_item = BillingItem.objects.get(
-                    item=transport_sales_item, grades__in=[instance.current_grade])
-                invoice = Invoice.objects.filter(student=instance).latest()
-                transport_inv_item = InvoiceItem.objects.get(
-                    invoice=invoice, billing_item=transport_item)
-                transport_inv_item.delete()
+        #previous = Student.objects.get(id=instance.id)
+        # if instance.lunch != previous.lunch:
+        #    if instance.lunch == True:
+        #        # student subscribed to lunch
+        #        # charge student for lunch on the current invoice
+        #        item_manager = ItemManager()
+        #        lunch_sales_item = item_manager.get_lunch_item()
+        #        lunch_billing_item = BillingItem.objects.get(
+        #            item=lunch_sales_item, grades__in=[instance.current_grade])
+        #        InvoiceItem.objects.create(
+        #            billing_item=lunch_billing_item,
+        #            invoice=Invoice.objects.filter(student=instance).latest()
+        #        )
+        #    else:
+        #        item_manager = ItemManager()
+        #        lunch_sales_item = item_manager.get_lunch_item()
+        #        lunch_item = BillingItem.objects.get(
+        #            item=lunch_sales_item, grades__in=[instance.current_grade])
+        #        invoice = Invoice.objects.filter(student=instance).latest()
+        #        lunch_inv_item = InvoiceItem.objects.get(
+        #            invoice=invoice, billing_item=lunch_item)
+        #        lunch_inv_item.delete()
+        # if instance.transport != previous.transport:
+        #    if instance.transport == True:
+        #        item_manager = ItemManager()
+        #        transport_sales_item = item_manager.get_transport_item()
+        #        transport_item = BillingItem.objects.get(
+        #            item=transport_sales_item, grades__in=[instance.current_grade])
+        #        InvoiceItem.objects.create(
+        #            billing_item=transport_item,
+        #            invoice=Invoice.objects.filter(student=instance).latest()
+        #        )
+        #    else:
+        #        item_manager = ItemManager()
+        #        transport_sales_item = item_manager.get_transport_item()
+        #        transport_item = BillingItem.objects.get(
+        #            item=transport_sales_item, grades__in=[instance.current_grade])
+        #        invoice = Invoice.objects.filter(student=instance).latest()
+        #        transport_inv_item = InvoiceItem.objects.get(
+        #            invoice=invoice, billing_item=transport_item)
+        #        transport_inv_item.delete()
 
 
 @receiver(post_save, sender=Student)

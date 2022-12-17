@@ -38,6 +38,21 @@ class PaymentCreateView(BSModalCreateView):
     form_class = PaymentModelForm
     success_message = 'Success: Payment was created.'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['invoice'] = Invoice.objects.get(pk=self.kwargs['invoice_pk'])
+        context['student'] = Student.objects.get(pk=self.kwargs['student_pk'])
+
+        return context
+
+    # add invoice and student to modelform  **kwargs
+    def get_form_kwargs(self):
+        kwargs = super(PaymentCreateView, self).get_form_kwargs()
+        invoice = Invoice.objects.get(pk=self.kwargs['invoice_pk'])
+        student = Student.objects.get(pk=self.kwargs['student_pk'])
+        kwargs.update({'invoice': invoice, 'student': student})
+        return kwargs
+
     def get_success_url(self):
         return reverse_lazy('payment_list', kwargs={'invoice_pk': self.kwargs['invoice_pk'], 'student_pk': self.kwargs['student_pk']})
 
@@ -48,8 +63,16 @@ class PaymentUpdateView(BSModalUpdateView):
     form_class = PaymentModelForm
     success_message = 'Success: Payment was updated.'
 
+    # add invoice and student to modelform  **kwargs
+    def get_form_kwargs(self):
+        kwargs = super(PaymentUpdateView, self).get_form_kwargs()
+        invoice = Invoice.objects.get(pk=self.kwargs['invoice_pk'])
+        student = Student.objects.get(pk=self.kwargs['student_pk'])
+        kwargs.update({'invoice': invoice, 'student': student})
+        return kwargs
+
     def get_success_url(self):
-        return reverse_lazy('payment_list', kwargs={'invoice_pk': self.kwargs['invoice_pk']})
+        return reverse_lazy('payment_list', kwargs={'invoice_pk': self.kwargs['invoice_pk'], 'student_pk': self.kwargs['student_pk']})
 
 
 class PaymentReadView(BSModalReadView):
@@ -63,17 +86,18 @@ class PaymentDeleteView(BSModalDeleteView):
     success_message = "Success: Payment was deleted"
 
     def get_success_url(self):
-        return reverse_lazy('payment_list', kwargs={'invoice_pk': self.kwargs['invoice_pk']})
+        return reverse_lazy('payment_list', kwargs={'invoice_pk': self.kwargs['invoice_pk'], 'student_pk': self.kwargs['student_pk']})
 
 
-def payments(request,invoice_pk):
-    invoice = get_object_or_404(Invoice,pk=invoice_pk)
+def payments(request, invoice_pk, student_pk):
+    invoice = get_object_or_404(Invoice, pk=invoice_pk)
+    student = get_object_or_404(Student, pk=student_pk)
     data = dict()
     if request.method == 'GET':
-        payment_list = Payment.objects.all()
+        payment_list = Payment.objects.filter(invoice=invoice)
         data['table'] = render_to_string(
             '_payments_table.html',
-            {'payment_list': payment_list,'invoice':invoice},
+            {'payment_list': payment_list, 'invoice': invoice, 'student': student},
             request=request
         )
         return JsonResponse(data)

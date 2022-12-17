@@ -6,10 +6,10 @@
   </button>
 </div>
 <div class="modal-body">
-  <div class="">Payment Date: {{ payment.date_paid }}</div>
-  <div>Notes:{{ payment.note }}</div>
-  <div>Student: {{ payment.student }}</div>
+  <div>Payment Date: {{ payment.date_paid }}</div>
   <div>Amount: {{ payment.amount }}</div>
+  <div>Student: {{ payment.student }}</div>
+  <div>Student: {{ payment.invoice.year }} Term:{{ payment.invoice.term }}</div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
