@@ -18,6 +18,11 @@ class GradeListView(generic.ListView):
     template_name = 'grade_list.html'
     context_object_name = 'grade_list'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_no_grades'] = Grade.objects.all().count()
+        return context
+
 
 class GradeCreateView(BSModalCreateView):
     template_name = 'grade/create_grade.html'

@@ -2,22 +2,33 @@
     <table id="billitems-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <tr>
                 <th scope="col">Description</th>
+                <th scope="col">Payment Status</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Price per quantity</th>
                 <th scope="col">Total</th>
+                <th scope="col">Amount Due</th>
                 <th scope="col">Read / Update / Delete</th>
+                <th scope="col">Payments</th>
             </tr>
         </thead>
         <tbody>
             {% for billitem in billitem_list %}
                 <tr>
                     <td>{{ billitem.description }}</td>
+                    <td>
+                        {% if billitem.payment_status == 'unpaid' %}<span class="badge badge-danger">unpaid</span>{% endif %}
+                        {% if billitem.payment_status == 'paid' %}<span class="badge badge-success">paid</span>{% endif %}
+                        {% if billitem.payment_status == 'partially-paid' %}
+                            <span class="badge badge-secondary">partially paid</span>
+                        {% endif %}
+                    </td>
                     <td>{{ billitem.quantity }}</td>
                     <td>{{ billitem.price_per_quantity }}</td>
                     <td>{{ billitem.total }}</td>
+                    <td>{{ billitem.amount_due }}</td>
                     <td >
                         <!-- Read billitem buttons -->
                         <button type="button"
@@ -37,6 +48,10 @@
                                 data-form-url="{% url 'delete_billitem' billitem.pk bill.pk %}">
                             <span class="fa fa-trash"></span>
                         </button>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary btn-sm"
+                           href="{% url 'billpayment_list' billitem.pk bill.pk %}">payments</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -2,7 +2,7 @@
 <form method="post" action="">
   {% csrf_token %}
   <div class="modal-header bg-light">
-    <h5 class="modal-title">Update Bill Item</h5>
+    <h5 class="modal-title">update Bill Item</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -11,18 +11,38 @@
     <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
       {% for error in form.non_field_errors %}{{ error }}{% endfor %}
     </div>
-    {% for field in form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% render_field field class="form-control form-control-sm" placeholder=field.label %}
-        <div class="{% if field.errors %} invalid{% endif %}">
-          {% for error in field.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
-        </div>
+    <div class="form-group">
+      <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+      {% render_field form.description class="form-control form-control-sm"  %}
+      <div class="{% if form.description.errors %} invalid{% endif %}">
+        {% for error in form.description.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
-    {% endfor %}
+    </div>
+    <div class="form-group">
+      <label for="{{ form.quantity.id_for_label }}">{{ form.quantity.label }}</label>
+      {% render_field form.quantity class="form-control form-control-sm"  %}
+      <div class="{% if form.quantity.errors %} invalid{% endif %}">
+        {% for error in form.quantity.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="{{ form.price_per_quantity.id_for_label }}">{{ form.price_per_quantity.label }}</label>
+      {% render_field form.price_per_quantity class="form-control form-control-sm"  %}
+      <div class="{% if form.price_per_quantity.errors %} invalid{% endif %}">
+        {% for error in form.price_per_quantity.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="{{ form.total.id_for_label }}">{{ form.total.label }}</label>
+      {% render_field form.total class="form-control form-control-sm"  %}
+      <div class="{% if form.total.errors %} invalid{% endif %}">
+        {% for error in form.total.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group">{% render_field form.bill class="form-control form-control-sm" hidden=True %}</div>
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-sm btn-success">Update</button>
+    <button type="submit" class="btn btn-sm btn-success">update</button>
     <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
   </div>
 </form>

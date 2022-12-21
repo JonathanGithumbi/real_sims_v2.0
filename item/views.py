@@ -12,16 +12,23 @@ from bootstrap_modal_forms.generic import (
 from django.urls import reverse_lazy
 from django.views import generic
 
+
 class ItemListView(generic.ListView):
     model = Item
     template_name = 'item_list.html'
     context_object_name = 'item_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
 
 class ItemCreateView(BSModalCreateView):
     template_name = 'item/create_item.html'
     form_class = ItemModelForm
     success_message = 'Success: Item was created'
     success_url = reverse_lazy('item_list')
+
 
 class ItemUpdateView(BSModalUpdateView):
     model = Item
@@ -34,6 +41,7 @@ class ItemUpdateView(BSModalUpdateView):
 class ItemReadView(BSModalReadView):
     model = Item
     template_name = 'item/read_item.html'
+
 
 class ItemDeleteView(BSModalDeleteView):
     model = Item

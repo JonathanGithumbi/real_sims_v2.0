@@ -1,5 +1,5 @@
 from .models import Bill
-from .models import BillItem
+from .models import BillItem, BillPayment
 from django import forms
 from bootstrap_modal_forms.forms import BSModalModelForm
 
@@ -15,6 +15,22 @@ class BillItemModelForm(BSModalModelForm):
         model = BillItem
         fields = ['description', 'quantity',
                   'price_per_quantity', 'total', 'bill']
+
+    def __init__(self, *args, **kwargs):
+        self.bill_obj = kwargs.pop('bill_obj', None)
+        super(BillItemModelForm, self).__init__(*args, **kwargs)
+        self.fields['bill'].initial = self.bill_obj
+
+
+class BillPaymentModelForm(BSModalModelForm):
+    class Meta:
+        model = BillPayment
+        fields = ['billitem', 'payment_date', 'amount']
+
+    def __init__(self, *args, **kwargs):
+        self.billitem = kwargs.pop('billitem')
+        super(BillPaymentModelForm, self).__init__(*args, **kwargs)
+        self.fields['billitem'].initial = self.billitem
 
 
 class TopUpForm(forms.Form):

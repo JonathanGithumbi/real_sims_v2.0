@@ -16,6 +16,11 @@ class VendorListView(generic.ListView):
     template_name = 'vendor_list.html'
     context_object_name = 'vendor_list'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_no_vendors'] = Vendor.objects.all().count()
+        return context
+
 
 class VendorCreateView(BSModalCreateView):
     template_name = 'vendor/create_vendor.html'

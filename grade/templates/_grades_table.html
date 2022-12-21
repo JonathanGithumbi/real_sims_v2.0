@@ -2,9 +2,10 @@
     <table id="grades-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <tr>
                 <th scope="col">Grade</th>
+                <th scope="col">Number of Students</th>
                 <th scope="col">Read / Update / Delete</th>
             </tr>
         </thead>
@@ -12,6 +13,7 @@
             {% for grade in grade_list %}
                 <tr>
                     <td >{{ grade.title }}</td>
+                    <td >{{ grade.student_set.all.count }}</td>
                     <td >
                         <!-- Read vendor buttons -->
                         <button type="button"

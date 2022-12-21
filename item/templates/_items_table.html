@@ -2,10 +2,9 @@
     <table id="items-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <tr>
                 <th scope="col">Sales Item</th>
-            
                 <th scope="col">Read / Update / Delete</th>
             </tr>
         </thead>
@@ -13,7 +12,6 @@
             {% for item in item_list %}
                 <tr>
                     <td >{{ item.name }}</td>
-                    
                     <td >
                         <!-- Read vendor buttons -->
                         <button type="button"

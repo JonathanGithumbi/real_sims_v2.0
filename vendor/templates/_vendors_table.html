@@ -2,10 +2,11 @@
     <table id="vendors-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <tr>
                 <th scope="col">Vendor</th>
                 <th scope="col">Phone Number</th>
+                <th scope="col">Amount owed</th>
                 <th scope="col">Read / Update / Delete</th>
             </tr>
         </thead>
@@ -14,6 +15,7 @@
                 <tr>
                     <td >{{ vendor.name }}</td>
                     <td >{{ vendor.phone_number }}</td>
+                    <td>{{ vendor.amount_owed }}</td>
                     <td >
                         <!-- Read vendor buttons -->
                         <button type="button"

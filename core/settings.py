@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'user_account',
     'grade',
     'student.apps.StudentConfig',
-    'bill',
+    'bill.apps.BillConfig',
+
     'fees_structure',
     'invoice.apps.InvoiceConfig',
     'academic_calendar',

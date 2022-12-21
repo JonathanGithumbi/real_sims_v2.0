@@ -1,0 +1,41 @@
+<div class="table-responsive">
+    <table id="billpayments-table"
+           class="table table-bordered table-sm text-gray-900"
+           style="width:100%">
+        <thead class='thead-dark'>
+            <tr>
+                <th scope="col">Payment Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Read / Update / Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for billpayment in billpayment_list %}
+                <tr>
+                    <td>{{ billpayment.payment_date }}</td>
+                    <td>{{ billpayment.amount }}</td>
+                    <td >
+                        <!-- Read billitem buttons -->
+                        <button type="button"
+                                class="read-billpayment btn btn-sm btn-primary"
+                                data-form-url="{% url 'read_billpayment' billpayment.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                        <!-- Update billitem buttons -->
+                        <button type="button"
+                                class="update-billpayment btn btn-sm btn-primary"
+                                data-form-url="{% url 'update_billpayment' billpayment.pk billitem.pk bill.pk %}">
+                            <span class="fas fa-pen"></span>
+                        </button>
+                        <!-- Delete billitem buttons -->
+                        <button type="button"
+                                class="delete-billpayment btn btn-sm btn-danger"
+                                data-form-url="{% url 'delete_billpayment' billpayment.pk billitem.pk bill.pk %}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

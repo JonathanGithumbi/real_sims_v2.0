@@ -2,12 +2,15 @@
     <table id="bills-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <tr>
                 <th scope="col">Billing Date</th>
                 <th scope="col">Vendor</th>
                 <th scope="col">Payment Status</th>
+                <th scope="col">Total Amount</th>
+                <th scope="col">Amount Due</th>
                 <th scope="col">Read / Update / Delete</th>
+                <th scope="col">Details</th>
             </tr>
         </thead>
         <tbody>
@@ -15,10 +18,15 @@
                 <tr>
                     <td>{{ bill.billing_date }}</td>
                     <td>{{ bill.vendor }}</td>
-                    <td>{{ bill.payment_status }}</td>
+                    <td>
+                        {% if bill.payment_status == 'unpaid' %}<span class="badge badge-danger">unpaid</span>{% endif %}
+                        {% if bill.payment_status == 'partially-paid' %}<span class="badge badge-secondary">partially paid</span>{% endif %}
+                        {% if bill.payment_status == 'paid' %}<span class="badge badge-success">paid</span>{% endif %}
+                        {% if bill.payment_status == 'empty' %}<span class="badge badge-info">Empty Bill</span>{% endif %}
+                    </td>
+                    <td>{{ bill.get_total_amount }}</td>
+                    <td>{{ bill.get_amount_due }}</td>
                     <td >
-                        <a class="btn btn-sm btn-primary"
-                           href="{% url 'billitem_list' bill.pk %}">Bill Items</a>
                         <!-- Read bill buttons -->
                         <button type="button"
                                 class="read-bill btn btn-sm btn-primary"
@@ -37,6 +45,10 @@
                                 data-form-url="{% url 'delete_bill' bill.pk %}">
                             <span class="fa fa-trash"></span>
                         </button>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-primary"
+                           href="{% url 'billitem_list' bill.pk %}">open bill</a>
                     </td>
                 </tr>
             {% endfor %}

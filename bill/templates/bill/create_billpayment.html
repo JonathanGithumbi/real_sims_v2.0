@@ -1,0 +1,35 @@
+{% load widget_tweaks %}
+<form method="post" action="">
+  {% csrf_token %}
+  <div class="modal-header bg-light">
+    <h5 class="modal-title">Create Bill Payment</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+      {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+    </div>
+    <div class="form-group">
+      <label for="{{ form.amount.id_for_label }}">{{ form.amount.label }}</label>
+      {% render_field form.amount class="form-control form-control-sm"  %}
+      <div class="{% if form.amount.errors %} invalid{% endif %}">
+        {% for error in form.amount.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="{{ form.payment_date.id_for_label }}">{{ form.payment_date.label }}</label>
+      {% render_field form.payment_date class="form-control form-control-sm"  %}
+      <div class="{% if form.payment_date.errors %} invalid{% endif %}">
+        {% for error in form.payment_date.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group">{% render_field form.billitem class="form-control form-control-sm" hidden=True %}</div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-sm btn-success">Create</button>
+    <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
+  </div>
+</form>

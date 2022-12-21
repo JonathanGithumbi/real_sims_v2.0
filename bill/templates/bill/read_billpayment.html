@@ -1,15 +1,13 @@
 {% load widget_tweaks %}
 <div class="modal-header bg-light">
-  <h5 class="modal-title">Bill Details</h5>
+  <h5 class="modal-title">Bill Payment details</h5>
   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-  <div>Vendor:{{ bill.vendor }}</div>
-  <div>Total Amount:{{ bill.get_total_amount }}</div>
-  <div>Payment Status:{{ bill.payment_status }}</div>
-  <div>Billing Date:{{ bill.billing_date }}</div>
+  <div>Payment Date:{{ billpayment.payment_date }}</div>
+  <div>Amount: {{ billpayment.amount }}</div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>

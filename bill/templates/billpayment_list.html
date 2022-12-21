@@ -7,31 +7,34 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h5>Bill: {{ bill }}</h5>
-                <h6>Bill Items</h6>
+                <h6>Bill Items: {{ billitem }}</h6>
+                <h6>Bills Payments</h6>
                 <hr>
                 <nav aria-label="breadcrumb breadcrumb-sm">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item " aria-current="page">
                             <a href="{% url 'bill_list' %}">All Bills ></a>
                         </li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            <a href="{% url 'billitem_list' bill.pk %}">Bill: {{ bill }}</a>
+                        </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            <a href="{% url 'billitem_list' bill.pk %}">Bill: {{ bill }} / Items/</a>
+                            <a href="{% url 'billpayment_list' billitem.pk bill.pk %}">BillItem: {{ billitem }} / payments /</a>
                         </li>
                     </ol>
                 </nav>
                 <!--Modal-->
                 {% include "_modal.html" %}
                 <!-- Create billitem button -->
-                <button id="create-billitem"
+                <button id="create-billpayment"
                         class="btn btn-primary btn-sm"
                         type="button"
-                        name="button">Add Bill Item</button>
+                        name="button">Create Bill Payment</button>
                 <br>
-                <small>Total Amount Due on this bill: {{ billitem.amount_due }}</small>
             </div>
             <!--Table Body-->
             <div class="card-body">
-                <div class="table-responsive">{% include "_billitems_table.html" %}</div>
+                <div class="table-responsive">{% include "_billpayments_table.html" %}</div>
             </div>
         </div>
     </div>
@@ -44,7 +47,7 @@
                 // message
                 var asyncSuccessMessageCreate = [
                     "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-sm alert-success alert-dismissible fade show mb-0' role='alert'>",
-                    "Success: BillItem was created.",
+                    "Success: Bill Payment was created.",
                     "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
                     "<span aria-hidden='true'>&times;</span>",
                     "</button>",
@@ -55,28 +58,27 @@
                 ].join("");
 
                 // modal form
-                function createBillItemAsyncModalForm() {
-                    $("#create-billitem").modalForm({
-                        formURL: "{% url 'create_billitem' bill.pk %}",
+                function createBillPaymentAsyncModalForm() {
+                    $("#create-billpayment").modalForm({
+                        formURL: "{% url 'create_billpayment' billitem.pk bill.pk%}",
                         modalID: "#create-modal",
                         asyncUpdate: true,
                         asyncSettings: {
                             closeOnSubmit: true,
                             successMessage: asyncSuccessMessageCreate,
-                            dataUrl: "{% url 'billitems' bill.pk %}",
-                            dataElementId: "#billitems-table",
+                            dataUrl: "{% url 'billpayments' billitem.pk%}",
+                            dataElementId: "#billpayments-table",
                             dataKey: "table",
                             addModalFormFunction: reinstantiateModalForms
                         }
                     });
                 }
-                createBillItemAsyncModalForm();
+                createBillPaymentAsyncModalForm();
 
-                // Update billitem asynchronous button
                 // message
                 var asyncSuccessMessageUpdate = [
                     "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-stringformat alert-success alert-dismissible fade show mb-0' role='alert'>",
-                    "Success: BillItem was updated.",
+                    "Success: Bill Payment was updated.",
                     "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
                     "<span aria-hidden='true'>&times;</span>",
                     "</button>",
@@ -87,50 +89,50 @@
                 ].join("");
 
                 // modal form
-                function updateBillItemModalForm() {
-                    $(".update-billitem").each(function() {
+                function updateBillPaymentModalForm() {
+                    $(".update-billpayment").each(function() {
                         $(this).modalForm({
                             formURL: $(this).data("form-url"),
                             asyncUpdate: true,
                             asyncSettings: {
                                 closeOnSubmit: true,
                                 successMessage: asyncSuccessMessageUpdate,
-                                dataUrl: "{% url 'billitems' bill.pk%}",
-                                dataElementId: "#billitems-table",
+                                dataUrl: "{% url 'billpayments' billitem.pk %}",
+                                dataElementId: "#billpayments-table",
                                 dataKey: "table",
                                 addModalFormFunction: reinstantiateModalForms
                             }
                         });
                     });
                 }
-                updateBillItemModalForm();
+                updateBillPaymentModalForm();
 
                 // Delete billitem buttons - formURL is retrieved from the data of the element
-                function deleteBillItemModalForm() {
-                    $(".delete-billitem").each(function() {
+                function deleteBillPaymentModalForm() {
+                    $(".delete-billpayment").each(function() {
                         $(this).modalForm({
                             formURL: $(this).data("form-url"),
                             isDeleteForm: true
                         });
                     });
                 }
-                deleteBillItemModalForm();
+                deleteBillPaymentModalForm();
 
                 // Read billitem buttons
-                function readBillItemModalForm() {
-                    $(".read-billitem").each(function() {
+                function readBillPaymentModalForm() {
+                    $(".read-billpayment").each(function() {
                         $(this).modalForm({
                             formURL: $(this).data("form-url")
                         });
                     });
                 }
-                readBillItemModalForm();
+                readBillPaymentModalForm();
 
                 function reinstantiateModalForms() {
-                    createBillItemAsyncModalForm();
-                    readBillItemModalForm();
-                    updateBillItemModalForm();
-                    deleteBillItemModalForm();
+                    createBillPaymentAsyncModalForm();
+                    readBillPaymentModalForm();
+                    updateBillPaymentModalForm();
+                    deleteBillPaymentModalForm();
                 }
 
 
@@ -142,7 +144,7 @@
 
 
                 //BillItems DataTable Configuration
-                var table = $('#billitems-table').DataTable({
+                var table = $('#billpayments-table').DataTable({
                     fixedHeader: true,
                     order: [
                         [1, 'asc']
@@ -160,7 +162,7 @@
                             extend: 'pdf',
 
                             download: 'open',
-                            title: "BillItems List",
+                            title: "Bill Payment List for item: {{billitem}}",
                             messageBottom: function() {
                                 var curr_date = new Date();
                                 txt_curr_date = curr_date.toString();
