@@ -2,7 +2,7 @@ from .models import Bill, BillItem
 
 
 class BillManager():
-    def get_total_amount_due_bills(self):
+    def get_total_amount_due_all_bills(self):
         all_bills = Bill.objects.all()
         amount_due = 0
         for bill in all_bills:

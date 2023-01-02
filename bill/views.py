@@ -26,7 +26,7 @@ class BillListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         bill_man = BillManager()
-        context['total_amount_due_bills'] = bill_man.get_total_amount_due_bills()
+        context['total_amount_due_all_bills'] = bill_man.get_total_amount_due_all_bills()
         return context
 
 

@@ -15,6 +15,9 @@ class BillItemModelForm(BSModalModelForm):
         model = BillItem
         fields = ['description', 'quantity',
                   'price_per_quantity', 'total', 'bill']
+        widgets = {
+            'total': forms.NumberInput(attrs={'readonly': 'readonly'})
+        }
 
     def __init__(self, *args, **kwargs):
         self.bill_obj = kwargs.pop('bill_obj', None)

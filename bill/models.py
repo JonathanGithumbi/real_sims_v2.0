@@ -56,7 +56,8 @@ class BillItem(models.Model):
     total = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     # varies every time a payment is made
-    amount_due = models.IntegerField(null=True)
+    #should be set to == total on pre_save
+    amount_due = models.IntegerField(null=True)#the amount that changes when a payment is created, updated and deleted
 
     def __str__(self):
         return self.description

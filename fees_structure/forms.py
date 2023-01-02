@@ -1,5 +1,6 @@
 from .models import BillingItem
 from bootstrap_modal_forms.forms import BSModalModelForm
+from django import forms
 
 
 class BillingItemModelForm(BSModalModelForm):
@@ -15,4 +16,7 @@ class BillingItemModelForm(BSModalModelForm):
             'terms',
             'year',
             'term',
-            ]
+        ]
+        widgets = {
+            'ocurrence': forms.RadioSelect()
+        }

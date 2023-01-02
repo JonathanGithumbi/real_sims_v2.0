@@ -82,6 +82,12 @@ class TermCreateView(BSModalCreateView):
     form_class = TermModelForm
     success_message = 'Success: Term was created'
 
+    def get_form_kwargs(self):
+        kwargs = super(TermCreateView, self).get_form_kwargs()
+        year = Year.objects.get(pk=self.kwargs['year_pk'])
+        kwargs.update({'year': year})
+        return kwargs
+
     def get_success_url(self):
         return reverse_lazy('term_list', kwargs={'pk': self.kwargs['year_pk']})
 
@@ -110,13 +116,14 @@ class TermDeleteView(BSModalDeleteView):
         return reverse_lazy('term_list', kwargs={'pk': self.kwargs['pk2']})
 
 
-def terms(request):
+def terms(request, year_pk):
+    year = Year.objects.get(pk=year_pk)
     data = dict()
     if request.method == 'GET':
-        term_list = Term.objects.all()
+        term_list = Term.objects.filter(year=year)
         data['table'] = render_to_string(
             '_terms_table.html',
-            {'term_list': term_list},
+            {'term_list': term_list, 'year': year},
             request=request
         )
         return JsonResponse(data)

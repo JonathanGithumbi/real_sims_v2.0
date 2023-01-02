@@ -2,13 +2,12 @@
     <table id="years-table"
            class="table table-bordered table-sm text-gray-900"
            style="width:100%">
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <tr>
                 <th scope="col">Year</th>
                 <th scope="col">Start</th>
                 <th scope="col">End</th>
                 <th scope="col">Terms</th>
-            
                 <th scope="col">Read / Update / Delete</th>
             </tr>
         </thead>
@@ -18,8 +17,9 @@
                     <td >{{ year.year }}</td>
                     <td >{{ year.start }}</td>
                     <td >{{ year.end }}</td>
-                    <td >{% for term in year.term_set.all %}Term {{ term.term }},{% endfor %}</td>
-
+                    <td >
+                        {% for term in year.term_set.all %}Term {{ term.term }},{% endfor %}
+                    </td>
                     <td >
                         <a class="btn btn-primary  btn-sm " href="{% url 'term_list' year.pk %}">Terms</a>
                         <!-- Read vendor buttons -->

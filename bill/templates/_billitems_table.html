@@ -36,12 +36,16 @@
                                 data-form-url="{% url 'read_billitem' billitem.pk %}">
                             <span class="fa fa-eye"></span>
                         </button>
-                        <!-- Update billitem buttons -->
-                        <button type="button"
-                                class="update-billitem btn btn-sm btn-primary"
-                                data-form-url="{% url 'update_billitem' billitem.pk bill.pk %}">
-                            <span class="fas fa-pen"></span>
-                        </button>
+                        {% if billitem.amount_due != billitem.total %}
+                            <!-- Update billitem buttons -->
+                        {% else %}
+                            <!-- Update billitem buttons -->
+                            <button type="button"
+                                    class="update-billitem btn btn-sm btn-primary"
+                                    data-form-url="{% url 'update_billitem' billitem.pk bill.pk %}">
+                                <span class="fas fa-pen"></span>
+                            </button>
+                        {% endif %}
                         <!-- Delete billitem buttons -->
                         <button type="button"
                                 class="delete-billitem btn btn-sm btn-danger"

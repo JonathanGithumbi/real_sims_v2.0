@@ -20,21 +20,21 @@
     </div>
     <div class="form-group">
       <label for="{{ form.quantity.id_for_label }}">{{ form.quantity.label }}</label>
-      {% render_field form.quantity class="form-control form-control-sm"  %}
+      {% render_field form.quantity class="form-control form-control-sm" id='quantity' %}
       <div class="{% if form.quantity.errors %} invalid{% endif %}">
         {% for error in form.quantity.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
     </div>
     <div class="form-group">
       <label for="{{ form.price_per_quantity.id_for_label }}">{{ form.price_per_quantity.label }}</label>
-      {% render_field form.price_per_quantity class="form-control form-control-sm"  %}
+      {% render_field form.price_per_quantity class="form-control form-control-sm" id='price_per_quantity' %}
       <div class="{% if form.price_per_quantity.errors %} invalid{% endif %}">
         {% for error in form.price_per_quantity.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
     </div>
     <div class="form-group">
       <label for="{{ form.total.id_for_label }}">{{ form.total.label }}</label>
-      {% render_field form.total class="form-control form-control-sm"  %}
+      {% render_field form.total class="form-control form-control-sm" id='total' %}
       <div class="{% if form.total.errors %} invalid{% endif %}">
         {% for error in form.total.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
@@ -46,3 +46,18 @@
     <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
   </div>
 </form>
+<script>
+  $(document).ready(function() {
+
+      $("#quantity").keyup(function() {
+          var ppq = $("#price_per_quantity").val()
+          total = ppq * $(this).val();
+          $("#total").val(total)
+      });
+      $("#price_per_quantity").keyup(function() {
+          var quantity = $("#quantity").val()
+          total = quantity * $(this).val();
+          $("#total").val(total)
+      });
+  });
+</script>

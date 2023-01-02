@@ -2,11 +2,11 @@ from django.urls import path
 from . import views
 urlpatterns = [
     path('list/years/', views.YearListView.as_view(), name='year_list'),
-    path('list/terms/<int:pk>/',
+    path('list/terms/<int:pk>/<int:pk2>',
          views.TermListView.as_view(), name='term_list'),
     path('create/year/', views.YearCreateView.as_view(),
          name='create_year'),
-    path('create/term/<int:year_pk>', views.TermCreateView.as_view(),
+    path('create/term/<int:year_pk>/<int:pk2>', views.TermCreateView.as_view(),
          name='create_term'),
     path('update/year/<int:pk>/', views.YearUpdateView.as_view(),
          name="update_year"),
@@ -21,6 +21,6 @@ urlpatterns = [
     path('delete/term/<int:pk>/<int:pk2>', views.TermDeleteView.as_view(),
          name='delete_term'),
     path('list/years/years/', views.years, name='years'),
-    path('list/terms/terms/', views.terms, name='terms'),
-     path('load-terms',views.load_terms,name='ajax_load_terms')
+    path('list/terms/terms/<int:year_pk>', views.terms, name='terms'),
+    path('load-terms', views.load_terms, name='ajax_load_terms')
 ]

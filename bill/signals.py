@@ -10,15 +10,28 @@ from .models import BillItem, BillPayment
 @receiver(post_save, sender=BillItem)
 def billitem_postsave_receiver(sender, instance, created, **kwargs):
     if created:
-        # When a new billitem is created, set its balance = its total
-        instance.amount_due = instance.total
-        instance.save()
+        pass
 
     else:
         pass
 
 
+@receiver(pre_save, sender=BillItem)
+def billitem_presave_receiver(sender, instance: BillItem, **kwargs):
+    if instance.id is None:
+        # New billitem instance
+        # populate amount_due == total
+        
+        instance.amount_due = instance.total
+        
+    else:
+        curr_obj = BillItem.objects.get(id = instance.id)
+        if instance.total != curr_obj.total:
+            instance.amount_due = instance.total
+
 # bill payment post save
+
+
 @receiver(pre_save, sender=BillPayment)
 def billpayment_presave_receiver(sender, instance, **kwargs):
     if instance.id is None:
@@ -30,7 +43,7 @@ def billpayment_presave_receiver(sender, instance, **kwargs):
         curr_obj = BillPayment.objects.get(id=instance.id)
         if instance.amount != curr_obj.amount:
             billitem = curr_obj.billitem
-            #undo the current object's payment
+            # undo the current object's payment
             billitem.amount_due += curr_obj.amount
             billitem.save()
 

@@ -17,3 +17,8 @@ class TermModelForm(BSModalModelForm):
     class Meta:
         model = Term
         fields = ['term', 'start', 'end', 'year']
+
+    def __init__(self,*args,**kwargs):
+        self.year = kwargs.pop('year')
+        super(TermModelForm,self).__init__(*args,**kwargs)
+        self.fields['year'].initial = self.year
