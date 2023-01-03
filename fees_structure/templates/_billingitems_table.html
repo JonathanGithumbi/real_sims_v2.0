@@ -5,22 +5,13 @@
         <thead class='thead-dark'>
             <tr>
                 <th scope="col">Item</th>
-                <th scope="col">
-                    Charge on Registration
-                </th>
+                <th scope="col">Charge on Registration</th>
                 <th scope="col">Grades Applied To</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Ocurrence</th>
-                <th scope="col">Period</th>
                 <th scope="col">Terms applied to</th>
-                <th scope="col">
-                    year
-                </th>
-                <th scope="col">
-                    term
-                </th>
-                
-               
+                <th scope="col">year</th>
+                <th scope="col">term</th>
                 <th scope="col">Read / Update / Delete</th>
             </tr>
         </thead>
@@ -29,15 +20,17 @@
                 <tr>
                     <td >{{ billingitem.item }}</td>
                     <td >{{ billingitem.charge_on_registration }}</td>
-                    <td >{{ billingitem.grades_list }} {% for grade in billingitem.grades.all %}Grade {{grade.id}},{% endfor %}</td>
+                    <td >
+                        {% for grade in billingitem.grades.all %}{{ grade }},{% endfor %}
+                    </td>
                     <td >{{ billingitem.amount }}</td>
                     <td >{{ billingitem.ocurrence }}</td>
-                    <td >{{ billingitem.period }}</td>
-                    <td >{{ billingitem.terms_list }}</td>
+                    <td >
+                        {{ billingitem.terms_list }}
+                        {% for term in billingitem.terms.all %}{{ term }},{% endfor %}
+                    </td>
                     <td >{{ billingitem.year }}</td>
                     <td >{{ billingitem.term }}</td>
-                    
-                    
                     <td >
                         <!-- Read item buttons -->
                         <button type="button"

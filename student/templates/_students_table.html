@@ -29,8 +29,8 @@
                         {% endif %}
                     </td>
                     <td>{{ student.get_fees_balance }}</td>
-                    <td>{{ student.get_lunch_status }}</td>
-                    <td>{{ student.get_transport_status }}</td>
+                    <td>{{ student.is_taking_lunch }}</td>
+                    <td>{{ student.is_taking_transport }}</td>
                     <td >
                         <!-- Read vendor buttons -->
                         <button type="button"

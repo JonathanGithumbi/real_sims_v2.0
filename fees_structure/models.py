@@ -2,7 +2,7 @@ from django.db import models
 from grade.models import Grade
 from item.models import Item
 from user_account.models import User
-from academic_calendar.models import Term, Year
+from academic_calendar.models import Term, Year, TermNumbers
 from django.shortcuts import reverse
 
 TERM_CHOICES = (
@@ -36,7 +36,7 @@ class BillingItem(models.Model):
     period = models.CharField(
         max_length=50, default=None, null=True, choices=period_choices, blank=True)
     # incase the it recurrs on specific terms
-    terms = models.ManyToManyField(Term, blank=True)
+    terms = models.ManyToManyField(TermNumbers, blank=True)
 
     # incase the occurence is one time
     year = models.ForeignKey(

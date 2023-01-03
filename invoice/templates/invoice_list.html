@@ -22,10 +22,8 @@
                 <!--Modal-->
                 {% include "_modal.html" %}
                 <!-- Create invoice button -->
-                <button id="create-invoice"
-                        class="btn btn-primary btn-sm"
-                        type="button"
-                        name="button">Invoice Student</button>
+                <!--
+                <button id="create-invoice" class="btn btn-primary btn-sm" type="button" name="button">Invoice Student</button>-->
                 <br>
                 <small>Total amount due: {{ student.get_fees_due }}</small>
             </div>
@@ -166,7 +164,7 @@
                             messageBottom: function() {
                                 var curr_date = new Date();
                                 txt_curr_date = curr_date.toString();
-                                return txt_curr_date ;
+                                return txt_curr_date;
                             },
                             exportOptions: {
                                 columns: ':visible'

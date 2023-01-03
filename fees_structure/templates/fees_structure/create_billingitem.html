@@ -26,13 +26,6 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="{{ form.ocurrence.id_for_label }}">{{ form.ocurrence.label }}</label>
-      {% render_field form.ocurrence class=""  id="ocurrence" %}
-      <div class="{% if form.ocurrence.errors %} invalid{% endif %}">
-        {% for error in form.ocurrence.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
-      </div>
-    </div>
-    <div class="form-group">
       <label for="{{ form.grades.id_for_label }}">{{ form.grades.label }}</label>
       {% render_field form.grades class="form-control form-control-sm"  id="grades" %}
       <div class="{% if form.grades.errors %} invalid{% endif %}">
@@ -47,27 +40,27 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="{{ form.period.id_for_label }}">{{ form.period.label }}</label>
-      {% render_field form.period class="form-control form-control-sm"  id="period" %}
-      <div class="{% if form.period.errors %} invalid{% endif %}">
-        {% for error in form.period.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      <label for="{{ form.ocurrence.id_for_label }}">{{ form.ocurrence.label }}</label>
+      {% render_field form.ocurrence   id="ocurrence" %}
+      <div class="{% if form.ocurrence.errors %} invalid{% endif %}">
+        {% for error in form.ocurrence.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="terms_div">
       <label for="{{ form.terms.id_for_label }}">{{ form.terms.label }}</label>
       {% render_field form.terms class="form-control form-control-sm"  id="terms" %}
       <div class="{% if form.terms.errors %} invalid{% endif %}">
         {% for error in form.terms.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="year_div">
       <label for="{{ form.year.id_for_label }}">{{ form.year.label }}</label>
       {% render_field form.year class="form-control form-control-sm"  id="year" %}
       <div class="{% if form.year.errors %} invalid{% endif %}">
         {% for error in form.year.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" id='term_div'>
       <label for="{{ form.term.id_for_label }}">{{ form.term.label }}</label>
       {% render_field form.term class="form-control form-control-sm"  id="term" %}
       <div class="{% if form.term.errors %} invalid{% endif %}">
@@ -80,3 +73,39 @@
     <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
   </div>
 </form>
+<script>
+  $(document).ready(function() {
+      $('#year_div').hide();
+      $('#term_div').hide();
+      $('#terms_div').hide();
+
+      $('#ocurrence').change(function() {
+          var value = $("input[name='ocurrence']:checked").val()
+          if (value == 'recurring') {
+              //set empty value for term and year
+              $("#year option:selected").prop("selected", false);
+              $("#term option:selected").prop("selected", false);
+              //show terms_div
+              $('#terms_div').show();
+              $("#term_div").hide();
+              $("#year_div").hide();
+
+          }
+          if (value == 'one-time') {
+              $("#term_div").show();
+              $("#year_div").show();
+              $('#terms_div').hide();
+              $('#terms').val([]);
+          }
+          if (value == 'optional') {
+              $('#year_div').hide();
+              $('#term_div').hide();
+              $('#terms_div').hide();
+              $("#year option:selected").prop("selected", false);
+              $("#term option:selected").prop("selected", false);
+              $('#terms').val([]);
+          }
+      });
+
+  });
+</script>

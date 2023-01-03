@@ -64,16 +64,11 @@ class TermListView(generic.ListView):
     template_name = 'term_list.html'
     context_object_name = 'term_list'
 
-    # Only return terms for self.year
-    def get_queryset(self):
-        self.year = get_object_or_404(Year, pk=self.kwargs['pk'])
-        return Term.objects.filter(year=self.year)
-
     # Add year to thte context data
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["year"] = get_object_or_404(
-            Year, pk=self.kwargs['pk'])
+            Year, pk=self.kwargs['year_pk'])
         return context
 
 
@@ -89,7 +84,7 @@ class TermCreateView(BSModalCreateView):
         return kwargs
 
     def get_success_url(self):
-        return reverse_lazy('term_list', kwargs={'pk': self.kwargs['year_pk']})
+        return reverse_lazy('term_list', kwargs={'year_pk': self.kwargs['year_pk']})
 
 
 class TermUpdateView(BSModalUpdateView):
@@ -98,8 +93,14 @@ class TermUpdateView(BSModalUpdateView):
     form_class = TermModelForm
     success_message = 'Success: Term was updated'
 
+    def get_form_kwargs(self):
+        kwargs = super(TermUpdateView, self).get_form_kwargs()
+        year = Year.objects.get(pk=self.kwargs['year_pk'])
+        kwargs.update({'year': year})
+        return kwargs
+
     def get_success_url(self):
-        return reverse_lazy('term_list', kwargs={'pk': self.kwargs['pk2']})
+        return reverse_lazy('term_list', kwargs={'year_pk': self.kwargs['year_pk']})
 
 
 class TermReadView(BSModalReadView):
@@ -113,7 +114,7 @@ class TermDeleteView(BSModalDeleteView):
     success_message = 'Success: Term was created'
 
     def get_success_url(self):
-        return reverse_lazy('term_list', kwargs={'pk': self.kwargs['pk2']})
+        return reverse_lazy('term_list', kwargs={'year_pk': self.kwargs['year_pk']})
 
 
 def terms(request, year_pk):

@@ -20,13 +20,12 @@
     </div>
     <div class="form-group">
       <label for="{{ form.payment_date.id_for_label }}">{{ form.payment_date.label }}</label>
-      {% render_field form.payment_date class="form-control form-control-sm"  %}
+      {% render_field form.payment_date class="form-control form-control-sm" type='date' %}
       <div class="{% if form.payment_date.errors %} invalid{% endif %}">
         {% for error in form.payment_date.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
     </div>
     <div class="form-group">{% render_field form.billitem class="form-control form-control-sm" hidden=True %}</div>
-
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-sm btn-success">Create</button>

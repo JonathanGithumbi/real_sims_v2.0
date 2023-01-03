@@ -3,7 +3,7 @@ from . import views
 #from django.shortcuts import reverse
 urlpatterns = [
     path('', views.CustomLoginView.as_view(
-       ), name='login'),
+    ), name='login'),
     path('logout/', views.CustomLogoutView, name='logout'),
     path('change-password/', views.CustomPasswordChangeView,
          name='password_change'),

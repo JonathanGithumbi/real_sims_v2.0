@@ -6,6 +6,9 @@ from grade.models import Grade
 from academic_calendar.models import Year, Term
 
 from fees_structure.BillingItemManager import BillingItemManager
+from academic_calendar.CalendarManager import CalendarManager
+from item.ItemManager import ItemManager
+from fees_structure.models import BillingItem
 
 
 class AdmissionNumber(models.Model):
@@ -103,3 +106,46 @@ class Student(models.Model):
             return False
         else:
             return True
+
+    def is_taking_lunch(self):
+        # check whether the student has been invoice for lunch in this term's invoice
+        # get this term's invoice
+        cal_man = CalendarManager()
+        current_term = cal_man.get_term()
+
+        current_invoice = self.invoice_set.get(term=current_term)
+
+        # check if the lunch item is among the invoice's billing items
+        item_man = ItemManager()
+        lunch_item = item_man.get_lunch_item()
+        # get the lunch billing item
+        lunch_bill = BillingItem.objects.get(item=lunch_item)
+        print(lunch_bill in current_invoice.item_set.all())
+
+        for item in current_invoice.item_set.all():
+            if item.billing_item == lunch_bill:
+                return True
+        else:
+            return False
+
+    def is_taking_transport(self):
+
+        # check whether the student has been invoice for transport in this term's invoice
+        # get this term's invoice
+        cal_man = CalendarManager()
+        current_term = cal_man.get_term()
+
+        current_invoice = self.invoice_set.get(term=current_term)
+
+        # check if the transport item is among the invoice's billing items
+        item_man = ItemManager()
+        transport_item = item_man.get_transport_item()
+        # get the transport billing item
+        transport_bill = BillingItem.objects.get(item=transport_item)
+        print(transport_bill in current_invoice.item_set.all())
+
+        for item in current_invoice.item_set.all():
+            if item.billing_item == transport_bill:
+                return True
+        else:
+            return False

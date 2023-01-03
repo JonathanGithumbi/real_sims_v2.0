@@ -5,6 +5,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import reverse
 
 
+class TermNumbers(models.Model):
+    """this model simply stores the term number 1,2,3 i need this for the billing item creation form where the user select the number of a term rather than an actual term instance"""
+    """This is a proto term the idea of a 1st term, 2nd term etc"""
+    term = models.IntegerField()
+
+    def __str__(self):
+        return str(self.term)
+
+
 class Year(models.Model):
     # AKA Academic calendar. 1 per year
     year = models.IntegerField()
@@ -24,13 +33,14 @@ class Term(models.Model):
         (2, 2),
         (3, 3),
     ]
-    term = models.IntegerField(choices=TERM_CHOICES)
+    term = models.ForeignKey(
+        TermNumbers, on_delete=models.CASCADE, related_name='term_numbers')
     start = models.DateField()
     end = models.DateField()
     year = models.ForeignKey(Year, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return "{}".format(self.term)
+        return "{}:{}".format(self.year, self.term)
 
     def get_absolute_url(self):
         return reverse('term_detail', kwargs={'pk': self.pk})

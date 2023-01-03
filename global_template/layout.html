@@ -14,8 +14,6 @@
             <li class="nav-item text-center small">
                 <span class="small badge  text-success">{{ user.username |capfirst }} online</span>
             </li>
-            
-            
             <li class="nav-item">
                 <a class="nav-link " href="{% url 'student_list' %}">
                     <i class="fas fa-graduation-cap"></i>
@@ -74,8 +72,11 @@
             <hr class="sidebar-divider">
             <!-- Heading -->
             <li class="nav-item ">
-                <a class="nav-link collapsed" href="{% url 'account_settings' %}">
-                    <i class="fas fa-fw fa-user"></i>
+                <a class="nav-link collapsed"
+                   href="#"
+                   data-toggle="modal"
+                   data-target="#logoutModal">
+                    <i class="fas fa-sign-out"></i>
                     <span >Log out</span>
                 </a>
             </li>
@@ -113,15 +114,15 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Logout</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">�</span>
+                        <span aria-hidden="true">x</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">If you are ready to end your current session,select "Logout" below.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-danger btn-sm" href="{% url 'logout' %}">Logout</a>
+                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>

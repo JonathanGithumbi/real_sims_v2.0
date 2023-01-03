@@ -12,7 +12,6 @@ class BillingItemModelForm(BSModalModelForm):
             'grades',
             'amount',
             'ocurrence',
-            'period',
             'terms',
             'year',
             'term',

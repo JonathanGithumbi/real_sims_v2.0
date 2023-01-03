@@ -11,18 +11,119 @@
     <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
       {% for error in form.non_field_errors %}{{ error }}{% endfor %}
     </div>
-    {% for field in form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% render_field field class="form-control form-control-sm" placeholder=field.label %}
-        <div class="{% if field.errors %} invalid{% endif %}">
-          {% for error in field.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
-        </div>
+    <div class="form-group">
+      <label for="{{ form.item.id_for_label }}">{{ form.item.label }}</label>
+      {% render_field form.item class="form-control form-control-sm"  id="item" %}
+      <div class="{% if form.item.errors %} invalid{% endif %}">
+        {% for error in form.item.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
       </div>
-    {% endfor %}
+    </div>
+    <div class="form-group">
+      <label for="{{ form.charge_on_registration.id_for_label }}">{{ form.charge_on_registration.label }}</label>
+      {% render_field form.charge_on_registration class=""  id="charge_on_registration" %}
+      <div class="{% if form.charge_on_registration.errors %} invalid{% endif %}">
+        {% for error in form.charge_on_registration.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="{{ form.grades.id_for_label }}">{{ form.grades.label }}</label>
+      {% render_field form.grades class="form-control form-control-sm"  id="grades" %}
+      <div class="{% if form.grades.errors %} invalid{% endif %}">
+        {% for error in form.grades.charge_on_registration.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="{{ form.amount.id_for_label }}">{{ form.amount.label }}</label>
+      {% render_field form.amount class="form-control form-control-sm"  id="amount" %}
+      <div class="{% if form.amount.errors %} invalid{% endif %}">
+        {% for error in form.amount.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="{{ form.ocurrence.id_for_label }}">{{ form.ocurrence.label }}</label>
+      {% render_field form.ocurrence   id="ocurrence" %}
+      <div class="{% if form.ocurrence.errors %} invalid{% endif %}">
+        {% for error in form.ocurrence.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group" id="terms_div">
+      <label for="{{ form.terms.id_for_label }}">{{ form.terms.label }}</label>
+      {% render_field form.terms class="form-control form-control-sm"  id="terms" %}
+      <div class="{% if form.terms.errors %} invalid{% endif %}">
+        {% for error in form.terms.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group" id="year_div">
+      <label for="{{ form.year.id_for_label }}">{{ form.year.label }}</label>
+      {% render_field form.year class="form-control form-control-sm"  id="year" %}
+      <div class="{% if form.year.errors %} invalid{% endif %}">
+        {% for error in form.year.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="form-group" id='term_div'>
+      <label for="{{ form.term.id_for_label }}">{{ form.term.label }}</label>
+      {% render_field form.term class="form-control form-control-sm"  id="term" %}
+      <div class="{% if form.term.errors %} invalid{% endif %}">
+        {% for error in form.term.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-sm btn-success">Update</button>
     <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
   </div>
 </form>
+<script>
+  var value = $("input[name='ocurrence']:checked").val()
+          if (value == 'recurring') {
+              //set empty value for term and year
+              $("#year option:selected").prop("selected", false);
+              $("#term option:selected").prop("selected", false);
+              //show terms_div
+              $('#terms_div').show();
+              $("#term_div").hide();
+              $("#year_div").hide();
+
+          }
+          if (value == 'one-time') {
+              $("#term_div").show();
+              $("#year_div").show();
+              $('#terms_div').hide();
+              $('#terms').val([]);
+          }
+          if (value == 'optional') {
+              $('#year_div').hide();
+              $('#term_div').hide();
+              $('#terms_div').hide();
+              $("#year option:selected").prop("selected", false);
+              $("#term option:selected").prop("selected", false);
+              $('#terms').val([]);
+          }
+          $('#ocurrence').change(function() {
+          var value = $("input[name='ocurrence']:checked").val()
+          if (value == 'recurring') {
+              //set empty value for term and year
+              $("#year option:selected").prop("selected", false);
+              $("#term option:selected").prop("selected", false);
+              //show terms_div
+              $('#terms_div').show();
+              $("#term_div").hide();
+              $("#year_div").hide();
+
+          }
+          if (value == 'one-time') {
+              $("#term_div").show();
+              $("#year_div").show();
+              $('#terms_div').hide();
+              $('#terms').val([]);
+          }
+          if (value == 'optional') {
+              $('#year_div').hide();
+              $('#term_div').hide();
+              $('#terms_div').hide();
+              $("#year option:selected").prop("selected", false);
+              $("#term option:selected").prop("selected", false);
+              $('#terms').val([]);
+          }
+      });
+</script>
