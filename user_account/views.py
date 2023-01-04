@@ -9,7 +9,7 @@ from .backends import AuthBackend
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from .forms import CustomLoginForm
 from django.urls import reverse_lazy
 from .forms import CustomLoginForm
@@ -24,8 +24,8 @@ class CustomLoginView(LoginView):
         return reverse_lazy('dashboard')
 
 
-class CustomLogoutView():
-    pass
+class CustomLogoutView(LogoutView):
+    next_page = '/'
 
 
 class CustomPasswordChangeView():

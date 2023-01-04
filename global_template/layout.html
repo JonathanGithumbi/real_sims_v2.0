@@ -70,16 +70,13 @@
                 </a>
             </li>
             <hr class="sidebar-divider">
-            <!-- Heading -->
-            <li class="nav-item ">
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-toggle="modal"
-                   data-target="#logoutModal">
-                    <i class="fas fa-sign-out"></i>
-                    <span >Log out</span>
+           <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </li>
+            
             <!--
             <hr class="sidebar-divider">
             <span class="small text-center text-white">Allied Software Consultancy</span>
@@ -98,33 +95,14 @@
             <!-- End of Main Content -->
         </div>
         <!-- End of Content Wrapper -->
+
+
     </div>
     <!-- End of Page Wrapper -->
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-    <!-- Logout Modal-->
-    <div class="modal fade text-gray-900"
-         id="logoutModal"
-         tabindex="-1"
-         role="dialog"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Logout</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">x</span>
-                    </button>
-                </div>
-                <div class="modal-body">If you are ready to end your current session,select "Logout" below.</div>
-                <div class="modal-footer">
-                    <a class="btn btn-danger btn-sm" href="{% url 'logout' %}">Logout</a>
-                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
+   
+    
 {% endblock %}

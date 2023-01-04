@@ -10,11 +10,6 @@ from bootstrap_modal_forms.generic import (
 )
 from django.urls import reverse_lazy
 from django.views import generic
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
-from academic_calendar.CalendarManager import CalendarManager
-from invoice.InvoiceManager import InvoiceManager
-
 
 class StudentListView(generic.ListView):
     model = Student
