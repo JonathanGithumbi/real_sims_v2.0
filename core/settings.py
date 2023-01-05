@@ -41,15 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django.contrib.admin',
-    
-    
+
+
     'bootstrap_modal_forms',
     'widget_tweaks',
     'user_account',
     'grade',
     'student.apps.StudentConfig',
     'bill.apps.BillConfig',
-
+    'django_quickbooks.apps.DjangoQuickbooksConfig',
     'fees_structure',
     'invoice.apps.InvoiceConfig',
     'academic_calendar',
@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'item',
     'core',
     'dashboard',
-    'django_quickbooks.apps.DjangoQuickbooksConfig',
+
+
 
 
 
