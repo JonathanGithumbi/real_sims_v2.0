@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django.contrib.admin',
-    'django_quickbooks',
+    
+    
     'bootstrap_modal_forms',
     'widget_tweaks',
     'user_account',
@@ -57,7 +58,7 @@ INSTALLED_APPS = [
     'item',
     'core',
     'dashboard',
-
+    'django_quickbooks.apps.DjangoQuickbooksConfig',
 
 
 
