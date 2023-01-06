@@ -30,11 +30,13 @@
                 <a class="btn btn-primary btn-sm"
                    href="#">Download QWC File</a>
                 <br>
-                <h6>Import/Export Data:</h6>
-                <a class="btn btn-primary btn-sm"
-                   href="#">Export Data to Quickbooks</a>
+                <h6>Import Data:</h6>
                 <a class="btn btn-primary btn-sm"
                    href="#">Import Data from Quickbooks</a>
+                <h6>Export Data:</h6>
+                <a class="btn btn-primary btn-sm"
+                   href="#">Export Data to Quickbooks</a><br>
+                
                 <hr>
                 <h6>Account Settings:</h6>
                 <hr>
@@ -43,9 +45,8 @@
                    data-toggle="modal"
                    data-target="#change_password_modal">Change Password</a>
                 <a class="btn btn-danger  btn-sm "
-                   href="#"
-                   data-toggle="modal"
-                   data-target="#logout_modal">Logout</a>
+                   href="{% url 'logout'%}"
+                   >Logout</a>
                 <div class="modal  fade" id="change_password_modal">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
