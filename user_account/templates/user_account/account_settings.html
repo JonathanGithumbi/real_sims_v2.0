@@ -12,33 +12,17 @@
                 <h5 class"m-0">Account Settings</h5>
             </div>
             <div class="card-body">
-                <h6>Quickbooks Settings:</h6>
-                <small class"m-0">
-                    Quickbooks Connection Status:
-                    {% if connection_status == 'online' %}
-                        <span class="badge badge-success">online</span>
-                    {% else %}
-                        <span class="badge badge-danger">offline</span>
-                    {% endif %}
-                </small>
-                <hr>
-                <h6>Refresh Connection:</h6>
                 <a class="btn btn-primary btn-sm"
-                   href="#">Refresh</a>
+                   href="#">  Import Data from Quickbooks <i class="fas fa-download"></i></a>
+                <a class="btn btn-primary btn-sm"
+                   href="#"> Export Data to Quickbooks <i class="fas fa-upload"></i></a>
+
+
                 <br>
-                <h6>Quickbooks Web Connector(QWC) File:</h6>
-                <a class="btn btn-primary btn-sm"
-                   href="#">Download QWC File</a>
                 <br>
-                <h6>Import Data:</h6>
                 <a class="btn btn-primary btn-sm"
-                   href="#">Import Data from Quickbooks</a>
-                <h6>Export Data:</h6>
-                <a class="btn btn-primary btn-sm"
-                   href="#">Export Data to Quickbooks</a><br>
-                
-                <hr>
-                <h6>Account Settings:</h6>
+                   href="#">Download QWC File <i class="fas fa-tools"></i></a>
+                <br>
                 <hr>
                 <a class="btn btn-primary  btn-sm "
                    href="#"
@@ -46,7 +30,7 @@
                    data-target="#change_password_modal">Change Password</a>
                 <a class="btn btn-danger  btn-sm "
                    href="{% url 'logout'%}"
-                   >Logout</a>
+                   >Logout <i class="fas fa-sign-out"></i></a>
                 <div class="modal  fade" id="change_password_modal">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -58,6 +42,17 @@
                             <div class="modal-body">
                                 <form class="user" action="#" method="post">
                                     {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                            <label for="{{ form.contact1_name.id_for_label }}">{{ form.contact1_name.label }}</label>
+                                            {% render_field form.contact1_name class="form-control form-control-sm"  %}
+                                            <div class="{% if form.contact1_name.errors %} invalid{% endif %}">
+                                                {% for error in form.contact1_name.errors %}<p class="help-block">{{ error }}</p>{% endfor %}
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     {{ password_change_form.as_p }}
                                     <input class="btn btn-success btn-sm " type="submit" value="Submit">
                                     <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
