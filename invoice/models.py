@@ -7,7 +7,7 @@ from student.models import Student
 from fees_structure.models import BillingItem
 from django_quickbooks.models import QBDModelMixin
 
-class Invoice(QBDModelMixin):
+class Invoice(models.Model):
     """An Invoice. Charged to the active students at the beginning of every term."""
     class Meta:
         db_table = "Invoice_invoice"
