@@ -10,6 +10,8 @@ from academic_calendar.CalendarManager import CalendarManager
 from item.ItemManager import ItemManager
 from fees_structure.models import BillingItem
 
+from django_quickbooks.models import QBDModelMixin
+
 
 class AdmissionNumber(models.Model):
     """Generates the unformatted admission number"""
@@ -18,12 +20,16 @@ class AdmissionNumber(models.Model):
     def __str__(self):
         return self.id
 
+#
 
-class Student(models.Model):
+
+class Student(QBDModelMixin):
     """this model represents a student enrolled in school"""
 
     class Meta:
         ordering = ['-date_of_admission']
+
+    full_name = models.CharField(max_length=255, null=True)
     first_name = models.CharField(max_length=255, blank=True)
     middle_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
@@ -46,15 +52,29 @@ class Student(models.Model):
     contact2_name = models.CharField(max_length=255, blank=True)
     contact2_number = models.CharField(
         max_length=255, blank=True)
-
     # This active flag defines whether or not the student gets  invoiced
     active = models.BooleanField(null=True, default=True, blank=True)
-
     # This visible flag will determing whether the student is visible; an alternative to deleting data
     visible = models.BooleanField(null=True, default=True, blank=True)
 
     def __str__(self):
-        return f"{self.first_name} {self.middle_name} {self.last_name}"
+        return f'{self.first_name} {self.middle_name} {self.last_name}'
+
+    def to_qbd_obj(self, **fields):
+        from django_quickbooks.objects import Customer as QBCustomer
+        # map your fields to the qbd obj fields
+        return QBCustomer(
+            Name=self.__str__()
+        )
+
+    @classmethod
+    def from_qbd_obj(cls, qbd_obj):
+        # map qbd obj fields to your model fields
+        return cls(
+            full_name=qbd_obj.Name,
+            qbd_object_id=qbd_obj.ListID,
+            qbd_object_version=qbd_obj.EditSequence
+        )
 
     def get_transport_status(self):
         latest_invoice = self.invoice_set.all().latest()
