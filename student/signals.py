@@ -8,19 +8,27 @@ from item.ItemManager import ItemManager
 from invoice.models import Invoice
 from invoice.models import Item as InvoiceItem
 from fees_structure.models import BillingItem
-from django_quickbooks.models import QBDTask,ContentType
+from django_quickbooks.models import QBDTask, ContentType
 from django_quickbooks import QUICKBOOKS_ENUMS
 
-#add a signal handler foor the desired events
-@receiver(post_save,sender=Student)
-def send_customer_to_qbtask(sender,instance,**kwargs):
+# add a signal handler foor the desired events
+
+# Create QB Customer Signal Handler
+
+
+@receiver(post_save, sender=Student)
+def send_customer_to_qbtask(sender, instance, created, **kwargs):
     QBDTask.objects.create(
-        qb_operation =  QUICKBOOKS_ENUMS.OPP_ADD,
-        qb_resource = QUICKBOOKS_ENUMS.RESOURCE_CUSTOMER,
-        object_id = instance.id,
-        content_type = ContentType.objects.get_for_model(instance),
+        qb_operation=QUICKBOOKS_ENUMS.OPP_ADD,
+        qb_resource=QUICKBOOKS_ENUMS.RESOURCE_CUSTOMER,
+        object_id=instance.id,
+        content_type=ContentType.objects.get_for_model(instance),
         realm_id="c83de7e8-c6de-418b-88a9-4f30a5ff1cce"
     )
+
+
+# Edit QB Customer Signal Handler
+
 
 @receiver(pre_save, sender=Student)
 def student_presave_receiver(sender, instance: Student, **kwargs):

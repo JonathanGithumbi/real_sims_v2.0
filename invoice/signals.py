@@ -3,6 +3,19 @@ from django.dispatch import receiver
 from .models import Invoice
 from .models import Item as InvoiceItem
 from .models import BalanceTable
+from django_quickbooks.models import QBDTask, ContentType
+from django_quickbooks import QUICKBOOKS_ENUMS
+
+
+#@receiver(post_save, sender=Invoice)
+#def send_invoice_to_qbtask(sender, instance, created, **kwargs):
+#    QBDTask.objects.create(
+#        qb_operation=QUICKBOOKS_ENUMS.OPP_ADD,
+#        qb_resource=QUICKBOOKS_ENUMS.RESOURCE_INVOICE,
+#        object_id=instance.id,
+#        content_type=ContentType.objects.get_for_model(instance),
+#        realm_id="c83de7e8-c6de-418b-88a9-4f30a5ff1cce"
+#    )
 
 
 @receiver(post_save, sender=InvoiceItem)

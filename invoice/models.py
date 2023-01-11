@@ -5,9 +5,9 @@ from grade.models import Grade
 from academic_calendar.models import Year, Term
 from student.models import Student
 from fees_structure.models import BillingItem
+from django_quickbooks.models import QBDModelMixin
 
-
-class Invoice(models.Model):
+class Invoice(QBDModelMixin):
     """An Invoice. Charged to the active students at the beginning of every term."""
     class Meta:
         db_table = "Invoice_invoice"
@@ -24,6 +24,13 @@ class Invoice(models.Model):
     modified = models.DateTimeField(auto_now=True)
     created_sys = models.DateTimeField(auto_now_add=True, null=True)
 
+    def to_qbd_obj(self,**fields):
+        pass
+
+    @classmethod
+    def from_qbd_obj(cls,qbd_obj):
+        pass
+    
     def status(self):
         if self.balance == self.get_total_amount():
             return 'unpaid'
