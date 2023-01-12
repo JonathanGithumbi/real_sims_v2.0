@@ -13,7 +13,7 @@ from django.contrib.auth.views import LoginView
 from .forms import CustomLoginForm
 from django.urls import reverse_lazy
 from .forms import CustomLoginForm
-
+from django.contrib.auth.views import LogoutView
 
 class CustomLoginView(LoginView):
     template_name = 'user_account/login.html'
@@ -24,8 +24,8 @@ class CustomLoginView(LoginView):
         return reverse_lazy('dashboard')
 
 
-class CustomLogoutView():
-    pass
+class CustomLogoutView(LogoutView):
+    next_page = "/"
 
 
 class CustomPasswordChangeView():

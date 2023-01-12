@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.CustomLoginView.as_view(
     ), name='login'),
-    path('logout/', views.CustomLogoutView, name='logout'),
+    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
     path('change-password/', views.CustomPasswordChangeView,
          name='password_change'),
     path('change-password-done/', views.CustomPasswordChangeDoneView,
