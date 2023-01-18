@@ -1,6 +1,14 @@
 from django.urls import path
 from . import views
 urlpatterns = [
+    # cash (petty cash ) transactions urls
+    path('cash-transactions/', views.CashTransactionListView.as_view(),name='cashtransaction_list'), 
+    path('create/cash-transaction/',views.CashTransactionCreateView.as_view(),name='create_cashtransaction'),
+    path('update/<int:pk>/cash-transaction/',views.CashTransactionUpdateView.as_view(),name='update_cashtransaction'),
+    path('read/<int:pk>/cash-transaction/', views.CashTransactionReadView.as_view(),name='read_cashtransaction'),
+    path('delete/<int:pk>/cash-transaction/', views.CashTransactionDeleteView.as_view(),name='delete_cashtransaction'),
+    path('list/items/',views.cashtransactions,name='cashtransactions'),
+
     # Bill payment urls
     path('list/bill-payments/<int:billitem_pk>/<int:bill_pk>', views.BillPaymentListView.as_view(),
          name='billpayment_list'),  # Capture a single group

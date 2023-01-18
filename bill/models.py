@@ -56,8 +56,9 @@ class BillItem(models.Model):
     total = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     # varies every time a payment is made
-    #should be set to == total on pre_save
-    amount_due = models.IntegerField(null=True)#the amount that changes when a payment is created, updated and deleted
+    # should be set to == total on pre_save
+    # the amount that changes when a payment is created, updated and deleted
+    amount_due = models.IntegerField(null=True)
 
     def __str__(self):
         return self.description
@@ -95,6 +96,30 @@ class BillPayment(models.Model):
     creation_day = models.DateTimeField(auto_now_add=True)
     amount = models.IntegerField()
     payment_date = models.DateField()
+
+# obsolete remove when able
+
+
+class Cash(models.Model):
+    OPERATION_CHOICES = [
+        ('Deposit', 'Deposit'),
+        ('Withdraw', 'Withdraw')
+    ]
+    operation = models.CharField(max_length=255, choices=OPERATION_CHOICES)
+    amount = models.IntegerField()
+    day = models.DateField()
+
+
+class CashTransaction(models.Model):
+    OPERATION_CHOICES = [
+        ('Deposit', 'Deposit'),
+        ('Withdraw', 'Withdraw')
+    ]
+    operation = models.CharField(max_length=255, choices=OPERATION_CHOICES)
+    amount = models.IntegerField()
+    date = models.DateField()
+    payment = models.ForeignKey(
+        BillPayment, on_delete=models.CASCADE, null=True)
 
 
 class PettyCash(models.Model):

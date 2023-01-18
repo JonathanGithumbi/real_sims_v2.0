@@ -6,31 +6,34 @@
         <br/>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5>All Bills</h5>
+                <h5>All Cash Transactions</h5>
                 <hr>
                 <nav aria-label="breadcrumb breadcrumb-sm">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item active" aria-current="page">
-                            <a href="{% url 'bill_list' %}">All Bills ></a>
+                        <li class="breadcrumb-cashtransaction active" aria-current="page">
+                            <a href="{% url 'bill_list' %}">All Bills / </a>
+                        </li>
+                        <li class="breadcrumb-cashtransaction active" aria-current="page">
+                            <a href="{% url 'cashtransaction_list' %}"> All Cash Transactions ></a>
                         </li>
                     </ol>
                 </nav>
+                <hr />
                 <!--Modal-->
                 {% include "_modal.html" %}
-                <!-- Create bill button -->
-                <button id="create-bill"
+                <!-- Create vendor button -->
+                <button id="create-cashtransaction"
                         class="btn btn-primary btn-sm"
                         type="button"
-                        name="button">Add Bill</button>
-                <a class="btn btn-primary btn-sm" href="{% url 'cashtransaction_list'%}">Petty Cash</a>
-                <br>
-                <small>Balance : {{ balance }}</small><br>
-                <small>Total Amount Due on all bills : {{ total_amount_due_all_bills }}</small>
-                <br>
+                        name="button">Deposit</button>
+                        <br>
+                <small>
+                    Balance: {{balance}}
+                </small>
             </div>
             <!--Table Body-->
             <div class="card-body">
-                <div class="table-responsive">{% include "_bills_table.html" %}</div>
+                <div class="table-responsive">{% include "_cashtransactions_table.html" %}</div>
             </div>
         </div>
     </div>
@@ -39,11 +42,9 @@
         <script type="text/javascript">
             $(function() {
 
-                // Create bill asynchronous button
-                // message
                 var asyncSuccessMessageCreate = [
                     "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-sm alert-success alert-dismissible fade show mb-0' role='alert'>",
-                    "Success: Bill was created.",
+                    "Success: Cash Transaction Successfull.",
                     "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
                     "<span aria-hidden='true'>&times;</span>",
                     "</button>",
@@ -54,28 +55,27 @@
                 ].join("");
 
                 // modal form
-                function createBillAsyncModalForm() {
-                    $("#create-bill").modalForm({
-                        formURL: "{% url 'create_bill' %}",
+                function createCashTransactionAsyncModalForm() {
+                    $("#create-cashtransaction").modalForm({
+                        formURL: "{% url 'create_cashtransaction' %}",
                         modalID: "#create-modal",
                         asyncUpdate: true,
                         asyncSettings: {
                             closeOnSubmit: true,
                             successMessage: asyncSuccessMessageCreate,
-                            dataUrl: "{% url 'bills' %}",
-                            dataElementId: "#bills-table",
+                            dataUrl: "{% url 'cashtransactions'%}",
+                            dataElementId: "#cashtransactions-table",
                             dataKey: "table",
                             addModalFormFunction: reinstantiateModalForms
                         }
                     });
                 }
-                createBillAsyncModalForm();
+                createCashTransactionAsyncModalForm();
 
-                // Update bill asynchronous button
-                // message
+                
                 var asyncSuccessMessageUpdate = [
                     "<div ", "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ", "class='alert alert-icon alert-stringformat alert-success alert-dismissible fade show mb-0' role='alert'>",
-                    "Success: Bill was updated.",
+                    "Success: Cash Transaction was updated.",
                     "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
                     "<span aria-hidden='true'>&times;</span>",
                     "</button>",
@@ -86,50 +86,49 @@
                 ].join("");
 
                 // modal form
-                function updateBillModalForm() {
-                    $(".update-bill").each(function() {
+                function updateCashTransactionModalForm() {
+                    $(".update-cashtransaction").each(function() {
                         $(this).modalForm({
                             formURL: $(this).data("form-url"),
                             asyncUpdate: true,
                             asyncSettings: {
                                 closeOnSubmit: true,
                                 successMessage: asyncSuccessMessageUpdate,
-                                dataUrl: "{% url 'bills'%}",
-                                dataElementId: "#bills-table",
+                                dataUrl: "{% url 'cashtransactions'%}",
+                                dataElementId: "#cashtransactions-table",
                                 dataKey: "table",
                                 addModalFormFunction: reinstantiateModalForms
                             }
                         });
                     });
                 }
-                updateBillModalForm();
+                updateCashTransactionModalForm();
 
-                // Delete bill buttons - formURL is retrieved from the data of the element
-                function deleteBillModalForm() {
-                    $(".delete-bill").each(function() {
+                function deleteCashTransactionModalForm() {
+                    $(".delete-cashtransaction").each(function() {
                         $(this).modalForm({
                             formURL: $(this).data("form-url"),
                             isDeleteForm: true
                         });
                     });
                 }
-                deleteBillModalForm();
+                deleteCashTransactionModalForm();
 
-                // Read bill buttons
-                function readBillModalForm() {
-                    $(".read-bill").each(function() {
+                // Read vendor buttons
+                function readCashTransactionModalForm() {
+                    $(".read-cashtransaction").each(function() {
                         $(this).modalForm({
                             formURL: $(this).data("form-url")
                         });
                     });
                 }
-                readBillModalForm();
+                readCashTransactionModalForm();
 
                 function reinstantiateModalForms() {
-                    createBillAsyncModalForm();
-                    readBillModalForm();
-                    updateBillModalForm();
-                    deleteBillModalForm();
+                    createCashTransactionAsyncModalForm();
+                    readCashTransactionModalForm();
+                    updateCashTransactionModalForm();
+                    deleteCashTransactionModalForm();
                 }
 
 
@@ -140,8 +139,8 @@
                 });
 
 
-                //Bills DataTable Configuration
-                var table = $('#bills-table').DataTable({
+                //Vendors DataTable Configuration
+                var table = $('#cashtransactions-table').DataTable({
                     fixedHeader: true,
                     order: [
                         [1, 'asc']
@@ -159,11 +158,11 @@
                             extend: 'pdf',
 
                             download: 'open',
-                            title: "Bills List",
+                            title: "CashTransaction List",
                             messageBottom: function() {
                                 var curr_date = new Date();
                                 txt_curr_date = curr_date.toString();
-                                return txt_curr_date;
+                                return txt_curr_date + "\n ~School Information Management System~";
                             },
                             exportOptions: {
                                 columns: ':visible'

@@ -1,0 +1,52 @@
+<div class="table-responsive">
+    <table id="cashtransactions-table"
+           class="table table-bordered table-sm text-gray-900"
+           style="width:100%">
+        <thead class='thead-dark'>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Operation</th>
+                <th scope= "col">Purchased Item</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Read / Update / Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cashtransaction in cashtransaction_list %}
+                <tr>
+                    <td >{{ cashtransaction.date }}</td>
+                    <td >{% if cashtransaction.operation == 'Deposit' %}
+                        <span class="badge badge-success">Deposit</span>
+                        {% else %}
+                        <span class="badge badge-danger">Withdraw</span>
+                        {% endif %}</td>
+                    <td >{{cashtransaction.payment.billitem}}</td>
+                    <td >{{ cashtransaction.amount }}</td>
+                    <td >
+                        {% if cashtransaction.operation == 'Deposit' %}
+                        <!-- Read vendor buttons -->
+                        <button type="button"
+                                class="read-cashtransaction btn btn-sm btn-primary"
+                                data-form-url="{% url 'read_cashtransaction' cashtransaction.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                        <!-- Update vendor buttons -->
+                        <button type="button"
+                                class="update-cashtransaction btn btn-sm btn-primary"
+                                data-form-url="{% url 'update_cashtransaction' cashtransaction.pk %}">
+                            <span class="fas fa-pen"></span>
+                        </button> 
+                        <!-- Delete vendor buttons -->
+                        <button type="button"
+                                class="delete-cashtransaction btn btn-sm btn-danger"
+                                data-form-url="{% url 'delete_cashtransaction' cashtransaction.pk %}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                        {% endif %}
+                        
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

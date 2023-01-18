@@ -1,5 +1,5 @@
 from .models import Bill
-from .models import BillItem, BillPayment
+from .models import BillItem, BillPayment, CashTransaction
 from django import forms
 from bootstrap_modal_forms.forms import BSModalModelForm
 
@@ -40,3 +40,13 @@ class TopUpForm(forms.Form):
     amount = forms.IntegerField(
         widget=forms.NumberInput
         (attrs={'class': 'form-control form-control-sm', 'id': 'amount'}))
+
+
+class CashTransactionModelForm(BSModalModelForm):
+    class Meta:
+        model = CashTransaction
+        fields = ['operation', 'amount', 'date']
+
+    def __init__(self, *args, **kwargs):
+        super(CashTransactionModelForm, self).__init__(*args, **kwargs)
+        self.fields['operation'].initial = 'Deposit'

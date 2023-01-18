@@ -1,7 +1,7 @@
-from .models import BillItem
+from .models import BillItem, CashTransaction
 from .models import Bill
 from django.template.loader import render_to_string
-from .forms import BillItemModelForm, BillModelForm, BillPaymentModelForm
+from .forms import BillItemModelForm, BillModelForm, BillPaymentModelForm, CashTransactionModelForm
 from django.http import JsonResponse
 from bootstrap_modal_forms.generic import (
     BSModalCreateView,
@@ -18,6 +18,57 @@ from .BillManager import BillManager
 # lists of bills are visible on a per student basis
 
 
+class CashTransactionListView(generic.ListView):
+    model = CashTransaction
+    template_name = 'cashtransaction_list.html'
+    context_object_name = 'cashtransaction_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cash_man = CashManager()
+        context['balance'] = cash_man.get_cash_balance()
+        return context
+
+
+class CashTransactionCreateView(BSModalCreateView):
+    template_name = 'bill/create_cashtransaction.html'
+    form_class = CashTransactionModelForm
+    success_message = 'Success: Cash Transaction was created.'
+    success_url = reverse_lazy('cashtransaction_list')
+
+
+class CashTransactionUpdateView(BSModalUpdateView):
+    model = CashTransaction
+    template_name = "bill/update_cashtransaction.html"
+    form_class = CashTransactionModelForm
+    success_message = 'Success: Cash Transaction was updated.'
+    success_url = reverse_lazy('cashtransaction_list')
+
+
+class CashTransactionReadView(BSModalReadView):
+    model = CashTransaction
+    template_name = "bill/read_cashtransaction.html"
+
+
+class CashTransactionDeleteView(BSModalDeleteView):
+    model = CashTransaction
+    template_name = "bill/delete_cashtransaction.html"
+    success_message = "Success: Cash Transaction was deleted"
+    success_url = reverse_lazy('cashtransaction_list')
+
+
+def cashtransactions(request):
+    data = dict()
+    if request.method == 'GET':
+        cashtransaction_list = CashTransaction.objects.all()
+        data['table'] = render_to_string(
+            '_cashtransactions_table.html',
+            {'cashtransaction_list': cashtransaction_list},
+            request=request
+        )
+        return JsonResponse(data)
+
+
 class BillListView(generic.ListView):
     model = Bill
     template_name = 'bill_list.html'
@@ -26,7 +77,9 @@ class BillListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         bill_man = BillManager()
+        cash_man = CashManager()
         context['total_amount_due_all_bills'] = bill_man.get_total_amount_due_all_bills()
+        context['balance'] = cash_man.get_cash_balance()
         return context
 
 

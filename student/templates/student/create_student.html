@@ -1,6 +1,7 @@
 {% load widget_tweaks %}
+
 <form method="post" action="" id="create-student-form">
-  {% csrf_token %}
+    {% csrf_token %}
   <div class="modal-header bg-light">
     <h5 class="modal-title">Register Student</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -97,7 +98,14 @@
     </div>
     
     <div class="modal-footer">
-      <button type="submit" class="btn btn-sm btn-success">Register</button>
+      <button type="submit" class="btn btn-sm btn-success" id="sub_std_cre">Register</button>
       <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
     </div>
   </form>
+<script>
+  $('#create-student-form').submit(function(e){
+    var objBtn = document.getElementById('sub_std_cre');
+    objBtn.value = "Processing...";
+    objBtn.disabled = 'disabled';
+  });
+</script>
