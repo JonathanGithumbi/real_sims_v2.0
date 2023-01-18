@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'item',
     'core',
     'dashboard',
+    'onboarding',
 
 
 

@@ -36,5 +36,6 @@ urlpatterns = [
     path('fees-structure/', include('fees_structure.urls')),
     path('vendors/', include('vendor.urls')),
     path('qwc/', include('django_quickbooks.urls'))
+    path('onboarding/',include('onboarding.urls'))
 
 ]
