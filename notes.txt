@@ -187,4 +187,7 @@ so that it preserves its functionality awaiting aany edits from the user if at a
 
  12/12/2022
  -- Make sure to diable form submitting by pressing the enter key
- --- since forms are modals make sure to disable submit butto
+ --- since forms are modals make sure to disable submit button
+
+ 18/1/2023
+ -- multiselect multidelete datatables
