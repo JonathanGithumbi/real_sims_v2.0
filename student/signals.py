@@ -16,15 +16,15 @@ from django_quickbooks import QUICKBOOKS_ENUMS
 # Create QB Customer Signal Handler
 
 
-@receiver(post_save, sender=Student)
-def send_customer_to_qbtask(sender, instance, created, **kwargs):
-    QBDTask.objects.create(
-        qb_operation=QUICKBOOKS_ENUMS.OPP_ADD,
-        qb_resource=QUICKBOOKS_ENUMS.RESOURCE_CUSTOMER,
-        object_id=instance.id,
-        content_type=ContentType.objects.get_for_model(instance),
-        realm_id="c83de7e8-c6de-418b-88a9-4f30a5ff1cce"
-    )
+#@receiver(post_save, sender=Student)
+#def send_customer_to_qbtask(sender, instance, created, **kwargs):
+#    QBDTask.objects.create(
+#        qb_operation=QUICKBOOKS_ENUMS.OPP_ADD,
+#        qb_resource=QUICKBOOKS_ENUMS.RESOURCE_CUSTOMER,
+#        object_id=instance.id,
+#        content_type=ContentType.objects.get_for_model(instance),
+#        realm_id="c83de7e8-c6de-418b-88a9-4f30a5ff1cce"
+#    )
 
 
 # Edit QB Customer Signal Handler
@@ -92,12 +92,13 @@ def student_postsave_receiver(sender, instance, created, **kwargs):
     # Create the balance table also
     if created:
         # only for a new student do you create a balance record
-        BalanceTable.objects.create(
-            student=instance
-        )
+        # BalanceTable.objects.create(
+        #    student=instance
+        # )
         # invoice the student
-        inv_man = InvoiceManager()
-        inv_man.invoice_new_student(instance)
+        #inv_man = InvoiceManager()
+        # inv_man.invoice_new_student(instance)
+        pass
 
     else:
         print("error in student post save receiver")

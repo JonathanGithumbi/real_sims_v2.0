@@ -14,7 +14,8 @@ TERM_CHOICES = (
 ocurrence_choices = [
     ('recurring', 'recurring'),
     ('one-time', 'one-time'),
-    ('optional', 'optional')
+    ('optional', 'optional'),
+    ('registration', 'registration')
 ]
 period_choices = [
     ('year-round', 'year-round'),
