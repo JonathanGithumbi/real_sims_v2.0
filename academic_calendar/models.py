@@ -21,7 +21,7 @@ class Year(models.Model):
     end = models.DateField()
 
     def __str__(self):
-        return str(self.year)
+        return "Year: {}".format(str(self.year))
 
     def get_absolute_url(self):
         return reverse('year_detail', kwargs={'pk': self.pk})
@@ -40,7 +40,7 @@ class Term(models.Model):
     year = models.ForeignKey(Year, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return "{}:{}".format(self.year, self.term)
+        return "Term: {}".format(self.term)
 
     def get_absolute_url(self):
         return reverse('term_detail', kwargs={'pk': self.pk})

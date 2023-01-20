@@ -19,7 +19,7 @@
             {% for invoice in invoice_list %}
                 <tr>
                     <td>{{ invoice.created }}</td>
-                    <td>{{ invoice.year }} Term: {{ invoice.term }}</td>
+                    <td>{{ invoice.year }}{{ invoice.term }}</td>
                     <td>{{ invoice.grade }}</td>
                     <td>
                         {% if invoice.status == 'paid' %}<span class="badge badge-success">paid</span>{% endif %}

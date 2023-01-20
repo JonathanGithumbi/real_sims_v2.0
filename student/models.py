@@ -28,7 +28,13 @@ class Student(QBDModelMixin):
 
     class Meta:
         ordering = ['-date_of_admission']
-
+    # onboarding fields
+    balance_brought_forward = models.IntegerField(default=0, null=True)
+    onboarding_year = models.ForeignKey(
+        Year, on_delete=models.DO_NOTHING, related_name='onboarding_year', null=True)
+    onboarding_term = models.ForeignKey(
+        Term, on_delete=models.DO_NOTHING, related_name='onboarding_term', null=True)
+    # normal fields
     full_name = models.CharField(max_length=255, null=True)
     first_name = models.CharField(max_length=255, blank=True)
     middle_name = models.CharField(max_length=255, blank=True)
@@ -134,6 +140,10 @@ class Student(QBDModelMixin):
         current_term = cal_man.get_term()
 
         current_invoice = self.invoice_set.get(term=current_term)
+        if current_invoice.exists():
+            pass
+        else:
+            return False
 
         # check if the lunch item is among the invoice's billing items
         item_man = ItemManager()

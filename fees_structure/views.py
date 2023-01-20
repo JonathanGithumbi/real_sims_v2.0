@@ -14,9 +14,12 @@ from django.views import generic
 
 
 class BillingItemListView(generic.ListView):
-    model = BillingItem
+    #model = BillingItem
     template_name = 'billingitem_list.html'
     context_object_name = 'billingitem_list'
+
+    def get_queryset(self):
+        return BillingItem.objects.filter(visible=True)
 
 
 class BillingItemCreateView(BSModalCreateView):
@@ -49,7 +52,7 @@ class BillingItemDeleteView(BSModalDeleteView):
 def billingitems(request):
     data = dict()
     if request.method == 'GET':
-        billingitem_list = BillingItem.objects.all()
+        billingitem_list = BillingItem.objects.filter(visible=True)
         data['table'] = render_to_string(
             '_billingitems_table.html',
             {'billingitem_list': billingitem_list},

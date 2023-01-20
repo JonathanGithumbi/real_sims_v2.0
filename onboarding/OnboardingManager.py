@@ -6,7 +6,7 @@ from grade.models import Grade
 def load_data(path):
     """
         Returns a list of all the data contained in  a given .xlsx files
-        """
+    """
 
     wb = openpyxl.load_workbook(path)
 
@@ -41,7 +41,8 @@ def parse_row(row):
     balance_brought_forward = row[1]
     grade = row[2]
     active = row[3]
-
+    year = row[4]
+    term = row[5]
     full_names_list = full_names.split(' ')
     first_name = full_names_list[0]
     last_name = full_names_list[-1]
@@ -54,24 +55,80 @@ def parse_row(row):
         status = False
         active = bool(status)
 
+    from academic_calendar.models import Year, Term, TermNumbers
+    term_number = TermNumbers.objects.get(term=int(term))
+    year = Year.objects.get(year=int(year))
+    term = Term.objects.get(term=term_number, year=year)
+
     my_obj = {
         'first_name': first_name,
         'last_name': last_name,
         'balance_brought_forward': balance_brought_forward,
         'grade': grade,
-        'active': active
+        'active': active,
+        'onboarding_year': year,
+        'onboarding_term': term
     }
     return my_obj
 
 
-def register_students(my_obj):
+def register_student(my_obj):
     from student.models import Student
     print("Registering: {}".format(my_obj['first_name']))
-    Student.objects.create(
+    student = Student.objects.create(
         first_name=my_obj['first_name'],
         last_name=my_obj['last_name'],
         grade_admitted_to=my_obj['grade'],
-        active=my_obj['active']
+        active=my_obj['active'],
+        balance_brought_forward=my_obj['balance_brought_forward'],
+        onboarding_year=my_obj['onboarding_year'],
+        onboarding_term=my_obj['onboarding_term']
     )
     print("Complete.")
+    return student
+
+
+def register_and_invoice_balance_brought_forward(my_obj):
+    """invoices each student with a balance brought forward bill."""
+
+    # get "student_obj
+    student = register_student(my_obj)
+    print("Registering and invoicing {}".format(student.first_name))
+    from invoice.models import Invoice
+    from invoice.models import Item as InvoiceItem
+    from fees_structure.models import BillingItem
+
+    # Create an invoice for the student
+    invoice = Invoice.objects.create(
+        student=student,
+        year=student.onboarding_year,
+        term=student.onboarding_term,
+        grade=student.current_grade
+    )
+    # get the balance brought forward item
+    from item.models import Item as SalesItem
+    sales_item = SalesItem.objects.get(name='Balance Brought Forward')
+    # create a billing item for balance brought forward
+    billing_item = BillingItem.objects.create(
+        item=sales_item,
+        amount=student.balance_brought_forward,
+        visible=False
+    )
+
+    # create invoice item
+    InvoiceItem.objects.create(
+        billing_item=billing_item,
+        invoice=invoice
+    )
+
+    print("Complete...")
     return True
+
+
+def __main__():
+    from onboarding import OnboardingManager
+    data = OnboardingManager.load_data(
+        'Kings Educational Centre Data Migration File.xlsx')
+    for row in data[1:]:
+        OnboardingManager.register_and_invoice_balance_brought_forward(
+            OnboardingManager.parse_row(row))

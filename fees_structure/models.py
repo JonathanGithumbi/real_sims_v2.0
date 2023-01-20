@@ -27,7 +27,7 @@ class BillingItem(models.Model):
     """Billing items are items that you bill to your customers/students"""
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
     # is being charged to these gra9des
-    grades = models.ManyToManyField(Grade)
+    grades = models.ManyToManyField(Grade,null=True)
     # at this amount
     amount = models.IntegerField(null=True, default=None)
     # at this frequency
@@ -53,6 +53,7 @@ class BillingItem(models.Model):
     # one-time charged during registration
     charge_on_registration = models.BooleanField(default=False,
                                                  blank=True)
+    visible = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.item)
