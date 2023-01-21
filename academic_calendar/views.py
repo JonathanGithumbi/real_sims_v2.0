@@ -60,7 +60,7 @@ def years(request):
 
 
 class TermListView(generic.ListView):
-    model = Term
+
     template_name = 'term_list.html'
     context_object_name = 'term_list'
 
@@ -70,6 +70,11 @@ class TermListView(generic.ListView):
         context["year"] = get_object_or_404(
             Year, pk=self.kwargs['year_pk'])
         return context
+
+    def get_queryset(self):
+        year_pk = int(self.kwargs['year_pk'])
+        year = Year.objects.get(id=year_pk)
+        return Term.objects.filter(year=year)
 
 
 class TermCreateView(BSModalCreateView):

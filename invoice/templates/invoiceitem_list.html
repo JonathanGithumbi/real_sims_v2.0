@@ -17,7 +17,7 @@
                             <a href="{% url 'invoice_list' student.pk %}">{{ student.first_name }} {{ student.last_name }} / All Invoices</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            <a href="{% url 'invoiceitem_list' invoice.pk student.pk %}">Invoice:{{ invoice.year }} Term:{{ invoice.term }}/</a>
+                            <a href="{% url 'invoiceitem_list' invoice.pk student.pk %}">Invoice:{{ invoice.year }} Term:{{ invoice.term }}/Invoice Items</a>
                         </li>
                     </ol>
                 </nav>

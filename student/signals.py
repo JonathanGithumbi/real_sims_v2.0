@@ -101,4 +101,4 @@ def student_postsave_receiver(sender, instance, created, **kwargs):
         pass
 
     else:
-        print("error in student post save receiver")
+        pass

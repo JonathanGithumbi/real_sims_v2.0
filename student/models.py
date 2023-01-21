@@ -140,10 +140,7 @@ class Student(QBDModelMixin):
         current_term = cal_man.get_term()
 
         current_invoice = self.invoice_set.get(term=current_term)
-        if current_invoice.exists():
-            pass
-        else:
-            return False
+        
 
         # check if the lunch item is among the invoice's billing items
         item_man = ItemManager()

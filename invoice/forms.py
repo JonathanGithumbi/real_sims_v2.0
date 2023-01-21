@@ -1,6 +1,6 @@
 from .models import Invoice
 from .models import Item as InvoiceItem
-
+from fees_structure.models import BillingItem
 from bootstrap_modal_forms.forms import BSModalModelForm
 
 
@@ -38,3 +38,5 @@ class InvoiceItemModelForm(BSModalModelForm):
         self.invoice_obj = kwargs.pop('invoice')
         super(InvoiceItemModelForm, self).__init__(*args, **kwargs)
         self.fields['invoice'].initial = self.invoice_obj
+        self.fields['billing_item'].queryset = BillingItem.objects.filter(
+            visible=True)

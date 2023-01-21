@@ -10,7 +10,7 @@
                 <th scope="col">Total Amount</th>
                 <th scope="col">Amount Due</th>
                 <th scope="col">Read / Update / Delete</th>
-                <th scope="col">Details</th>
+                <th scope="col">Bill Items</th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +48,7 @@
                     </td>
                     <td>
                         <a class="btn btn-sm btn-primary"
-                           href="{% url 'billitem_list' bill.pk %}">open bill</a>
+                           href="{% url 'billitem_list' bill.pk %}">Bill Items</a>
                     </td>
                 </tr>
             {% endfor %}

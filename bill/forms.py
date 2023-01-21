@@ -50,3 +50,4 @@ class CashTransactionModelForm(BSModalModelForm):
     def __init__(self, *args, **kwargs):
         super(CashTransactionModelForm, self).__init__(*args, **kwargs)
         self.fields['operation'].initial = 'Deposit'
+        

@@ -12,6 +12,11 @@ def invoicepayment_postdelete_receiver(sender, instance, **kwargs):
         inv = instance.invoice
         inv.balance += instance.amount
         inv.save()
+        # the balance record should also be modified
+        from invoice.models import BalanceTable
+        record = BalanceTable.objects.get(student=instance.student)
+        record.balance += instance.amount
+        record.save()
     except:
         print("Done ")
 
@@ -23,11 +28,21 @@ def invoicepayment_postsave_receiver(sender, instance, created, **kwargs):
         invoice = instance.invoice
         invoice.balance -= instance.amount
         invoice.save()
+        # the balance record should also go down
+        from invoice.models import BalanceTable
+        record = BalanceTable.objects.get(student=instance.student)
+        record.balance -= instance.amount
+        record.save()
     else:
         # if payment has been edited
         invoice = instance.invoice
         invoice.balance -= instance.amount
         invoice.save()
+        # the balance record should also go down
+        from invoice.models import BalanceTable
+        record = BalanceTable.objects.get(student=instance.student)
+        record.balance -= instance.amount
+        record.save()
 
 
 @receiver(pre_save, sender=InvoicePayment)
@@ -42,3 +57,8 @@ def invoice_presave_receiver(sender, instance, **kwargs):
         inv = instance.invoice
         inv.balance += prev_amount
         inv.save()
+        # the balance record should also be modified
+        from invoice.models import BalanceTable
+        record = BalanceTable.objects.get(student=instance.student)
+        record.balance += prev_amount
+        record.save()
