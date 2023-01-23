@@ -107,7 +107,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'mysql.connector.django',
         'NAME': 'sims_production_database_demo',
         'USER': 'root',
         'PASSWORD': 'Root123!@#',
