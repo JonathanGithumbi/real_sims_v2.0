@@ -109,9 +109,9 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
-        'NAME': 'sims_production_database_demo',
-        'USER': 'root',
-        'PASSWORD': 'Root123!@#',
+        'NAME': 'kingsedu_sims_production_database',
+        'USER': 'kingsedu_admin',
+        'PASSWORD': '1t$Pug33!@#',
         'HOST': '127.0.0.1',
         'PORT': '3306'
     }
