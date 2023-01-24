@@ -7,6 +7,8 @@ from item.ItemManager import ItemManager
 class InvoiceManager():
     """This invoice manager is in charge of invoicing one student at registration and all active students at the beginning of the term"""
 
+    
+
     def get_latest_invoice(self, student):
         latest_invoice = Invoice.objects.filter(student=student).latest()
         return latest_invoice
@@ -46,59 +48,55 @@ class InvoiceManager():
             student=student,
             year=student.current_year,
             term=student.current_term,
-            grade=student.grade_admitted_to,
+            grade=student.current_grade,
 
         )
         # the items that are charged on a termly basis are either those that recurr yearly throught the year, those that recurr at
         # the current specific term, and those one time charges that happen to fall on this particular term and year
 
-        # get items that recurr yearly throughout all the terms
+        # get items that recurr yearly and also fall into this term
+        from academic_calendar.CalendarManager import CalendarManager
+        cal_man = CalendarManager()
+        curr_term = cal_man.get_term()
+        curr_year = cal_man.get_year
+
         rec_yr_thr = BillingItem.objects.filter(
-            grades__in=[student.current_grade], ocurrence='recurring', period='year-round')
+            grades__in=[student.current_grade], ocurrence='recurring', terms__in=[curr_term.term])
         if rec_yr_thr:
             # add those items to the invoice
             for fees_structure in rec_yr_thr:
-                InvoiceItem.objets.create(
-                    sales_item=fees_structure.item,
-                    amount=fees_structure.amount,
+                InvoiceItem.objects.create(
+                    billing_item=fees_structure,
                     invoice=invoice
                 )
 
         # get items that recurr yearly at specific terms
-        rec_yr_spc = BillingItem.objects.filter(
-            grades__in=[student.current_grade], ocurrence='recurring', period='specific-terms', terms__in=[student.current_term])
-        if rec_yr_spc:
-            # add those items to the invoice
-            for fees_structure in rec_yr_spc:
-                InvoiceItem.objets.create(
-                    sales_item=fees_structure.item,
-                    amount=fees_structure.amount,
-                    invoice=invoice
-                )
-        else:
-            pass
+        # rec_yr_spc = BillingItem.objects.filter(
+        #    grades__in=[student.current_grade], ocurrence='recurring', period='specific-terms', terms__in=[student.current_term])
+        # if rec_yr_spc:
+        #    # add those items to the invoice
+        #    for fees_structure in rec_yr_spc:
+        #        InvoiceItem.objets.create(
+        #            sales_item=fees_structure.item,
+        #            amount=fees_structure.amount,
+        #            invoice=invoice
+        #        )
+        # else:
+        #    pass
 
         # get onetime items if any
-        one_time = BillingItem.objects.filter(
-            grades__in=[student.current_grade], ocurrence='one-time', term=student.current_term, year=student.current_year)
-        if one_time:
-            # add those items to the invoice
-            for fees_structure in rec_yr_spc:
-                InvoiceItem.objets.create(
-                    sales_item=fees_structure.item,
-                    amount=fees_structure.amount,
-                    invoice=invoice
-                )
-        else:
-            pass
-        # set the invoice balance
-        invoice.balance = invoice.get_total_amount()
-        invoice.save(update_fields=['balance'])
-        # update the balancetable
-        bal_record = BalanceTable.objects.get(student=invoice.student)
-        bal_record.increase_balance(invoice.get_total_amount())
-
-        # return teh charge
+        #one_timers = BillingItem.objects.filter(
+        #    grades__in=[student.current_grade], ocurrence='one-time', term=student.current_term.term, year=student.current_year)
+        #if one_timers:
+        #    # add those items to the invoice
+        #    for fees_structure in one_timers:
+        #        InvoiceItem.objects.create(
+        #            billing_item=fees_structure,
+        #            invoice=invoice
+        #        )
+        #else:
+        #    pass
+        ## return teh charge
         return invoice
 
     def invoice_student_lunch(self, student):

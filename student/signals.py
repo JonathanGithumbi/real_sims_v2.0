@@ -98,7 +98,7 @@ def student_postsave_receiver(sender, instance, created, **kwargs):
         # invoice the student
         inv_man = InvoiceManager()
         inv_man.invoice_new_student(instance)
-        pass
-
+        #inv_man.invoice_continuing_student(instance)
+        
     else:
         pass

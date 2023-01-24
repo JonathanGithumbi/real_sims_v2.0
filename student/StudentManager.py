@@ -3,9 +3,12 @@ from academic_calendar.CalendarManager import CalendarManager
 from invoice.models import BalanceTable
 from django.shortcuts import get_object_or_404
 
-
 class StudentManager():
     """The registered_student manager is responsible for managing the state of the Student """
+
+    
+
+
 
     def register_student(self, registration_form):
         """Takes a registration form and gives you a registered_student"""

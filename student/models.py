@@ -139,21 +139,20 @@ class Student(QBDModelMixin):
         cal_man = CalendarManager()
         current_term = cal_man.get_term()
 
-        current_invoice = self.invoice_set.get(term=current_term)
-        
+        current_invoices = self.invoice_set.filter(term=current_term)
+        for current_invoice in current_invoices:
+            # check if the lunch item is among the invoice's billing items
+            item_man = ItemManager()
+            lunch_item = item_man.get_lunch_item()
+            # get the lunch billing item
+            lunch_bill = BillingItem.objects.get(item=lunch_item)
+            print(lunch_bill in current_invoice.item_set.all())
 
-        # check if the lunch item is among the invoice's billing items
-        item_man = ItemManager()
-        lunch_item = item_man.get_lunch_item()
-        # get the lunch billing item
-        lunch_bill = BillingItem.objects.get(item=lunch_item)
-        print(lunch_bill in current_invoice.item_set.all())
-
-        for item in current_invoice.item_set.all():
-            if item.billing_item == lunch_bill:
-                return True
-        else:
-            return False
+            for item in current_invoice.item_set.all():
+                if item.billing_item == lunch_bill:
+                    return True
+            else:
+                return False
 
     def is_taking_transport(self):
 
@@ -162,17 +161,18 @@ class Student(QBDModelMixin):
         cal_man = CalendarManager()
         current_term = cal_man.get_term()
 
-        current_invoice = self.invoice_set.get(term=current_term)
+        current_invoices = self.invoice_set.filter(term=current_term)
+        for current_invoice in current_invoices:
 
-        # check if the transport item is among the invoice's billing items
-        item_man = ItemManager()
-        transport_item = item_man.get_transport_item()
-        # get the transport billing item
-        transport_bill = BillingItem.objects.get(item=transport_item)
-        print(transport_bill in current_invoice.item_set.all())
+            # check if the transport item is among the invoice's billing items
+            item_man = ItemManager()
+            transport_item = item_man.get_transport_item()
+            # get the transport billing item
+            transport_bill = BillingItem.objects.get(item=transport_item)
+            print(transport_bill in current_invoice.item_set.all())
 
-        for item in current_invoice.item_set.all():
-            if item.billing_item == transport_bill:
-                return True
-        else:
-            return False
+            for item in current_invoice.item_set.all():
+                if item.billing_item == transport_bill:
+                    return True
+            else:
+                return False

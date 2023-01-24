@@ -127,6 +127,8 @@ def register_and_invoice_balance_brought_forward(my_obj):
 
 def __main__():
     from onboarding import OnboardingManager
+    from invoice.InvoiceManager import InvoiceManager
+    inv_man = InvoiceManager()
     data = OnboardingManager.load_data(
         'Kings Educational Centre Data Migration File.xlsx')
     for row in data[1:]:

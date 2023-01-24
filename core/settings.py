@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'f8y-ks$a%-86&fn&^#kxc_v=u)revm8(dq8*p3oaz98530tbem'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 TIME_ZONE = 'UTC'
@@ -68,7 +68,6 @@ INSTALLED_APPS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -108,10 +107,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': 'kingsedu_sims_production_database',
-        'USER': 'kingsedu_admin',
-        'PASSWORD': '1t$Pug33!@#',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sims_production_database_demo',
+        'USER': 'root',
+        'PASSWORD': 'Root123!@#',
         'HOST': '127.0.0.1',
         'PORT': '3306'
     }
@@ -152,7 +151,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
