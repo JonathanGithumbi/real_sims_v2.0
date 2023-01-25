@@ -56,6 +56,7 @@ class Student(QBDModelMixin):
     contact1_name = models.CharField(max_length=255, blank=True)
     contact1_number = models.CharField(max_length=255, blank=True)
     contact2_name = models.CharField(max_length=255, blank=True)
+    
     contact2_number = models.CharField(
         max_length=255, blank=True)
     # This active flag defines whether or not the student gets  invoiced
