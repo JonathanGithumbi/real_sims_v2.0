@@ -18,3 +18,13 @@ class PaymentModelForm(BSModalModelForm):
         self.fields['invoice'].widget.attrs['readonly'] = True
 
     # You have to validate that the amount is greatter than 1
+    def clean(self):
+        super(PaymentModelForm,self).clean()
+        #the aomunt should not be greateer than the invoice's balance
+        amount = self.cleaned_data.get('amount')
+        invoice = self.cleaned_data.get('invoice')
+
+        if int(amount) > invoice.balance:
+            self._errors['amount'] = self.error_class(['Cannot pay amount greater than invoice balance'])
+        
+        return self.cleaned_data
