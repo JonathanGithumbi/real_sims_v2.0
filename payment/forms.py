@@ -26,5 +26,7 @@ class PaymentModelForm(BSModalModelForm):
 
         if int(amount) > invoice.balance:
             self._errors['amount'] = self.error_class(['Cannot pay amount greater than invoice balance'])
-        
+
+        if  int(amount) <= 0 :
+            self._errors['amount'] = self.error_class(['Enter a valid amount'])
         return self.cleaned_data
