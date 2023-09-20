@@ -107,7 +107,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sims_v2.0',
         'USER': 'root',
-        'PASSWORD': 'Root123!@#',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '3306'
     }
@@ -162,8 +162,8 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/user_account/login/'
 
 # OAauth2 config here
-CLIENT_ID = 'ABqj7EU6zlngD2KKw34dy6Z7SzVwF7XcHP7c6EOr2GCZUiSOZI'
-CLIENT_SECRET = 'KgY50RPimjKkz4shvDb2PRrIKADSadw8ysWIuOhA'
+CLIENT_ID = ''
+CLIENT_SECRET = ''
 REDIRECT_URI = 'http://localhost:8000/user_account/callback'
 ENVIRONMENT = 'sandbox'
 
@@ -185,8 +185,8 @@ AUTHENTICATION_BACKENDS = ['user_account.backends.AuthBackend']
 DEFAULT_FROM_EMAIL = "jonathan.m.githumbi@gmail.com"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
-EMAIL_HOST_PASSWORD = "1t$nAB01033!@#"
-EMAIL_HOST_USER = "jonathan.m.githumbi@gmail.com"
+EMAIL_HOST_PASSWORD = ""
+EMAIL_HOST_USER = ""
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
